@@ -1,0 +1,55 @@
+package com.andradel.pathfinders.features.activity.add.participant
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.andradel.pathfinders.features.navArgs
+import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
+import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
+import com.andradel.pathfinders.model.participant.Participant
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+
+@HiltViewModel
+class AddParticipantsToActivityViewModel @Inject constructor(
+    handle: SavedStateHandle,
+    dataSource: ParticipantFirebaseDataSource,
+) : ViewModel() {
+    private val initialSelection = handle.navArgs<ParticipantSelectionArg>().selection
+    private val selection = MutableStateFlow(initialSelection)
+    private val selectedClasses = handle.navArgs<ParticipantSelectionArg>().classes
+    private val filteringByClass = MutableStateFlow(false)
+
+    val state: StateFlow<AddParticipantsToActivityState> =
+        combine(selection, dataSource.participants, filteringByClass) { selection, participants, filteringByClass ->
+            AddParticipantsToActivityState.Loaded(
+                selection = selection,
+                participants = participants
+                    .filter { it !in selection }
+                    .let { list -> if (filteringByClass) list.filter { it.scoutClass in selectedClasses } else list },
+                filteringByClass = filteringByClass,
+                classes = selectedClasses,
+            )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddParticipantsToActivityState.Loading)
+
+    val isUnsaved
+        get() = initialSelection != selection.value
+
+    fun setFilteringByClass(checked: Boolean) {
+        filteringByClass.value = checked
+    }
+
+    fun selectParticipant(participant: Participant) {
+        selection.update { selection -> selection + participant }
+    }
+
+    fun unselectParticipant(participant: Participant) {
+        selection.update { selection -> selection - participant }
+    }
+}

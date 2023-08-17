@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name ="yellow_variant">#FFF9C4</color>
+    <color name="color_surface">@color/white</color>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Pathfinders" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryVariant">@color/red</item>
+        <item name="colorOnPrimary">@color/color_surface</item>
+        <item name="colorSecondary">@color/yellow</item>
+        <item name="colorAccent">@color/yellow</item>
+    </style>
+</resources>
