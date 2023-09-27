@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,15 +34,15 @@ fun ConfirmationDialog(
             modifier = Modifier
                 .clip(RoundedCornerShape(4.dp))
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.background)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp),
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-            Text(text = body, color = MaterialTheme.colors.onBackground)
+            Text(text = body, color = MaterialTheme.colorScheme.onBackground)
             Spacer(modifier = Modifier.size(16.dp))
             Row(modifier = Modifier.align(Alignment.End)) {
                 OutlinedButton(onClick = onDismiss) {

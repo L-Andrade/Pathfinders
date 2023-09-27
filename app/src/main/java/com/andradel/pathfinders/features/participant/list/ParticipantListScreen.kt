@@ -13,18 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -80,7 +80,6 @@ fun ParticipantListScreen(
                 }
             )
         },
-        scaffoldState = rememberScaffoldState(),
         content = { padding ->
             val state by viewModel.state.collectAsState()
             Box(
@@ -144,7 +143,7 @@ private fun ParticipantList(
                     ) {
                         Text(
                             text = section.scoutClass.title,
-                            style = MaterialTheme.typography.h6,
+                            style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = { onCollapseSection(section.scoutClass) }) {
@@ -176,7 +175,6 @@ private fun ParticipantList(
 }
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 private fun SortingFab(
     isExpanded: Boolean,
     selected: ParticipantSort,
@@ -199,8 +197,8 @@ private fun SortingFab(
                 Surface(
                     shape = RoundedCornerShape(50),
                     onClick = { onSortClick(sort); onExpand() },
-                    color = MaterialTheme.colors.secondary,
-                    border = if (sort == selected) BorderStroke(2.dp, MaterialTheme.colors.background) else null,
+                    color = MaterialTheme.colorScheme.secondary,
+                    border = if (sort == selected) BorderStroke(2.dp, MaterialTheme.colorScheme.background) else null,
                     modifier = Modifier.padding(4.dp)
                 ) {
                     Row(modifier = Modifier.padding(8.dp), verticalAlignment = CenterVertically) {
@@ -212,7 +210,7 @@ private fun SortingFab(
                         }
                         Text(
                             text = stringResource(id = label),
-                            style = MaterialTheme.typography.button,
+                            style = MaterialTheme.typography.labelMedium,
                         )
                         Icon(painter = painterResource(id = icon), contentDescription = null)
                     }
@@ -220,7 +218,7 @@ private fun SortingFab(
             }
         }
         ExtendedFloatingActionButton(
-            text = {
+            content = {
                 Row(verticalAlignment = CenterVertically) {
                     Icon(painter = painterResource(id = R.drawable.ic_sort), contentDescription = null)
                     AnimatedVisibility(isExpanded) {
@@ -233,7 +231,7 @@ private fun SortingFab(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ParticipantCard(
     participant: ParticipantWithTotalScore,
@@ -244,7 +242,7 @@ private fun ParticipantCard(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        backgroundColor = participant.participant.scoutClass.color,
+        colors = CardDefaults.cardColors(containerColor = participant.participant.scoutClass.color),
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -258,12 +256,12 @@ private fun ParticipantCard(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = participant.participant.name,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleMedium,
                     color = participant.participant.scoutClass.color.onColor
                 )
                 Text(
                     text = stringResource(id = R.string.participant_score, participant.score),
-                    style = MaterialTheme.typography.subtitle2,
+                    style = MaterialTheme.typography.titleSmall,
                     color = participant.participant.scoutClass.color.onColor
                 )
             }

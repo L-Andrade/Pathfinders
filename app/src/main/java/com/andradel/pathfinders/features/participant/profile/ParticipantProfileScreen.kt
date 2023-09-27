@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,7 +37,6 @@ fun ParticipantProfileScreen(
     navigator: DestinationsNavigator,
     viewModel: ParticipantProfileViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
     val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
@@ -47,7 +45,6 @@ fun ParticipantProfileScreen(
                 onIconClick = { navigator.navigateUp() },
             )
         },
-        scaffoldState = scaffoldState,
         content = { padding ->
             when (val s = state) {
                 is ParticipantProfileState.Loaded -> LoadedProfile(s, modifier = Modifier.padding(padding))
@@ -72,7 +69,7 @@ private fun LoadedProfile(
         item {
             Text(
                 text = stringResource(id = R.string.activity_list),
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
         if (state.activities.isNotEmpty()) {
@@ -83,7 +80,7 @@ private fun LoadedProfile(
             item {
                 Text(
                     stringResource(id = R.string.user_no_activities, state.participant.name),
-                    style = MaterialTheme.typography.subtitle2
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
         }
@@ -101,19 +98,19 @@ private fun ParticipantActivity(
             val activityScore = remember { activity.participantPoints(participant.id) }
             Text(
                 text = activity.name,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.weight(1f)
             )
             Text(
                 text = stringResource(id = R.string.participant_score, activityScore),
-                style = MaterialTheme.typography.subtitle2
+                style = MaterialTheme.typography.titleSmall
             )
         }
         activity.criteria.forEach { criteria ->
             val criteriaScore = remember { activity.scores[participant.id]?.get(criteria.id) ?: 0 }
             Text(
                 text = stringResource(id = R.string.criteria_with_value, criteria.name, criteriaScore),
-                style = MaterialTheme.typography.subtitle2,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp)
             )
         }

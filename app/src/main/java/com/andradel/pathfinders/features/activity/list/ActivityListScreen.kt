@@ -10,16 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -87,7 +87,7 @@ fun ActivityListScreen(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ActivityCard(
     activity: Activity,
@@ -108,7 +108,7 @@ private fun ActivityCard(
             ) {
                 Text(
                     text = activity.name,
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
@@ -137,19 +137,19 @@ private fun ActivityCard(
             if (activity.classes.isNotEmpty()) {
                 Text(
                     text = activity.classes.map { it.title }.joinToString(),
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(
                     text = stringResource(id = R.string.participant_number, activity.participants.size),
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.weight(1f)
                 )
                 if (activity.date.isNotBlank()) {
                     Text(
                         text = activity.date,
-                        style = MaterialTheme.typography.caption,
+                        style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.align(Alignment.Bottom)
                     )
                 }

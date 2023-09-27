@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,19 +42,19 @@ fun DatePicker(
                 Column(
                     Modifier
                         .fillMaxWidth()
-                        .background(color = MaterialTheme.colors.primary)
+                        .background(color = MaterialTheme.colorScheme.primary)
                         .padding(16.dp)
                 ) {
                     Spacer(modifier = Modifier.size(12.dp))
                     Text(
                         text = stringResource(id = R.string.select_date),
-                        style = MaterialTheme.typography.caption,
-                        color = MaterialTheme.colors.onPrimary
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                     Text(
-                        text = selectedDate.format(DateTimeFormatter.ofPattern("MMM d, YYYY")),
-                        style = MaterialTheme.typography.h4,
-                        color = MaterialTheme.colors.onPrimary
+                        text = selectedDate.format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
                 AndroidCalendarView(selectedDate = selectedDate, onDateSelected = { selectedDate = it })

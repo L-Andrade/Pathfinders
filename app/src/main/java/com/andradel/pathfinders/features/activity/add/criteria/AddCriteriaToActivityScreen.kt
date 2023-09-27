@@ -8,14 +8,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -87,7 +87,7 @@ private fun CriteriaSelectionList(
             item {
                 Text(
                     text = stringResource(id = R.string.criteria_selection),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .padding(top = 8.dp)
@@ -105,7 +105,7 @@ private fun CriteriaSelectionList(
         item {
             Text(
                 text = stringResource(id = R.string.criteria),
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -143,7 +143,7 @@ private fun AddCriteria(
         var maxScore by remember { mutableStateOf<Int?>(3) }
         Text(
             text = stringResource(id = R.string.add_criteria),
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -194,7 +194,7 @@ private fun Criteria(
     Row(modifier = modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = criteria.name,
-            style = MaterialTheme.typography.subtitle1,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
         Checkbox(checked = selected, onCheckedChange = { onClick() })
