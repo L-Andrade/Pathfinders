@@ -1,13 +1,18 @@
 package com.andradel.pathfinders.features.participant.add
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.DropdownMenu
@@ -30,13 +35,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.SimpleColorFilter
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.compose.rememberLottieDynamicProperties
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.OptionalParticipantArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
@@ -46,6 +64,7 @@ import com.andradel.pathfinders.validation.isError
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 @Destination(navArgsDelegate = OptionalParticipantArg::class)
 fun AddEditParticipantScreen(
@@ -76,50 +95,129 @@ fun AddEditParticipantScreen(
         scaffoldState = scaffoldState,
         content = { padding ->
             val result by remember { derivedStateOf { state.participantResult } }
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                AddParticipantResult(result, navigator) {
-                    LaunchedEffect(key1 = result) {
-                        scaffoldState.snackbarHostState.showSnackbar(it)
-                    }
+            var showCandle by remember { mutableStateOf(false) }
+            AddParticipantResult(result, navigator) {
+                LaunchedEffect(key1 = result) {
+                    scaffoldState.snackbarHostState.showSnackbar(it)
                 }
-                TextField(
-                    value = state.name,
-                    onValueChange = viewModel::updateName,
-                    label = {
-                        Text(state.nameValidation.errorMessage ?: stringResource(id = R.string.name_hint))
+            }
+            Box(modifier = Modifier.padding(padding)) {
+                val alpha by animateFloatAsState(targetValue = if (showCandle) 0.2f else 1f, label = "CandleAlpha")
+                AddEditForm(
+                    state = state,
+                    isEditing = viewModel.isEditing,
+                    onInvestiture = {
+                        showCandle = true
+                        viewModel.onInvestiture()
                     },
-                    isError = state.nameValidation.isError,
-                    modifier = Modifier.fillMaxWidth()
+                    addParticipant = viewModel::addParticipant,
+                    updateEmail = viewModel::updateEmail,
+                    updateName = viewModel::updateName,
+                    updateScoutClass = viewModel::updateScoutClass,
+                    modifier = Modifier.alpha(alpha)
                 )
-                Spacer(modifier = Modifier.size(24.dp))
-                ScoutClassDropDown(state.scoutClass, ScoutClass.options, viewModel::updateScoutClass)
-                Spacer(modifier = Modifier.size(24.dp))
-                TextField(
-                    value = state.email,
-                    onValueChange = viewModel::updateEmail,
-                    label = {
-                        Text(state.emailValidation.errorMessage ?: stringResource(id = R.string.email_hint))
-                    },
-                    isError = state.emailValidation.isError,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(modifier = Modifier.size(24.dp))
-                Button(
-                    onClick = viewModel::addParticipant,
-                    enabled = state.isValid,
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    val stringId = if (viewModel.isEditing) R.string.edit_participant else R.string.add_participant
-                    Text(stringResource(id = stringId))
+                AnimatedVisibility(showCandle, modifier = Modifier.align(Alignment.Center)) {
+                    CandleAnimation(
+                        start = !transition.isRunning,
+                        color = state.scoutClass?.color,
+                        onEnd = viewModel::addParticipant,
+                    )
                 }
             }
         }
     )
+}
+
+@Composable
+private fun CandleAnimation(start: Boolean, color: Color?, onEnd: () -> Unit, modifier: Modifier = Modifier) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_candle))
+    val compState by animateLottieCompositionAsState(composition, isPlaying = start)
+    val dynamicProperties = rememberLottieDynamicProperties(
+        rememberLottieDynamicProperty(
+            property = LottieProperty.COLOR_FILTER,
+            value = SimpleColorFilter((color ?: MaterialTheme.colors.primary).toArgb()),
+            keyPath = arrayOf("surface31887", "surface31887", "meltedCandleColor", "**")
+        ),
+        rememberLottieDynamicProperty(
+            property = LottieProperty.COLOR_FILTER,
+            value = SimpleColorFilter((color ?: MaterialTheme.colors.primary).toArgb()),
+            keyPath = arrayOf("surface31887", "surface31887", "candleColor", "**")
+        ),
+    )
+    LottieAnimation(
+        composition,
+        progress = { compState },
+        contentScale = ContentScale.FillWidth,
+        dynamicProperties = dynamicProperties,
+        modifier = modifier
+    )
+    if (compState == 1f) {
+        LaunchedEffect(key1 = compState) {
+            onEnd()
+        }
+    }
+}
+
+@Composable
+private fun AddEditForm(
+    state: AddEditParticipantState,
+    isEditing: Boolean,
+    onInvestiture: () -> Unit,
+    addParticipant: () -> Unit,
+    updateEmail: (String) -> Unit,
+    updateName: (String) -> Unit,
+    updateScoutClass: (ScoutClass) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .padding(vertical = 8.dp)
+    ) {
+        TextField(
+            value = state.name,
+            onValueChange = updateName,
+            label = {
+                Text(state.nameValidation.errorMessage ?: stringResource(id = R.string.name_hint))
+            },
+            isError = state.nameValidation.isError,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        Row {
+            ScoutClassDropDown(
+                state.scoutClass,
+                ScoutClass.options,
+                updateScoutClass,
+                Modifier.weight(1f)
+            )
+            if (state.canDoInvestiture) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = onInvestiture) {
+                    Text(text = stringResource(id = R.string.participant_investiture))
+                }
+            }
+        }
+        Spacer(modifier = Modifier.size(24.dp))
+        TextField(
+            value = state.email,
+            onValueChange = updateEmail,
+            label = {
+                Text(state.emailValidation.errorMessage ?: stringResource(id = R.string.email_hint))
+            },
+            isError = state.emailValidation.isError,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        Button(
+            onClick = addParticipant,
+            enabled = state.isValid,
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            val stringId = if (isEditing) R.string.edit_participant else R.string.add_participant
+            Text(stringResource(id = stringId))
+        }
+    }
 }
 
 @Composable

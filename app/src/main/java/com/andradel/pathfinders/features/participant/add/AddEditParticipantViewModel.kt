@@ -14,13 +14,13 @@ import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.ValidationResult
 import com.andradel.pathfinders.validation.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AddEditParticipantViewModel @Inject constructor(
@@ -48,7 +48,8 @@ class AddEditParticipantViewModel @Inject constructor(
                 emailValidation = emailResult,
                 scoutClass = scoutClass,
                 isValid = nameResult.isValid && emailResult.isValid && scoutClass != null,
-                participantResult = addParticipantResult
+                participantResult = addParticipantResult,
+                canDoInvestiture = isEditing && scoutClass != ScoutClass.Embaixador && scoutClass == participant?.scoutClass,
             )
         }.stateIn(
             viewModelScope,
@@ -60,6 +61,8 @@ class AddEditParticipantViewModel @Inject constructor(
                 emailValidation = ValidationResult.Valid,
                 isValid = false,
                 scoutClass = null,
+                participantResult = null,
+                canDoInvestiture = false,
             )
         )
 
@@ -73,6 +76,11 @@ class AddEditParticipantViewModel @Inject constructor(
 
     fun updateScoutClass(scoutClass: ScoutClass) {
         this.scoutClass.value = scoutClass
+    }
+
+    fun onInvestiture() {
+        val classes = ScoutClass.entries
+        this.scoutClass.value = classes[((scoutClass.value?.ordinal ?: 0) + 1).coerceAtMost(classes.lastIndex)]
     }
 
     fun addParticipant() {

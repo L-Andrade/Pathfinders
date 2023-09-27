@@ -10,5 +10,6 @@ data class AddEditParticipantState(
     val emailValidation: ValidationResult,
     val scoutClass: ScoutClass?,
     val isValid: Boolean,
-    val participantResult: ParticipantResult? = null
+    val participantResult: ParticipantResult?,
+    val canDoInvestiture: Boolean,
 )

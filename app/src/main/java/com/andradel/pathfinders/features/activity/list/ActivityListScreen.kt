@@ -15,7 +15,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.LocalMinimumTouchTargetEnforcement
+import androidx.compose.material.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -111,7 +111,7 @@ private fun ActivityCard(
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.weight(1f)
                 )
-                CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                     if (activity.criteria.isNotEmpty() && activity.participants.isNotEmpty()) {
                         IconButton(onClick = onEvaluateClick) {
                             Icon(
