@@ -1,6 +1,7 @@
 package com.andradel.pathfinders.features.activity.evaluate
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,19 +9,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Slider
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,17 +43,12 @@ import com.andradel.pathfinders.model.activity.CriteriaScore
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Destination(navArgsDelegate = ActivityArg::class)
 fun EvaluateActivityScreen(
@@ -73,7 +74,6 @@ fun EvaluateActivityScreen(
                         navigator.navigateUp()
                     }
                 },
-                elevation = 0.dp,
                 endContent = {
                     TextButton(onClick = {
                         viewModel.updateActivityScores()
@@ -93,14 +93,11 @@ fun EvaluateActivityScreen(
                 navigator::navigateUp
             )
         }
-        val pagerState = rememberPagerState()
+        val pagerState = rememberPagerState { viewModel.activity.participants.size }
         Column(modifier = Modifier.padding(padding)) {
             val activity = remember { viewModel.activity }
             ParticipantTabs(pagerState, activity.participants)
-            HorizontalPager(
-                count = viewModel.activity.participants.size,
-                state = pagerState,
-            ) { page ->
+            HorizontalPager(state = pagerState) { page ->
                 val state by viewModel.state.collectAsState()
                 val participant = remember(activity, page) { activity.participants[page] }
                 val participantCriteriaScores by remember(state) { derivedStateOf { state[participant.id].orEmpty() } }
@@ -114,8 +111,8 @@ fun EvaluateActivityScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-@OptIn(ExperimentalPagerApi::class)
 private fun ParticipantTabs(
     pagerState: PagerState,
     participants: List<Participant>,
@@ -125,10 +122,9 @@ private fun ParticipantTabs(
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
-            TabRowDefaults.Indicator(Modifier.pagerTabIndicatorOffset(pagerState, tabPositions))
+            TabRowDefaults.Indicator(modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]))
         },
         edgePadding = 8.dp,
-        backgroundColor = MaterialTheme.colors.background,
         modifier = modifier
             .fillMaxWidth()
             .shadow(elevation = 4.dp)
@@ -155,16 +151,16 @@ private fun ParticipantTab(
             Box(modifier = Modifier.padding(all = 16.dp)) {
                 Text(
                     text = stringResource(id = R.string.total, scores.values.sum()),
-                    style = MaterialTheme.typography.h6,
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
         }
         items(criteria) { c ->
-            var value by remember { mutableStateOf(scores[c.id]?.toFloat() ?: 0f) }
+            var value by remember { mutableFloatStateOf(scores[c.id]?.toFloat() ?: 0f) }
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
                 Text(
                     text = stringResource(id = R.string.criteria_with_value, c.name, scores[c.id] ?: 0),
-                    style = MaterialTheme.typography.subtitle2
+                    style = MaterialTheme.typography.titleSmall
                 )
                 Slider(
                     value = value,

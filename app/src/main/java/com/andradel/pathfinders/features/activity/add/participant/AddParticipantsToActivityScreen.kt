@@ -10,17 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -189,7 +189,7 @@ private fun FilterByClassSwitch(
                     id = R.string.filtering_by_class,
                     classes.map { it.title }.joinToString()
                 ),
-                style = MaterialTheme.typography.subtitle2,
+                style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.weight(1f)
             )
             Switch(checked = filteringByClass, onCheckedChange = onFilteringByClass)
@@ -233,7 +233,7 @@ private fun Header(
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(id = header),
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.weight(1f)
         )
         endContent()

@@ -10,22 +10,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -75,7 +76,7 @@ fun AddEditActivityScreen(
     criteriaRecipient.onNavResult { result ->
         if (result is NavResult.Value) viewModel.setCriteriaSelection(result.value.selection.toList())
     }
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
     BackHandler {
@@ -86,6 +87,9 @@ fun AddEditActivityScreen(
         }
     }
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBarTitleWithIcon(
                 title = if (viewModel.isEditing) state.name else stringResource(id = R.string.add_activity),
@@ -97,7 +101,7 @@ fun AddEditActivityScreen(
                     }
                 },
                 endContent = {
-                    IconButton(onClick = viewModel::addActivity) {
+                    IconButton(enabled = state.isValid, onClick = viewModel::addActivity) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_save),
                             contentDescription = stringResource(id = R.string.save)
@@ -110,11 +114,10 @@ fun AddEditActivityScreen(
                 }
             )
         },
-        scaffoldState = scaffoldState
     ) { padding ->
         LaunchedEffect(key1 = state.addActivityResult) {
             when (state.addActivityResult) {
-                AddActivityResult.Failure -> scaffoldState.snackbarHostState.showSnackbar("Error")
+                AddActivityResult.Failure -> snackbarHostState.showSnackbar("Error")
                 AddActivityResult.Success -> navigator.navigateUp()
                 null -> Unit
             }
@@ -143,8 +146,9 @@ fun AddEditActivityScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = stringResource(id = if (isSelected) R.string.unselect_all else R.string.select_all),
-                            style = MaterialTheme.typography.subtitle2
+                            style = MaterialTheme.typography.titleSmall
                         )
+                        Spacer(modifier = Modifier.width(4.dp))
                         Switch(checked = isSelected, onCheckedChange = viewModel::setAllSelected)
                     }
                 }
@@ -274,7 +278,7 @@ private fun DateField(
     modifier: Modifier = Modifier,
 ) {
     var showingDatePicker by remember { mutableStateOf(false) }
-    val backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity)
+    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
     Box(
         modifier = modifier
             .clickable { showingDatePicker = true }
@@ -340,7 +344,7 @@ private fun Header(
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(id = header),
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.weight(1f)
         )
         endContent()

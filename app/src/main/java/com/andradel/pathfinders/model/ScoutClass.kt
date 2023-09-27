@@ -1,7 +1,7 @@
 package com.andradel.pathfinders.model
 
 import androidx.annotation.Keep
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -28,7 +28,7 @@ val ScoutClass.color: Color
         ScoutClass.Explorador -> Color.Yellow
         ScoutClass.Companheiro -> Color.Blue
         ScoutClass.Embaixador -> Color(0xFFb83404)
-        ScoutClass.Invalid -> MaterialTheme.colors.primary
+        ScoutClass.Invalid -> MaterialTheme.colorScheme.primary
     }
 
 val ScoutClass.title: String

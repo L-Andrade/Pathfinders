@@ -14,17 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -71,15 +71,16 @@ fun AddEditParticipantScreen(
     navigator: DestinationsNavigator,
     viewModel: AddEditParticipantViewModel = hiltViewModel()
 ) {
-    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBarTitleWithIcon(
                 title = if (viewModel.isEditing) state.name else stringResource(id = R.string.add_participant),
                 onIconClick = { navigator.navigateUp() },
                 endContent = {
-                    IconButton(onClick = viewModel::addParticipant) {
+                    IconButton(enabled = state.isValid, onClick = viewModel::addParticipant) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_save),
                             contentDescription = stringResource(id = R.string.save)
@@ -92,13 +93,12 @@ fun AddEditParticipantScreen(
                 }
             )
         },
-        scaffoldState = scaffoldState,
         content = { padding ->
             val result by remember { derivedStateOf { state.participantResult } }
             var showCandle by remember { mutableStateOf(false) }
             AddParticipantResult(result, navigator) {
                 LaunchedEffect(key1 = result) {
-                    scaffoldState.snackbarHostState.showSnackbar(it)
+                    snackbarHostState.showSnackbar(it)
                 }
             }
             Box(modifier = Modifier.padding(padding)) {
@@ -135,12 +135,12 @@ private fun CandleAnimation(start: Boolean, color: Color?, onEnd: () -> Unit, mo
     val dynamicProperties = rememberLottieDynamicProperties(
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
-            value = SimpleColorFilter((color ?: MaterialTheme.colors.primary).toArgb()),
+            value = SimpleColorFilter((color ?: MaterialTheme.colorScheme.primary).toArgb()),
             keyPath = arrayOf("surface31887", "surface31887", "meltedCandleColor", "**")
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
-            value = SimpleColorFilter((color ?: MaterialTheme.colors.primary).toArgb()),
+            value = SimpleColorFilter((color ?: MaterialTheme.colorScheme.primary).toArgb()),
             keyPath = arrayOf("surface31887", "surface31887", "candleColor", "**")
         ),
     )
@@ -228,7 +228,7 @@ private fun ScoutClassDropDown(
     modifier: Modifier = Modifier
 ) {
     var dropdownState by remember { mutableStateOf(false) }
-    val backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity)
+    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
     Box(
         modifier = modifier
             .clickable { dropdownState = !dropdownState }
@@ -239,23 +239,24 @@ private fun ScoutClassDropDown(
     ) {
         Text(
             text = currentClass?.title ?: stringResource(id = R.string.choose_class),
-            color = MaterialTheme.colors.onBackground.copy(alpha = if (currentClass == null) 0.5f else 1f)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = if (currentClass == null) 0.5f else 1f)
         )
         DropdownMenu(
             expanded = dropdownState,
             onDismissRequest = { dropdownState = !dropdownState },
-            modifier = Modifier.background(MaterialTheme.colors.surface.copy(0.5f))
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface.copy(0.5f))
         ) {
             options.forEach { scoutClass ->
                 DropdownMenuItem(
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colors.surface.copy(alpha = if (scoutClass == currentClass) .5f else 0f)
+                            MaterialTheme.colorScheme.surface.copy(alpha = if (scoutClass == currentClass) .5f else 0f)
                         ),
                     onClick = {
                         onClassChosen(scoutClass)
                         dropdownState = !dropdownState
-                    }, content = {
+                    },
+                    text = {
                         Text(text = scoutClass.title)
                     }
                 )
