@@ -46,10 +46,6 @@ android {
     flavorDimensions += "version"
     productFlavors {
         create("pathfinders") {
-            // Assigns this product flavor to the "version" flavor dimension.
-            // If you are using only one dimension, this property is optional,
-            // and the plugin automatically assigns all the module's flavors to
-            // that dimension.
             dimension = "version"
             versionNameSuffix = "-pathfinders"
         }
@@ -70,7 +66,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.3'
+        kotlinCompilerExtensionVersion '1.5.7'
     }
     packagingOptions {
         resources {
@@ -80,40 +76,43 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
-    implementation 'androidx.activity:activity-compose:1.8.2'
-    implementation "androidx.compose.ui:ui:$compose_ui_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-    implementation 'androidx.compose.material3:material3:1.1.2'
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation "com.airbnb.android:lottie-compose:6.1.0"
-    testImplementation 'junit:junit:4.13.2'
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.activity.compose
+    implementation libs.androidx.material3
+
+    // Compose
+    implementation(platform(libs.compose.bom))
+    androidTestImplementation(platform(libs.compose.bom))
+    implementation libs.compose.ui
+    implementation libs.compose.ui.preview
+    debugImplementation libs.compose.ui.tooling
+    debugImplementation libs.compose.ui.manifest
+
+    implementation libs.lottie.compose
 
     // Accompanist tabs
-    def accompanist_version = "0.32.0"
-    implementation "com.google.accompanist:accompanist-pager:$accompanist_version"
-    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_version"
+    implementation libs.accompanist.pager
+    implementation libs.accompanist.pager.indicators
 
-    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
-    implementation platform('com.google.firebase:firebase-bom:31.2.0')
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation libs.firebase.ui.auth
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.analytics
+    implementation libs.firebase.database
+    implementation libs.firebase.crashlytics
 
     // Nav
-    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.9.53'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.9.53'
+    implementation libs.compose.destinations.animations
+    ksp libs.compose.destinations.ksp
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:2.49"
-    ksp "com.google.dagger:hilt-compiler:2.49"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.1.0'
+    implementation libs.hilt.android
+    ksp libs.hilt.compiler
+    implementation libs.androidx.lifecycle.viewmodel.compose
+    implementation libs.androidx.hilt.navigation.compose
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
-    debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.compose.ui.test.junit
 }
