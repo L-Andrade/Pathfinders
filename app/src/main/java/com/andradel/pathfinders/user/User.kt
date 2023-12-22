@@ -8,5 +8,5 @@ sealed interface UserState {
 data class User(
     val name: String,
     val email: String?,
-    val isAdmin: Boolean,
+    val role: UserRole,
 ) : UserState

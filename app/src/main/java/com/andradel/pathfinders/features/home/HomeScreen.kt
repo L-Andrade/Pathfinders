@@ -35,6 +35,8 @@ import com.andradel.pathfinders.features.destinations.ActivityListScreenDestinat
 import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.user.UserRole
+import com.andradel.pathfinders.user.isAdmin
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -147,8 +149,10 @@ private fun LoggedInScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(horizontalAlignment = CenterHorizontally, modifier = modifier) {
-        if (state.user.isAdmin) {
+        if (state.user.role is UserRole.Admin) {
             ListButton(onParticipantsClick, R.string.participant_list, modifier = Modifier.fillMaxWidth())
+        }
+        if (state.user.role.isAdmin) {
             ListButton(onActivitiesClick, R.string.activity_list, modifier = Modifier.fillMaxWidth())
         }
         if (state.participant != null) {
