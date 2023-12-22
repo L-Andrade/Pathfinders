@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -64,6 +65,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(CenterHorizontally)
                         .padding(vertical = 20.dp)
+                        .size(150.dp)
                 )
                 when (val s = state) {
                     HomeState.Guest -> GuestScreen(
@@ -93,10 +95,10 @@ private fun Loading() {
 @Composable
 private fun PathfindersImage(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.ic_desbravadores),
+        painter = painterResource(id = R.drawable.ic_logo),
         modifier = modifier,
         contentDescription = null,
-        contentScale = ContentScale.None,
+        contentScale = ContentScale.Fit,
         alignment = Alignment.TopCenter
     )
 }
