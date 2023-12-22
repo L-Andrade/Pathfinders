@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddEditParticipantScreenDestination
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.Participant
@@ -178,7 +178,7 @@ private fun ParticipantSelectionList(
 
 @Composable
 private fun FilterByClassSwitch(
-    classes: List<ScoutClass>,
+    classes: List<ParticipantClass>,
     filteringByClass: Boolean,
     onFilteringByClass: (Boolean) -> Unit
 ) {
@@ -211,7 +211,7 @@ private fun Participant(
         )
         Checkbox(
             checked = selected, onCheckedChange = { onClick() },
-            colors = CheckboxDefaults.colors(checkedColor = participant.scoutClass.color)
+            colors = CheckboxDefaults.colors(checkedColor = participant.participantClass.color)
         )
     }
 }

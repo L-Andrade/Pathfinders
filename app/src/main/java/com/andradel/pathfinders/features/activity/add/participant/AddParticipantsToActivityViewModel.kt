@@ -8,13 +8,13 @@ import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSour
 import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
 import com.andradel.pathfinders.model.participant.Participant
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 @HiltViewModel
 class AddParticipantsToActivityViewModel @Inject constructor(
@@ -32,7 +32,7 @@ class AddParticipantsToActivityViewModel @Inject constructor(
                 selection = selection,
                 participants = participants
                     .filter { it !in selection }
-                    .let { list -> if (filteringByClass) list.filter { it.scoutClass in selectedClasses } else list },
+                    .let { list -> if (filteringByClass) list.filter { it.participantClass in selectedClasses } else list },
                 filteringByClass = filteringByClass,
                 classes = selectedClasses,
             )

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.OptionalParticipantArg
 import com.andradel.pathfinders.validation.EmailValidation
@@ -33,7 +33,7 @@ class AddEditParticipantViewModel @Inject constructor(
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
     private val participantResult = MutableStateFlow<ParticipantResult?>(null)
-    private val scoutClass = MutableStateFlow(participant?.scoutClass)
+    private val scoutClass = MutableStateFlow(participant?.participantClass)
 
     val isEditing = participant != null
 
@@ -46,10 +46,10 @@ class AddEditParticipantViewModel @Inject constructor(
                 email = email,
                 nameValidation = nameResult,
                 emailValidation = emailResult,
-                scoutClass = scoutClass,
+                participantClass = scoutClass,
                 isValid = nameResult.isValid && emailResult.isValid && scoutClass != null,
                 participantResult = addParticipantResult,
-                canDoInvestiture = isEditing && scoutClass != ScoutClass.Embaixador && scoutClass == participant?.scoutClass,
+                canDoInvestiture = isEditing && scoutClass != ParticipantClass.last && scoutClass == participant?.participantClass,
             )
         }.stateIn(
             viewModelScope,
@@ -60,7 +60,7 @@ class AddEditParticipantViewModel @Inject constructor(
                 nameValidation = nameValidation.validate(""),
                 emailValidation = ValidationResult.Valid,
                 isValid = false,
-                scoutClass = null,
+                participantClass = null,
                 participantResult = null,
                 canDoInvestiture = false,
             )
@@ -74,18 +74,18 @@ class AddEditParticipantViewModel @Inject constructor(
         this.email.value = email
     }
 
-    fun updateScoutClass(scoutClass: ScoutClass) {
-        this.scoutClass.value = scoutClass
+    fun updateScoutClass(participantClass: ParticipantClass) {
+        this.scoutClass.value = participantClass
     }
 
     fun onInvestiture() {
-        val classes = ScoutClass.entries
+        val classes = ParticipantClass.entries
         this.scoutClass.value = classes[((scoutClass.value?.ordinal ?: 0) + 1).coerceAtMost(classes.lastIndex)]
     }
 
     fun addParticipant() {
         viewModelScope.launch {
-            val scoutClass = state.value.scoutClass ?: ScoutClass.Invalid
+            val participantClass = state.value.participantClass ?: ParticipantClass.Invalid
             val email = state.value.email
 
             val emailAlreadyExists = dataSource.isParticipantEmailRegistered(email, participant?.id)
@@ -95,7 +95,7 @@ class AddEditParticipantViewModel @Inject constructor(
                 val p = NewParticipant(
                     name = state.value.name,
                     email = email.takeIf { it.isNotBlank() },
-                    scoutClass = scoutClass
+                    participantClass = participantClass
                 )
                 dataSource.addOrUpdateParticipant(p, participant?.id)
                 participantResult.value = ParticipantResult.Success

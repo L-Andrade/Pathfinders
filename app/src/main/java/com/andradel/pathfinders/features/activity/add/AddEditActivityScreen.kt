@@ -45,7 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddCriteriaToActivityScreenDestination
 import com.andradel.pathfinders.features.destinations.AddParticipantsToActivityScreenDestination
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.CriteriaSelectionArg
 import com.andradel.pathfinders.model.activity.OptionalActivityArg
 import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
@@ -142,7 +142,7 @@ fun AddEditActivityScreen(
             item {
                 Spacer(modifier = Modifier.size(16.dp))
                 Header(header = R.string.classes, modifier = Modifier.padding(horizontal = 16.dp)) {
-                    val isSelected by remember { derivedStateOf { state.classes.size == ScoutClass.options.size } }
+                    val isSelected by remember { derivedStateOf { state.classes.size == ParticipantClass.options.size } }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = stringResource(id = if (isSelected) R.string.unselect_all else R.string.select_all),
@@ -153,11 +153,11 @@ fun AddEditActivityScreen(
                     }
                 }
             }
-            items(ScoutClass.options, key = { it.name }) { scoutClass ->
+            items(ParticipantClass.options, key = { it.name }) { scoutClass ->
                 val isSelected by remember { derivedStateOf { scoutClass in state.classes } }
                 ScoutClassCheckbox(
                     selected = isSelected,
-                    scoutClass = scoutClass,
+                    participantClass = scoutClass,
                     onCheckedChange = { viewModel.setClassSelected(scoutClass, it) },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
@@ -257,7 +257,7 @@ private fun DeleteActivityIcon(
 @Composable
 private fun ScoutClassCheckbox(
     selected: Boolean,
-    scoutClass: ScoutClass,
+    participantClass: ParticipantClass,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -265,9 +265,9 @@ private fun ScoutClassCheckbox(
         Checkbox(
             checked = selected,
             onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(checkedColor = scoutClass.color)
+            colors = CheckboxDefaults.colors(checkedColor = participantClass.color)
         )
-        Text(text = scoutClass.title)
+        Text(text = participantClass.title)
     }
 }
 

@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.features.activity.add.participant
 
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.Participant
 
 sealed interface AddParticipantsToActivityState {
@@ -9,6 +9,6 @@ sealed interface AddParticipantsToActivityState {
         val selection: List<Participant>,
         val participants: List<Participant>,
         val filteringByClass: Boolean,
-        val classes: List<ScoutClass>,
+        val classes: List<ParticipantClass>,
     ) : AddParticipantsToActivityState
 }

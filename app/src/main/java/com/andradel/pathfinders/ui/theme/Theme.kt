@@ -20,12 +20,14 @@ private val darkColorPalette = darkColorScheme(
     primary = red,
     primaryContainer = darkYellow,
     secondary = yellow,
+    onSecondary = Color.Black,
 )
 
 private val lightColorPalette = lightColorScheme(
     primary = red,
     primaryContainer = lightYellow,
     secondary = yellow,
+    onSecondary = Color.Black
 )
 
 @Composable

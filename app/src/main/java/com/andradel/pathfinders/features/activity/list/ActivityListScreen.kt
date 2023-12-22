@@ -96,7 +96,7 @@ private fun ActivityCard(
     onEvaluateClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier, shape = RoundedCornerShape(8.dp)) {
+    Card(modifier = modifier, shape = RoundedCornerShape(8.dp), onClick = onEditClick) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -119,12 +119,6 @@ private fun ActivityCard(
                                 contentDescription = stringResource(id = R.string.evaluate_activity)
                             )
                         }
-                    }
-                    IconButton(onClick = onEditClick) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_edit),
-                            contentDescription = stringResource(id = R.string.edit_activity)
-                        )
                     }
                     IconButton(onClick = { removeDialog = true }) {
                         Icon(

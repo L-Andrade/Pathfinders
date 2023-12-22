@@ -53,7 +53,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.OptionalParticipantArg
 import com.andradel.pathfinders.model.title
@@ -119,7 +119,7 @@ fun AddEditParticipantScreen(
                 AnimatedVisibility(showCandle, modifier = Modifier.align(Alignment.Center)) {
                     CandleAnimation(
                         start = !transition.isRunning,
-                        color = state.scoutClass?.color,
+                        color = state.participantClass?.color,
                         onEnd = viewModel::addParticipant,
                     )
                 }
@@ -166,7 +166,7 @@ private fun AddEditForm(
     addParticipant: () -> Unit,
     updateEmail: (String) -> Unit,
     updateName: (String) -> Unit,
-    updateScoutClass: (ScoutClass) -> Unit,
+    updateScoutClass: (ParticipantClass) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -186,8 +186,8 @@ private fun AddEditForm(
         Spacer(modifier = Modifier.size(24.dp))
         Row {
             ScoutClassDropDown(
-                state.scoutClass,
-                ScoutClass.options,
+                state.participantClass,
+                ParticipantClass.options,
                 updateScoutClass,
                 Modifier.weight(1f)
             )
@@ -222,9 +222,9 @@ private fun AddEditForm(
 
 @Composable
 private fun ScoutClassDropDown(
-    currentClass: ScoutClass?,
-    options: List<ScoutClass>,
-    onClassChosen: (ScoutClass) -> Unit,
+    currentClass: ParticipantClass?,
+    options: List<ParticipantClass>,
+    onClassChosen: (ParticipantClass) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var dropdownState by remember { mutableStateOf(false) }

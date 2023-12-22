@@ -29,11 +29,6 @@
     <string name="no_participants_selected">No participants selected yet</string>
     <string name="no_criteria_selected">No criteria selected</string>
     <string name="choose_class">Choose a class</string>
-    <string name="ticao">Tição</string>
-    <string name="rebento">Rebento</string>
-    <string name="explorador">Explorador</string>
-    <string name="companheiro">Companheiro</string>
-    <string name="embaixador">Embaixador</string>
     <string name="invalid_class">Invalid class</string>
     <string name="classes">Classes</string>
     <string name="participant_number">%1$s participants</string>

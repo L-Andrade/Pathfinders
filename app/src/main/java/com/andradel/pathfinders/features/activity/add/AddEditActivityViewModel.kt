@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.extensions.combine
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.NewActivity
@@ -15,12 +15,12 @@ import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.LocalDate
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import javax.inject.Inject
 
 @HiltViewModel
 class AddEditActivityViewModel @Inject constructor(
@@ -95,12 +95,12 @@ class AddEditActivityViewModel @Inject constructor(
         this.criteria.value = criteria
     }
 
-    fun setClassSelected(scoutClass: ScoutClass, selected: Boolean) {
-        classes.value = if (selected) classes.value + scoutClass else classes.value - scoutClass
+    fun setClassSelected(participantClass: ParticipantClass, selected: Boolean) {
+        classes.value = if (selected) classes.value + participantClass else classes.value - participantClass
     }
 
     fun setAllSelected(selected: Boolean) {
-        classes.value = if (selected) ScoutClass.options else emptyList()
+        classes.value = if (selected) ParticipantClass.options else emptyList()
     }
 
     fun updateName(name: String) {

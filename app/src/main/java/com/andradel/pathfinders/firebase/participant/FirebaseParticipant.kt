@@ -1,11 +1,11 @@
 package com.andradel.pathfinders.firebase.participant
 
 import androidx.annotation.Keep
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 
 @Keep
 data class FirebaseParticipant(
     val name: String = "",
     val email: String? = null,
-    val scoutClass: ScoutClass = ScoutClass.Invalid
+    val scoutClass: ParticipantClass = ParticipantClass.Invalid
 )

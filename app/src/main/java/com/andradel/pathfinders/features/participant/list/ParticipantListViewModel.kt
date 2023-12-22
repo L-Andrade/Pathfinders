@@ -4,19 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.participantPoints
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class ParticipantListViewModel @Inject constructor(
@@ -24,7 +24,7 @@ class ParticipantListViewModel @Inject constructor(
     activityDataSource: ActivityFirebaseDataSource,
     userSession: UserSession,
 ) : ViewModel() {
-    private val collapsed = MutableStateFlow<Map<ScoutClass, Boolean>>(emptyMap())
+    private val collapsed = MutableStateFlow<Map<ParticipantClass, Boolean>>(emptyMap())
     private val sorting = MutableStateFlow(ParticipantSort.NameAsc)
 
     val state: StateFlow<ParticipantListState> =
@@ -38,7 +38,7 @@ class ParticipantListViewModel @Inject constructor(
                 ParticipantWithTotalScore(p, activities.sumOf { it.participantPoints(participantId = p.id) })
             }.sort(sorting)
             val groupedParticipants = participantsWithTotalScore
-                .groupBy { p -> p.participant.scoutClass }
+                .groupBy { p -> p.participant.participantClass }
                 .toSortedMap()
                 .map { (scoutClass, participants) ->
                     ParticipantSection(scoutClass, participants, collapsed[scoutClass] ?: false)
@@ -55,8 +55,8 @@ class ParticipantListViewModel @Inject constructor(
         }
     }
 
-    fun collapseSection(scoutClass: ScoutClass) {
-        collapsed.value = collapsed.value.toMutableMap().apply { this[scoutClass] = !(this[scoutClass] ?: false) }
+    fun collapseSection(participantClass: ParticipantClass) {
+        collapsed.value = collapsed.value.toMutableMap().apply { this[participantClass] = !(this[participantClass] ?: false) }
     }
 
     fun sortBy(sorting: ParticipantSort) {

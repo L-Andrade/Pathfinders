@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,7 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddEditParticipantScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.model.title
@@ -120,10 +121,10 @@ private fun ParticipantList(
     onParticipantClick: (Participant) -> Unit,
     deleteParticipant: (Participant) -> Unit,
     onEditParticipant: (Participant) -> Unit,
-    onCollapseSection: (ScoutClass) -> Unit,
+    onCollapseSection: (ParticipantClass) -> Unit,
     onSortClick: (ParticipantSort) -> Unit,
 ) {
-    Box {
+    Box(modifier = Modifier.fillMaxSize()) {
         var isExpanded by remember { mutableStateOf(false) }
         val scrollConnection = remember {
             object : NestedScrollConnection {
@@ -135,18 +136,18 @@ private fun ParticipantList(
         }
         LazyColumn(modifier = Modifier.nestedScroll(scrollConnection), contentPadding = PaddingValues(bottom = 64.dp)) {
             section.forEach { section ->
-                item(key = section.scoutClass.name) {
+                item(key = section.participantClass.name) {
                     Row(
                         verticalAlignment = CenterVertically, modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .padding(top = 12.dp, bottom = 4.dp)
                     ) {
                         Text(
-                            text = section.scoutClass.title,
+                            text = section.participantClass.title,
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.weight(1f)
                         )
-                        IconButton(onClick = { onCollapseSection(section.scoutClass) }) {
+                        IconButton(onClick = { onCollapseSection(section.participantClass) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_chevron_down),
                                 contentDescription = null,
@@ -170,7 +171,7 @@ private fun ParticipantList(
                 }
             }
         }
-        SortingFab(isExpanded, selectedSorting,{ isExpanded = !isExpanded }, onSortClick, Modifier.align(BottomEnd))
+        SortingFab(isExpanded, selectedSorting, { isExpanded = !isExpanded }, onSortClick, Modifier.align(BottomEnd))
     }
 }
 
@@ -186,33 +187,43 @@ private fun SortingFab(
         modifier = modifier.padding(16.dp),
         horizontalAlignment = Alignment.End
     ) {
-        ParticipantSort.values().forEach { sort ->
-            var delayedExpanded by remember { mutableStateOf(isExpanded) }
-            LaunchedEffect(key1 = isExpanded) {
-                val first = if (isExpanded) (ParticipantSort.values().size - sort.ordinal) else sort.ordinal
-                delay(50L * first)
-                delayedExpanded = isExpanded
-            }
-            AnimatedVisibility(visible = delayedExpanded) {
-                Surface(
-                    shape = RoundedCornerShape(50),
-                    onClick = { onSortClick(sort); onExpand() },
-                    color = MaterialTheme.colorScheme.secondary,
-                    border = if (sort == selected) BorderStroke(2.dp, MaterialTheme.colorScheme.background) else null,
-                    modifier = Modifier.padding(4.dp)
-                ) {
-                    Row(modifier = Modifier.padding(8.dp), verticalAlignment = CenterVertically) {
-                        val (label, icon) = when (sort) {
-                            ParticipantSort.PointsAsc -> R.string.participant_sort_points to R.drawable.ic_arrow_up
-                            ParticipantSort.PointsDesc -> R.string.participant_sort_points to R.drawable.ic_arrow_down
-                            ParticipantSort.NameAsc -> R.string.participant_sort_name to R.drawable.ic_arrow_up
-                            ParticipantSort.NameDesc -> R.string.participant_sort_name to R.drawable.ic_arrow_down
+        ParticipantSort.entries.forEach { sort ->
+            key(sort.ordinal) {
+                var delayedExpanded by remember { mutableStateOf(isExpanded) }
+                LaunchedEffect(key1 = isExpanded) {
+                    val first = if (isExpanded) (ParticipantSort.entries.size - sort.ordinal) else sort.ordinal
+                    delay(50L * first)
+                    delayedExpanded = isExpanded
+                }
+                AnimatedVisibility(visible = delayedExpanded) {
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        onClick = { onSortClick(sort); onExpand() },
+                        color = MaterialTheme.colorScheme.secondary,
+                        border = if (sort == selected) BorderStroke(
+                            2.dp,
+                            MaterialTheme.colorScheme.background
+                        ) else null,
+                        modifier = Modifier.padding(4.dp)
+                    ) {
+                        Row(modifier = Modifier.padding(8.dp), verticalAlignment = CenterVertically) {
+                            val (label, icon) = when (sort) {
+                                ParticipantSort.PointsAsc -> R.string.participant_sort_points to R.drawable.ic_arrow_up
+                                ParticipantSort.PointsDesc -> R.string.participant_sort_points to R.drawable.ic_arrow_down
+                                ParticipantSort.NameAsc -> R.string.participant_sort_name to R.drawable.ic_arrow_up
+                                ParticipantSort.NameDesc -> R.string.participant_sort_name to R.drawable.ic_arrow_down
+                            }
+                            Text(
+                                text = stringResource(id = label),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.onSecondary
+                            )
+                            Icon(
+                                painter = painterResource(id = icon),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSecondary
+                            )
                         }
-                        Text(
-                            text = stringResource(id = label),
-                            style = MaterialTheme.typography.labelMedium,
-                        )
-                        Icon(painter = painterResource(id = icon), contentDescription = null)
                     }
                 }
             }
@@ -220,9 +231,16 @@ private fun SortingFab(
         ExtendedFloatingActionButton(
             content = {
                 Row(verticalAlignment = CenterVertically) {
-                    Icon(painter = painterResource(id = R.drawable.ic_sort), contentDescription = null)
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_sort),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
                     AnimatedVisibility(isExpanded) {
-                        Text(text = stringResource(id = R.string.participant_sort))
+                        Text(
+                            text = stringResource(id = R.string.participant_sort),
+                            color = MaterialTheme.colorScheme.onSecondary
+                        )
                     }
                 }
             },
@@ -242,7 +260,7 @@ private fun ParticipantCard(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = participant.participant.scoutClass.color),
+        colors = CardDefaults.cardColors(containerColor = participant.participant.participantClass.color),
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -257,12 +275,12 @@ private fun ParticipantCard(
                 Text(
                     text = participant.participant.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = participant.participant.scoutClass.color.onColor
+                    color = participant.participant.participantClass.color.onColor
                 )
                 Text(
                     text = stringResource(id = R.string.participant_score, participant.score),
                     style = MaterialTheme.typography.titleSmall,
-                    color = participant.participant.scoutClass.color.onColor
+                    color = participant.participant.participantClass.color.onColor
                 )
             }
             if (showButtons) {
@@ -271,14 +289,14 @@ private fun ParticipantCard(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_edit),
                         contentDescription = stringResource(id = R.string.edit),
-                        tint = participant.participant.scoutClass.color.onColor
+                        tint = participant.participant.participantClass.color.onColor
                     )
                 }
                 IconButton(onClick = { deleteDialog = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete),
                         contentDescription = stringResource(id = R.string.delete),
-                        tint = participant.participant.scoutClass.color.onColor
+                        tint = participant.participant.participantClass.color.onColor
                     )
                 }
                 if (deleteDialog) {

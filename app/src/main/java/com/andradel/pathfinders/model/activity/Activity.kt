@@ -1,7 +1,7 @@
 package com.andradel.pathfinders.model.activity
 
 import android.os.Parcelable
-import com.andradel.pathfinders.model.ScoutClass
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.Participant
 import kotlinx.parcelize.Parcelize
 
@@ -11,7 +11,7 @@ data class Activity(
     val name: String,
     val date: String,
     val participants: List<Participant>,
-    val classes: List<ScoutClass>,
+    val classes: List<ParticipantClass>,
     val criteria: List<ActivityCriteria>,
     val scores: ParticipantScores,
 ) : Parcelable

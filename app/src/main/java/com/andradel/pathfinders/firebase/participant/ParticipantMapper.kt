@@ -10,6 +10,6 @@ class ParticipantMapper @Inject constructor() {
     }
 
     fun toFirebaseParticipant(participant: NewParticipant): FirebaseParticipant {
-        return FirebaseParticipant(participant.name, participant.email, participant.scoutClass)
+        return FirebaseParticipant(participant.name, participant.email, participant.participantClass)
     }
 }

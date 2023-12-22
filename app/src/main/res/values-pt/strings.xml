@@ -30,11 +30,6 @@
     <string name="no_participants_selected">Não há participantes selecionados</string>
     <string name="no_criteria_selected">Não há critérios selecionados</string>
     <string name="choose_class">Escolha uma classe</string>
-    <string name="ticao">Tição</string>
-    <string name="rebento">Rebento</string>
-    <string name="explorador">Explorador</string>
-    <string name="companheiro">Companheiro</string>
-    <string name="embaixador">Embaixador</string>
     <string name="invalid_class">Classe inválida</string>
     <string name="classes">Classes</string>
     <string name="participant_number">%1$s participantes</string>
@@ -68,4 +63,5 @@
     <string name="participant_sort">Ordenar</string>
     <string name="save">Guardar</string>
     <string name="participant_investiture">Investidura</string>
+    <string name="jovem">Jovem</string>
 </resources>
