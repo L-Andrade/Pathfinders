@@ -7,5 +7,6 @@ import com.andradel.pathfinders.model.ParticipantClass
 data class FirebaseParticipant(
     val name: String = "",
     val email: String? = null,
-    val scoutClass: ParticipantClass = ParticipantClass.Invalid
+    val scoutClass: ParticipantClass = ParticipantClass.Invalid,
+    val birthday: String? = null,
 )

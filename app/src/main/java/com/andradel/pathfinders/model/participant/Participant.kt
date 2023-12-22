@@ -9,5 +9,6 @@ data class Participant(
     val id: String,
     val name: String,
     val email: String?,
-    val participantClass: ParticipantClass
+    val participantClass: ParticipantClass,
+    val birthday: String?,
 ) : Parcelable

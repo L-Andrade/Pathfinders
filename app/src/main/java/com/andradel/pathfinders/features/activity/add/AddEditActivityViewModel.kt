@@ -19,7 +19,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +52,8 @@ class AddEditActivityViewModel @Inject constructor(
         AddEditActivityState(
             name = name,
             nameValidation = nameValidation,
-            date = date,
+            dateRepresentation = date?.toString(),
+            date = (date ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli(),
             classes = classes,
             participants = participants,
             criteria = criteria,
@@ -80,7 +84,7 @@ class AddEditActivityViewModel @Inject constructor(
 
     private fun AddEditActivityState.toNewActivity(): NewActivity = NewActivity(
         name = name,
-        date = date?.toString().orEmpty(),
+        date = dateRepresentation.orEmpty(),
         participants = participants,
         classes = classes,
         criteria = criteria,
@@ -107,8 +111,8 @@ class AddEditActivityViewModel @Inject constructor(
         this.name.value = name
     }
 
-    fun updateDate(date: LocalDate) {
-        this.date.value = date
+    fun updateDate(millis: Long) {
+        date.value = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
     }
 
     fun deleteActivity() {

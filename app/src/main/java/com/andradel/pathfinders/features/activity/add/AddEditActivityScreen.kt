@@ -2,8 +2,6 @@ package com.andradel.pathfinders.features.activity.add
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
@@ -37,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -52,15 +48,14 @@ import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
-import com.andradel.pathfinders.ui.DatePicker
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
+import com.andradel.pathfinders.ui.fields.DatePickerField
 import com.andradel.pathfinders.validation.errorMessage
 import com.andradel.pathfinders.validation.isError
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
-import java.time.LocalDate
 
 @Composable
 @Destination(navArgsDelegate = OptionalActivityArg::class)
@@ -137,7 +132,12 @@ fun AddEditActivityScreen(
             }
             item {
                 Spacer(modifier = Modifier.size(16.dp))
-                DateField(state.date, viewModel::updateDate, modifier = Modifier.padding(horizontal = 16.dp))
+                DatePickerField(
+                    dateRepresentation = state.dateRepresentation,
+                    dateMillis = state.date,
+                    updateDate = viewModel::updateDate,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
             }
             item {
                 Spacer(modifier = Modifier.size(16.dp))
@@ -268,33 +268,6 @@ private fun ScoutClassCheckbox(
             colors = CheckboxDefaults.colors(checkedColor = participantClass.color)
         )
         Text(text = participantClass.title)
-    }
-}
-
-@Composable
-private fun DateField(
-    date: LocalDate?,
-    updateDate: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var showingDatePicker by remember { mutableStateOf(false) }
-    val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
-    Box(
-        modifier = modifier
-            .clickable { showingDatePicker = true }
-            .clip(RoundedCornerShape(topEnd = 4.dp, topStart = 4.dp))
-            .fillMaxWidth()
-            .background(backgroundColor)
-            .padding(all = 16.dp)
-    ) {
-        Text(date?.toString() ?: stringResource(id = R.string.date))
-    }
-    if (showingDatePicker) {
-        DatePicker(
-            date = date ?: LocalDate.now(),
-            onDateSelected = updateDate,
-            onDismiss = { showingDatePicker = false }
-        )
     }
 }
 

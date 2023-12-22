@@ -6,6 +6,8 @@ import com.andradel.pathfinders.validation.ValidationResult
 data class AddEditParticipantState(
     val name: String,
     val email: String,
+    val birthdayRepresentation: String?,
+    val birthday: Long,
     val nameValidation: ValidationResult,
     val emailValidation: ValidationResult,
     val participantClass: ParticipantClass?,

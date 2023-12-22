@@ -62,4 +62,5 @@
     <string name="participant_sort">Sorting</string>
     <string name="save">Save</string>
     <string name="participant_investiture">Investiture</string>
+    <string name="birthday_date">Birthday</string>
 </resources>

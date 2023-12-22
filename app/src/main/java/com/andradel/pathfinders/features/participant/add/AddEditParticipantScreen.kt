@@ -59,6 +59,7 @@ import com.andradel.pathfinders.model.participant.OptionalParticipantArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
+import com.andradel.pathfinders.ui.fields.DatePickerField
 import com.andradel.pathfinders.validation.errorMessage
 import com.andradel.pathfinders.validation.isError
 import com.ramcosta.composedestinations.annotation.Destination
@@ -114,6 +115,7 @@ fun AddEditParticipantScreen(
                     updateEmail = viewModel::updateEmail,
                     updateName = viewModel::updateName,
                     updateScoutClass = viewModel::updateScoutClass,
+                    updateDate = viewModel::updateDate,
                     modifier = Modifier.alpha(alpha)
                 )
                 AnimatedVisibility(showCandle, modifier = Modifier.align(Alignment.Center)) {
@@ -166,6 +168,7 @@ private fun AddEditForm(
     addParticipant: () -> Unit,
     updateEmail: (String) -> Unit,
     updateName: (String) -> Unit,
+    updateDate: (Long) -> Unit,
     updateScoutClass: (ParticipantClass) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -184,7 +187,7 @@ private fun AddEditForm(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(24.dp))
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             ScoutClassDropDown(
                 state.participantClass,
                 ParticipantClass.options,
@@ -207,6 +210,13 @@ private fun AddEditForm(
             },
             isError = state.emailValidation.isError,
             modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        DatePickerField(
+            dateRepresentation = state.birthdayRepresentation,
+            dateMillis = state.birthday,
+            updateDate = updateDate,
+            hint = R.string.birthday_date,
         )
         Spacer(modifier = Modifier.size(24.dp))
         Button(

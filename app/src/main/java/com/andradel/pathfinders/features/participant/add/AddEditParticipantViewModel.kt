@@ -20,6 +20,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,42 +36,55 @@ class AddEditParticipantViewModel @Inject constructor(
     private val participant = handle.navArgs<OptionalParticipantArg>().participant
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
+    private val birthday = MutableStateFlow(
+        participant?.birthday?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) }
+    )
     private val participantResult = MutableStateFlow<ParticipantResult?>(null)
-    private val scoutClass = MutableStateFlow(participant?.participantClass)
+    private val participantClass = MutableStateFlow(participant?.participantClass)
 
     val isEditing = participant != null
 
-    val state: StateFlow<AddEditParticipantState> =
-        combine(name, email, scoutClass, participantResult) { name, email, scoutClass, addParticipantResult ->
-            val nameResult = nameValidation.validate(name)
-            val emailResult = emailValidation.validate(email)
-            AddEditParticipantState(
-                name = name,
-                email = email,
-                nameValidation = nameResult,
-                emailValidation = emailResult,
-                participantClass = scoutClass,
-                isValid = nameResult.isValid && emailResult.isValid && scoutClass != null,
-                participantResult = addParticipantResult,
-                canDoInvestiture = isEditing && scoutClass != ParticipantClass.last && scoutClass == participant?.participantClass,
-            )
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            AddEditParticipantState(
-                name = "",
-                email = "",
-                nameValidation = nameValidation.validate(""),
-                emailValidation = ValidationResult.Valid,
-                isValid = false,
-                participantClass = null,
-                participantResult = null,
-                canDoInvestiture = false,
-            )
+    val state: StateFlow<AddEditParticipantState> = combine(
+        name, email, participantClass, participantResult, birthday
+    ) { name, email, participantClass, addParticipantResult, birthday ->
+        val nameResult = nameValidation.validate(name)
+        val emailResult = emailValidation.validate(email)
+        AddEditParticipantState(
+            name = name,
+            email = email,
+            birthdayRepresentation = birthday?.toString(),
+            birthday = (birthday ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
+                .toEpochMilli(),
+            nameValidation = nameResult,
+            emailValidation = emailResult,
+            participantClass = participantClass,
+            isValid = nameResult.isValid && emailResult.isValid && participantClass != null,
+            participantResult = addParticipantResult,
+            canDoInvestiture = isEditing && participantClass != ParticipantClass.last && participantClass == participant?.participantClass,
         )
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        AddEditParticipantState(
+            name = "",
+            email = "",
+            birthdayRepresentation = null,
+            birthday = 0L,
+            nameValidation = nameValidation.validate(""),
+            emailValidation = ValidationResult.Valid,
+            isValid = false,
+            participantClass = null,
+            participantResult = null,
+            canDoInvestiture = false,
+        )
+    )
 
     fun updateName(name: String) {
         this.name.value = name
+    }
+
+    fun updateDate(millis: Long) {
+        birthday.value = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
     }
 
     fun updateEmail(email: String) {
@@ -75,12 +92,12 @@ class AddEditParticipantViewModel @Inject constructor(
     }
 
     fun updateScoutClass(participantClass: ParticipantClass) {
-        this.scoutClass.value = participantClass
+        this.participantClass.value = participantClass
     }
 
     fun onInvestiture() {
         val classes = ParticipantClass.entries
-        this.scoutClass.value = classes[((scoutClass.value?.ordinal ?: 0) + 1).coerceAtMost(classes.lastIndex)]
+        this.participantClass.value = classes[((participantClass.value?.ordinal ?: 0) + 1).coerceAtMost(classes.lastIndex)]
     }
 
     fun addParticipant() {
@@ -95,7 +112,8 @@ class AddEditParticipantViewModel @Inject constructor(
                 val p = NewParticipant(
                     name = state.value.name,
                     email = email.takeIf { it.isNotBlank() },
-                    participantClass = participantClass
+                    participantClass = participantClass,
+                    birthday = birthday.value?.toString()
                 )
                 dataSource.addOrUpdateParticipant(p, participant?.id)
                 participantResult.value = ParticipantResult.Success
