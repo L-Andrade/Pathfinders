@@ -102,7 +102,7 @@ fun AddEditActivityScreen(
                             contentDescription = stringResource(id = R.string.save)
                         )
                     }
-                    DeleteActivityIcon(viewModel.isEditing, state.name) {
+                    DeleteActivityIcon(canDelete = viewModel.isEditing && state.isAdmin, name = state.name) {
                         viewModel.deleteActivity()
                         navigator.navigateUp()
                     }
@@ -149,7 +149,11 @@ fun AddEditActivityScreen(
                             style = MaterialTheme.typography.titleSmall
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Switch(checked = isSelected, onCheckedChange = viewModel::setAllSelected)
+                        Switch(
+                            checked = isSelected,
+                            onCheckedChange = viewModel::setAllSelected,
+                            enabled = state.isAdmin
+                        )
                     }
                 }
             }
@@ -159,6 +163,7 @@ fun AddEditActivityScreen(
                     selected = isSelected,
                     participantClass = scoutClass,
                     onCheckedChange = { viewModel.setClassSelected(scoutClass, it) },
+                    enabled = state.isAdmin,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -231,11 +236,11 @@ fun AddEditActivityScreen(
 
 @Composable
 private fun DeleteActivityIcon(
-    isEditing: Boolean,
+    canDelete: Boolean,
     name: String,
     onDelete: () -> Unit,
 ) {
-    if (isEditing) {
+    if (canDelete) {
         var deleteDialog by remember { mutableStateOf(false) }
         IconButton(onClick = { deleteDialog = true }) {
             Icon(
@@ -257,6 +262,7 @@ private fun DeleteActivityIcon(
 @Composable
 private fun ScoutClassCheckbox(
     selected: Boolean,
+    enabled: Boolean,
     participantClass: ParticipantClass,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -265,6 +271,7 @@ private fun ScoutClassCheckbox(
         Checkbox(
             checked = selected,
             onCheckedChange = onCheckedChange,
+            enabled = enabled,
             colors = CheckboxDefaults.colors(checkedColor = participantClass.color)
         )
         Text(text = participantClass.title)

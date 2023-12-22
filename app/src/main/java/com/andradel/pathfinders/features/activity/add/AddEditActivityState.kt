@@ -14,5 +14,6 @@ data class AddEditActivityState(
     val participants: List<Participant> = emptyList(),
     val criteria: List<ActivityCriteria> = emptyList(),
     val isValid: Boolean = false,
+    val isAdmin: Boolean = false,
     val addActivityResult: AddActivityResult? = null
 )

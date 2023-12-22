@@ -12,6 +12,8 @@ import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.OptionalActivityArg
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.user.UserSession
+import com.andradel.pathfinders.user.isAdmin
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditActivityViewModel @Inject constructor(
     handle: SavedStateHandle,
+    userSession: UserSession,
     private val dataSource: ActivityFirebaseDataSource,
     private val nameValidation: NameValidation,
 ) : ViewModel() {
@@ -46,8 +49,9 @@ class AddEditActivityViewModel @Inject constructor(
         participants,
         classes,
         criteria,
-        addActivityResult
-    ) { name, date, participants, classes, criteria, addActivityResult ->
+        addActivityResult,
+        userSession.isAdmin,
+    ) { name, date, participants, classes, criteria, addActivityResult, isAdmin ->
         val nameValidation = nameValidation.validate(name)
         AddEditActivityState(
             name = name,
@@ -58,6 +62,7 @@ class AddEditActivityViewModel @Inject constructor(
             participants = participants,
             criteria = criteria,
             isValid = nameValidation.isValid,
+            isAdmin = isAdmin,
             addActivityResult = addActivityResult
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())

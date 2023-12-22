@@ -23,6 +23,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,14 +50,18 @@ fun ActivityListScreen(
     navigator: DestinationsNavigator,
     viewModel: ActivityListViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = R.string.activity_list,
                 onIconClick = { navigator.navigateUp() },
                 endContent = {
-                    TextButton(onClick = { navigator.navigate(AddEditActivityScreenDestination()) }) {
-                        Text(text = stringResource(id = R.string.add_activity))
+                    val canAdd by remember { derivedStateOf { (state as? ActivityListState.Loaded)?.canAdd ?: false } }
+                    if (canAdd) {
+                        TextButton(onClick = { navigator.navigate(AddEditActivityScreenDestination()) }) {
+                            Text(text = stringResource(id = R.string.add_activity))
+                        }
                     }
                 }
             )
@@ -67,12 +72,12 @@ fun ActivityListScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            val state by viewModel.state.collectAsState()
             when (val s = state) {
                 is ActivityListState.Loaded -> LazyColumn {
                     items(s.activities, { it.id }) { activity ->
                         ActivityCard(
                             activity = activity,
+                            canDelete = s.canDelete,
                             onEditClick = { navigator.navigate(AddEditActivityScreenDestination(activity)) },
                             onDeleteClick = { viewModel.deleteActivity(activity) },
                             onEvaluateClick = { navigator.navigate(EvaluateActivityScreenDestination(activity)) },
@@ -91,6 +96,7 @@ fun ActivityListScreen(
 @Composable
 private fun ActivityCard(
     activity: Activity,
+    canDelete: Boolean,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onEvaluateClick: () -> Unit,
@@ -120,11 +126,13 @@ private fun ActivityCard(
                             )
                         }
                     }
-                    IconButton(onClick = { removeDialog = true }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_delete),
-                            contentDescription = stringResource(id = R.string.delete)
-                        )
+                    if (canDelete) {
+                        IconButton(onClick = { removeDialog = true }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_delete),
+                                contentDescription = stringResource(id = R.string.delete)
+                            )
+                        }
                     }
                 }
             }
