@@ -36,9 +36,7 @@ class AddEditParticipantViewModel @Inject constructor(
     private val participant = handle.navArgs<OptionalParticipantArg>().participant
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
-    private val birthday = MutableStateFlow(
-        participant?.birthday?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) }
-    )
+    private val birthday = MutableStateFlow(participant?.dateOfBirth)
     private val participantResult = MutableStateFlow<ParticipantResult?>(null)
     private val participantClass = MutableStateFlow(participant?.participantClass)
 

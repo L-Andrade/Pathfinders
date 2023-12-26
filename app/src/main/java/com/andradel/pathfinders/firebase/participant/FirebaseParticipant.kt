@@ -8,5 +8,5 @@ data class FirebaseParticipant(
     val name: String = "",
     val email: String? = null,
     val scoutClass: ParticipantClass = ParticipantClass.Invalid,
-    val birthday: String? = null,
+    val dateOfBirth: String? = null,
 )

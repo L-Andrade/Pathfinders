@@ -24,7 +24,7 @@ class AddParticipantsToActivityViewModel @Inject constructor(
     private val initialSelection = handle.navArgs<ParticipantSelectionArg>().selection
     private val selection = MutableStateFlow(initialSelection)
     private val selectedClasses = handle.navArgs<ParticipantSelectionArg>().classes
-    private val filteringByClass = MutableStateFlow(false)
+    private val filteringByClass = MutableStateFlow(true)
 
     val state: StateFlow<AddParticipantsToActivityState> =
         combine(selection, dataSource.participants, filteringByClass) { selection, participants, filteringByClass ->

@@ -64,4 +64,13 @@
     <string name="save">Guardar</string>
     <string name="participant_investiture">Investidura</string>
     <string name="birthday_date">Aniversário</string>
+    <string name="reminders_screen">Lembretes</string>
+    <string name="upcoming_birthdays">Próximos</string>
+    <string name="past_birthdays">Recentes</string>
+    <string name="todays_birthdays">Hoje</string>
+    <plurals name="age_years_old">
+        <item quantity="one">%1$s ano</item>
+        <item quantity="other">%1$s anos</item>
+        <item quantity="many">%1$s anos</item>
+    </plurals>
 </resources>

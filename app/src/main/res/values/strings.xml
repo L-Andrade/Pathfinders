@@ -63,4 +63,12 @@
     <string name="save">Save</string>
     <string name="participant_investiture">Investiture</string>
     <string name="birthday_date">Birthday</string>
+    <string name="reminders_screen">Reminders</string>
+    <string name="upcoming_birthdays">Upcoming</string>
+    <string name="past_birthdays">Past</string>
+    <string name="todays_birthdays">Today</string>
+    <plurals name="age_years_old">
+        <item quantity="one">%1$s year old</item>
+        <item quantity="other">%1$s years old</item>
+    </plurals>
 </resources>

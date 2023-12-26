@@ -34,6 +34,7 @@ import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
+import com.andradel.pathfinders.features.destinations.RemindersScreenDestination
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.isAdmin
@@ -73,12 +74,14 @@ fun HomeScreen(
                     HomeState.Guest -> GuestScreen(
                         onSignInClick = { resultLauncher.launch(viewModel.signInIntent) },
                     )
+
                     HomeState.Loading -> Loading()
                     is HomeState.Loaded -> LoggedInScreen(
                         state = s,
                         onSignOutClick = viewModel::onSignOutClick,
                         onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination) },
                         onActivitiesClick = { navigator.navigate(ActivityListScreenDestination) },
+                        onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
                         onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) }
                     )
                 }
@@ -135,7 +138,7 @@ private fun GuestScreen(
     modifier: Modifier = Modifier,
 ) {
     Column(horizontalAlignment = CenterHorizontally, modifier = modifier) {
-        ListButton(onClick = onSignInClick, text = R.string.sign_in, modifier = Modifier.fillMaxWidth())
+        ListButton(onClick = onSignInClick, text = R.string.sign_in)
     }
 }
 
@@ -145,15 +148,17 @@ private fun LoggedInScreen(
     onSignOutClick: () -> Unit,
     onParticipantsClick: () -> Unit,
     onActivitiesClick: () -> Unit,
+    onRemindersClick: () -> Unit,
     onProfileClick: (Participant) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(horizontalAlignment = CenterHorizontally, modifier = modifier) {
         if (state.user.role is UserRole.Admin) {
-            ListButton(onParticipantsClick, R.string.participant_list, modifier = Modifier.fillMaxWidth())
+            ListButton(onParticipantsClick, R.string.participant_list)
         }
         if (state.user.role.isAdmin) {
-            ListButton(onActivitiesClick, R.string.activity_list, modifier = Modifier.fillMaxWidth())
+            ListButton(onActivitiesClick, R.string.activity_list)
+            ListButton(onRemindersClick, R.string.reminders_screen)
         }
         if (state.participant != null) {
             ListButton(
