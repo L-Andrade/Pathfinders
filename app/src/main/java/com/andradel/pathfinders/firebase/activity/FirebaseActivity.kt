@@ -7,7 +7,7 @@ import com.andradel.pathfinders.model.activity.ParticipantScores
 @Keep
 data class FirebaseActivity(
     val name: String = "",
-    val date: String = "",
+    val date: String? = null,
     val participantIds: List<String> = emptyList(),
     val classes: List<ParticipantClass> = emptyList(),
     val criteriaIds: List<String> = emptyList(),

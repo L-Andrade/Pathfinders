@@ -40,7 +40,7 @@ class AddEditActivityViewModel @Inject constructor(
     private val criteria = MutableStateFlow(activity?.criteria.orEmpty())
     private val classes = MutableStateFlow(activity?.classes.orEmpty())
     private val name = MutableStateFlow(activity?.name.orEmpty())
-    private val date = MutableStateFlow(activity?.date?.takeIf { it.isNotBlank() }?.let { LocalDate.parse(it) })
+    private val date = MutableStateFlow(activity?.date)
     private val addActivityResult = MutableStateFlow<AddActivityResult?>(null)
 
     val state = combine(
@@ -80,7 +80,7 @@ class AddEditActivityViewModel @Inject constructor(
 
     private fun Activity.toNewActivity(): NewActivity = NewActivity(
         name = name,
-        date = date,
+        date = date?.toString(),
         participants = participants,
         classes = classes,
         criteria = criteria,
@@ -89,7 +89,7 @@ class AddEditActivityViewModel @Inject constructor(
 
     private fun AddEditActivityState.toNewActivity(): NewActivity = NewActivity(
         name = name,
-        date = dateRepresentation.orEmpty(),
+        date = dateRepresentation,
         participants = participants,
         classes = classes,
         criteria = criteria,

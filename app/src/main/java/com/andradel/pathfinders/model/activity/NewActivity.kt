@@ -7,7 +7,7 @@ import com.andradel.pathfinders.model.participant.Participant
 @Keep
 data class NewActivity(
     val name: String,
-    val date: String,
+    val date: String?,
     val participants: List<Participant>,
     val classes: List<ParticipantClass>,
     val criteria: List<ActivityCriteria>,

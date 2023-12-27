@@ -2,23 +2,28 @@ package com.andradel.pathfinders.features.reminders
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.participant.Participant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class RemindersViewModel @Inject constructor(
     participantDataSource: ParticipantFirebaseDataSource,
+    private val activityDataSource: ActivityFirebaseDataSource
 ) : ViewModel() {
-    private val formatter = DateTimeFormatter.ofPattern("dd MMMM")
+    private val dayMonthFormatter = DateTimeFormatter.ofPattern("dd MMMM")
 
-    val birthdays = participantDataSource.participants.map { participants ->
+    private val birthdays = participantDataSource.participants.map { participants ->
         val today = LocalDate.now()
         val interval = today.minusDays(7) to today.plusDays(14)
         val birthdays = participants.asSequence()
@@ -30,22 +35,32 @@ class RemindersViewModel @Inject constructor(
             .map {
                 it.toParticipantBirthday(today, requireNotNull(it.dateOfBirth?.nextBirthday(today, interval.first)))
             }
-        BirthdayRemindersState(
+        BirthdayReminders(
             today = birthdays.filter { it.state == BirthdayState.Today }.toList().takeIf { it.isNotEmpty() },
             upcoming = birthdays.toBirthdaySection(BirthdayState.Upcoming),
             past = birthdays.toBirthdaySection(BirthdayState.Past),
         )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        BirthdayRemindersState(today = null, upcoming = null, past = null)
-    )
-
-    val noShows = participantDataSource.participants.map { participants ->
-        // participants.map { participant ->
-        //     val activitiesForUser = activityDataSource.activitiesForUser(participant.id)
-        // }
     }
+
+    private val noShows = participantDataSource.participants.map { participants ->
+        val today = LocalDate.now()
+        val noShows = participants.mapNotNull { participant ->
+            val activitiesForUser = activityDataSource.activitiesForUser(participant.id).first()
+            val lastUserActivity = activitiesForUser
+                .asSequence().filter { it.date != null }.maxByOrNull { requireNotNull(it.date) }
+            val last20Days = today.minusDays(20)
+            if (lastUserActivity != null && requireNotNull(lastUserActivity.date) < last20Days) {
+                val daysSince = Period.between(lastUserActivity.date, today).days
+                ParticipantNoShow(participant.id, participant.name, daysSince.toString())
+            } else null
+        }
+        NoShowsReminders(noShows = noShows).takeIf { noShows.isNotEmpty() }
+    }
+
+    val state = combine(birthdays, noShows) { birthdays, noShows ->
+        val hasBirthdays = birthdays.past != null || birthdays.upcoming != null || birthdays.today != null
+        RemindersState.Loaded(birthdays = birthdays, noShows = noShows, divider = hasBirthdays && noShows != null)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), RemindersState.Loading)
 
     private fun LocalDate.nextBirthday(today: LocalDate, first: LocalDate): LocalDate {
         val thisYearsBirthday = withYear(today.year)
@@ -66,7 +81,7 @@ class RemindersViewModel @Inject constructor(
                 nextBirthday < today -> BirthdayState.Past
                 else -> BirthdayState.Upcoming
             },
-            date = formatter.format(nextBirthday).uppercase(),
+            date = dayMonthFormatter.format(nextBirthday).uppercase(),
         )
     }
 }

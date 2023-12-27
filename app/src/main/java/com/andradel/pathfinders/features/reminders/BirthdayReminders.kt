@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.features.reminders
 
-data class BirthdayRemindersState(
+data class BirthdayReminders(
     val today: List<ParticipantBirthday>?,
     val upcoming: BirthdaySection?,
     val past: BirthdaySection?,

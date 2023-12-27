@@ -148,9 +148,9 @@ private fun ActivityCard(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.weight(1f)
                 )
-                if (activity.date.isNotBlank()) {
+                if (activity.date != null) {
                     Text(
-                        text = activity.date,
+                        text = activity.date.toString(),
                         style = MaterialTheme.typography.labelSmall,
                         modifier = Modifier.align(Alignment.Bottom)
                     )

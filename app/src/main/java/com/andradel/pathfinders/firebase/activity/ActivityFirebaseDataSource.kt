@@ -10,11 +10,12 @@ import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.ParticipantScores
 import com.andradel.pathfinders.model.participant.Participant
 import com.google.firebase.database.FirebaseDatabase
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+import javax.inject.Inject
 
 class ActivityFirebaseDataSource @Inject constructor(
     db: FirebaseDatabase,
@@ -83,7 +84,7 @@ class ActivityFirebaseDataSource @Inject constructor(
             Activity(
                 key,
                 value.name,
-                value.date,
+                if (!value.date.isNullOrBlank()) LocalDate.parse(value.date) else null,
                 value.participantIds.mapNotNull { id -> participants[id]?.let { mapper.toParticipant(id, it) } },
                 value.classes,
                 value.criteriaIds.mapNotNull { id -> criteria[id]?.let { ActivityCriteria(id, it.name, it.maxScore) } },

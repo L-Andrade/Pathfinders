@@ -73,4 +73,6 @@
         <item quantity="other">%1$s anos</item>
         <item quantity="many">%1$s anos</item>
     </plurals>
+    <string name="last_seen_days">Visto pela última vez há %1$s dias</string>
+    <string name="no_shows">Desaparecidos</string>
 </resources>

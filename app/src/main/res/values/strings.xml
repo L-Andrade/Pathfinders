@@ -71,4 +71,6 @@
         <item quantity="one">%1$s year old</item>
         <item quantity="other">%1$s years old</item>
     </plurals>
+    <string name="last_seen_days">Last seen %1$s days ago</string>
+    <string name="no_shows">No shows</string>
 </resources>

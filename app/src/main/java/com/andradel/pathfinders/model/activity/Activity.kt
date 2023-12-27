@@ -4,12 +4,13 @@ import android.os.Parcelable
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.Participant
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
 
 @Parcelize
 data class Activity(
     val id: String,
     val name: String,
-    val date: String,
+    val date: LocalDate?,
     val participants: List<Participant>,
     val classes: List<ParticipantClass>,
     val criteria: List<ActivityCriteria>,

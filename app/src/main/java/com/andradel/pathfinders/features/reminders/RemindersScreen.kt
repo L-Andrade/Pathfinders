@@ -1,12 +1,19 @@
 package com.andradel.pathfinders.features.reminders
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,26 +42,49 @@ fun RemindersScreen(
             TopAppBarTitleWithIcon(titleRes = R.string.reminders_screen, onIconClick = navigator::navigateUp)
         },
         content = { padding ->
-            val birthdays by viewModel.birthdays.collectAsState()
-            LazyColumn(modifier = Modifier.padding(padding), contentPadding = PaddingValues(horizontal = 16.dp)) {
-                birthdays.today?.let { todaysBirthdays ->
-                    item {
-                        BirthdaySectionHeader(stringResource(id = R.string.todays_birthdays))
-                    }
-                    items(todaysBirthdays, key = { it.id }) { participant ->
-                        ParticipantBirthdayItem(participant)
-                    }
+            val state by viewModel.state.collectAsState()
+            Box(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            ) {
+                when (val s = state) {
+                    is RemindersState.Loaded -> RemindersColumn(s)
+                    RemindersState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
-                birthdays.upcoming?.let { birthdaySection(R.string.upcoming_birthdays, it) }
-                birthdays.past?.let { birthdaySection(R.string.past_birthdays, it) }
             }
         }
     )
 }
 
+@Composable
+private fun RemindersColumn(state: RemindersState.Loaded, modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 16.dp)) {
+        state.birthdays.today?.let { todaysBirthdays ->
+            item {
+                SectionHeader(stringResource(id = R.string.todays_birthdays))
+            }
+            items(todaysBirthdays, key = { it.id }) { participant ->
+                ParticipantBirthdayItem(participant)
+            }
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+        state.birthdays.upcoming?.let { birthdaySection(R.string.upcoming_birthdays, it) }
+        state.birthdays.past?.let { birthdaySection(R.string.past_birthdays, it) }
+        if (state.divider) {
+            item {
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+            }
+        }
+        state.noShows?.let { noShowsSection(it) }
+    }
+}
+
 private fun LazyListScope.birthdaySection(@StringRes sectionHeader: Int, birthdaySection: BirthdaySection) {
     item {
-        BirthdaySectionHeader(stringResource(id = sectionHeader))
+        SectionHeader(stringResource(id = sectionHeader))
     }
     birthdaySection.birthdays.forEach { (header, items) ->
         item {
@@ -64,12 +94,36 @@ private fun LazyListScope.birthdaySection(@StringRes sectionHeader: Int, birthda
             ParticipantBirthdayItem(participant)
         }
     }
+    item {
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+private fun LazyListScope.noShowsSection(noShowsReminders: NoShowsReminders) {
+    item {
+        SectionHeader(stringResource(id = R.string.no_shows), modifier = Modifier.padding(bottom = 8.dp))
+    }
+    items(noShowsReminders.noShows, key = { "noshow-${it.id}" }) { participant ->
+        ParticipantNoShowItem(participant)
+    }
+}
+
+@Composable
+private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.padding(vertical = 4.dp)) {
+        Text(text = participant.name, style = MaterialTheme.typography.bodySmall)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = stringResource(id = R.string.last_seen_days, participant.daysSince),
+            style = MaterialTheme.typography.labelMedium
+        )
+    }
 }
 
 @Composable
 private fun ParticipantBirthdayItem(participant: ParticipantBirthday, modifier: Modifier = Modifier) {
     Row(modifier = modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(text = participant.name, modifier = Modifier.weight(1f))
+        Text(text = participant.name, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
         Text(
             text = pluralStringResource(id = R.plurals.age_years_old, participant.age, participant.age),
             style = MaterialTheme.typography.labelMedium
@@ -87,6 +141,6 @@ private fun BirthdaySubSectionHeader(header: String, modifier: Modifier = Modifi
 }
 
 @Composable
-private fun BirthdaySectionHeader(text: String, modifier: Modifier = Modifier) {
-    Text(text = text, style = MaterialTheme.typography.titleMedium, modifier = modifier.padding(top = 16.dp))
+private fun SectionHeader(text: String, modifier: Modifier = Modifier) {
+    Text(text = text, style = MaterialTheme.typography.titleMedium, modifier = modifier)
 }
