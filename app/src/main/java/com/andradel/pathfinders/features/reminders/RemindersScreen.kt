@@ -111,11 +111,11 @@ private fun LazyListScope.noShowsSection(noShowsReminders: NoShowsReminders) {
 @Composable
 private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(vertical = 4.dp)) {
-        Text(text = participant.name, style = MaterialTheme.typography.bodySmall)
+        Text(text = participant.name, style = MaterialTheme.typography.labelMedium)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = stringResource(id = R.string.last_seen_days, participant.daysSince),
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }
