@@ -8,12 +8,11 @@ import com.andradel.pathfinders.model.participant.Participant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
-import java.time.Period
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,18 +41,20 @@ class RemindersViewModel @Inject constructor(
         )
     }
 
-    private val noShows = participantDataSource.participants.map { participants ->
+    private val noShows = combine(
+        activityDataSource.activities, participantDataSource.participants
+    ) { activities, participants ->
         val today = LocalDate.now()
         val noShows = participants.mapNotNull { participant ->
-            val activitiesForUser = activityDataSource.activitiesForUser(participant.id).first()
-            val lastUserActivity = activitiesForUser
-                .asSequence().filter { it.date != null }.maxByOrNull { requireNotNull(it.date) }
+            val lastUserActivity = activities.asSequence().filter { activity ->
+                activity.date != null && activity.participants.any { it.id == participant.id }
+            }.maxByOrNull { requireNotNull(it.date) }
             val last20Days = today.minusDays(20)
             if (lastUserActivity != null && requireNotNull(lastUserActivity.date) < last20Days) {
-                val daysSince = Period.between(lastUserActivity.date, today).days
-                ParticipantNoShow(participant.id, participant.name, daysSince.toString())
+                val daysSince = ChronoUnit.DAYS.between(lastUserActivity.date, today)
+                ParticipantNoShow(participant.id, participant.name, daysSince)
             } else null
-        }
+        }.sortedBy { it.daysSince }
         NoShowsReminders(noShows = noShows).takeIf { noShows.isNotEmpty() }
     }
 

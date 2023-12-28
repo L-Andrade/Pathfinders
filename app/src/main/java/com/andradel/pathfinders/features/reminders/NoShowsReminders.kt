@@ -7,5 +7,5 @@ data class NoShowsReminders(
 data class ParticipantNoShow(
     val id: String,
     val name: String,
-    val daysSince: String,
+    val daysSince: Long,
 )

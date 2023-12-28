@@ -49,7 +49,7 @@ fun RemindersScreen(
                     .fillMaxSize()
             ) {
                 when (val s = state) {
-                    is RemindersState.Loaded -> RemindersColumn(s)
+                    is RemindersState.Loaded -> RemindersColumn(s, modifier = Modifier.fillMaxSize())
                     RemindersState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
@@ -114,7 +114,7 @@ private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modi
         Text(text = participant.name, style = MaterialTheme.typography.labelMedium)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = stringResource(id = R.string.last_seen_days, participant.daysSince),
+            text = stringResource(id = R.string.last_seen_days, participant.daysSince.toString()),
             style = MaterialTheme.typography.bodySmall
         )
     }
