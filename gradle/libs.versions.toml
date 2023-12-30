@@ -41,6 +41,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx"
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "2.9.9" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-database = { module = "com.google.firebase:firebase-database-ktx" }
+firebase-functions = { module = "com.google.firebase:firebase-functions" }
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version = "8.0.2" }
 
 google-services = { module = "com.google.gms:google-services", version = "4.4.0" }
@@ -50,6 +51,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-android" }
 
 junit = { module = "junit:junit", version = "4.13.2" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.2" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.1.0" }
 
 [plugins]
@@ -58,3 +60,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-ksp = { id = "com.google.devtools.ksp", version = "1.9.21-1.0.15" }
 google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

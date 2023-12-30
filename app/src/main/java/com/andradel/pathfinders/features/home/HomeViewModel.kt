@@ -10,10 +10,11 @@ import com.andradel.pathfinders.user.UserState
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -32,7 +33,9 @@ class HomeViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeState.Loading)
 
     fun onSignInResult(res: FirebaseAuthUIAuthenticationResult?) {
-        userSession.updateUser()
+        viewModelScope.launch {
+            userSession.updateUser()
+        }
     }
 
     fun onSignOutClick() {

@@ -6,6 +6,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'com.google.dagger.hilt.android'
+    id("kotlinx-serialization")
 }
 
 android {
@@ -95,11 +96,16 @@ dependencies {
     implementation libs.accompanist.pager
     implementation libs.accompanist.pager.indicators
 
-    implementation libs.firebase.ui.auth
+    // Firebase
     implementation platform(libs.firebase.bom)
+    implementation libs.firebase.ui.auth
     implementation libs.firebase.analytics
     implementation libs.firebase.database
     implementation libs.firebase.crashlytics
+    implementation libs.firebase.functions
+
+    // Serialization
+    implementation libs.kotlinx.serialization.json
 
     // Nav
     implementation libs.compose.destinations.animations

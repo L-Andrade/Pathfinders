@@ -32,12 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
+import com.andradel.pathfinders.features.destinations.AdminScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
 import com.andradel.pathfinders.features.destinations.RemindersScreenDestination
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserRole
-import com.andradel.pathfinders.user.isAdmin
+import com.andradel.pathfinders.user.isClassAdmin
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -80,6 +81,7 @@ fun HomeScreen(
                         state = s,
                         onSignOutClick = viewModel::onSignOutClick,
                         onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination) },
+                        onAdminClick = { navigator.navigate(AdminScreenDestination) },
                         onActivitiesClick = { navigator.navigate(ActivityListScreenDestination) },
                         onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
                         onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) }
@@ -147,6 +149,7 @@ private fun LoggedInScreen(
     state: HomeState.Loaded,
     onSignOutClick: () -> Unit,
     onParticipantsClick: () -> Unit,
+    onAdminClick: () -> Unit,
     onActivitiesClick: () -> Unit,
     onRemindersClick: () -> Unit,
     onProfileClick: (Participant) -> Unit,
@@ -155,8 +158,9 @@ private fun LoggedInScreen(
     Column(horizontalAlignment = CenterHorizontally, modifier = modifier) {
         if (state.user.role is UserRole.Admin) {
             ListButton(onParticipantsClick, R.string.participant_list)
+            ListButton(onAdminClick, R.string.admin_screen)
         }
-        if (state.user.role.isAdmin) {
+        if (state.user.role.isClassAdmin) {
             ListButton(onActivitiesClick, R.string.activity_list)
             ListButton(onRemindersClick, R.string.reminders_screen)
         }

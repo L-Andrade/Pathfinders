@@ -73,4 +73,12 @@
     </plurals>
     <string name="last_seen_days">Last seen %1$s days ago</string>
     <string name="no_shows">No shows</string>
+    <string name="admin_screen">Admin zone</string>
+    <string name="generic_error">Something went wrong…</string>
+    <string name="try_again">Try again</string>
+    <string name="edit_user_role">Edit user role</string>
+    <string name="admin_role">Admin</string>
+    <string name="class_admin_role">Class admin</string>
+    <string name="user_role">User</string>
+    <string name="role">Role</string>
 </resources>

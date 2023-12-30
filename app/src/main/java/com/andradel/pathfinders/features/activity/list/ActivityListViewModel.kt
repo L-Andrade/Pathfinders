@@ -31,7 +31,7 @@ class ActivityListViewModel @Inject constructor(
                 .let { sequence ->
                     when (role) {
                         UserRole.Admin -> sequence
-                        is UserRole.ClassAdmin -> sequence.filter { it.classes.contains(role.participantClass) }
+                        is UserRole.ClassAdmin -> sequence.filter { it.classes.any { c -> c in role.classes } }
                         UserRole.User -> emptySequence()
                     }
                 }

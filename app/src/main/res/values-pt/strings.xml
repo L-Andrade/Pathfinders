@@ -75,4 +75,12 @@
     </plurals>
     <string name="last_seen_days">Visto pela última vez há %1$s dias</string>
     <string name="no_shows">Desaparecidos</string>
+    <string name="admin_screen">Administração</string>
+    <string name="generic_error">Ocorreu um erro…</string>
+    <string name="try_again">Tentar outra vez</string>
+    <string name="edit_user_role">Editar permissões</string>
+    <string name="admin_role">Administrador</string>
+    <string name="class_admin_role">Dinamizador</string>
+    <string name="user_role">Utilizador</string>
+    <string name="role">Permissões</string>
 </resources>
