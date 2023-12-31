@@ -82,4 +82,5 @@
     <string name="class_admin_role">Class admin</string>
     <string name="user_role">User</string>
     <string name="role">Role</string>
+    <string name="call_to_contact">Call %1$s</string>
 </resources>

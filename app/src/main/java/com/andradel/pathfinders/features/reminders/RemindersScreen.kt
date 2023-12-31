@@ -1,5 +1,7 @@
 package com.andradel.pathfinders.features.reminders
 
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,6 +26,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -30,6 +36,7 @@ import com.andradel.pathfinders.R
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
 
 @Composable
 @Destination
@@ -110,13 +117,29 @@ private fun LazyListScope.noShowsSection(noShowsReminders: NoShowsReminders) {
 
 @Composable
 private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(vertical = 4.dp)) {
-        Text(text = participant.name, style = MaterialTheme.typography.labelMedium)
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = stringResource(id = R.string.last_seen_days, participant.daysSince.toString()),
-            style = MaterialTheme.typography.bodySmall
-        )
+    Row(modifier = modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = participant.name, style = MaterialTheme.typography.labelMedium)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(id = R.string.last_seen_days, participant.daysSince.toString()),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        if (participant.contact != null) {
+            val context = LocalContext.current
+            IconButton(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:${participant.contact}") }
+                    context.startActivity(intent)
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_call),
+                    contentDescription = stringResource(id = R.string.call_to_contact, participant.contact)
+                )
+            }
+        }
     }
 }
 

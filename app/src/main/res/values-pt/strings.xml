@@ -84,4 +84,5 @@
     <string name="class_admin_role">Dinamizador</string>
     <string name="user_role">Utilizador</string>
     <string name="role">Permissões</string>
+    <string name="call_to_contact">Ligar a %1$s</string>
 </resources>
