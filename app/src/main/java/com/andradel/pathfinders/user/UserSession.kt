@@ -27,11 +27,14 @@ class UserSession @Inject constructor(
 
     suspend fun updateUser() {
         _userState.value = UserState.Loading
-        val user = userFunctions.getUser()
-        if (user != null) {
-            _userState.value = user
-        } else {
-            _userState.value = UserState.Guest
+        userFunctions.getUser().onSuccess { user ->
+            if (user != null) {
+                _userState.value = user
+            } else {
+                _userState.value = UserState.Guest
+            }
+        }.onFailure {
+            _userState.value = UserState.Error
         }
     }
 

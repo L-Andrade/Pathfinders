@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 sealed interface UserState {
     object Loading : UserState
+    object Error : UserState
     object Guest : UserState
 }
 

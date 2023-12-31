@@ -29,10 +29,16 @@ class HomeViewModel @Inject constructor(
                 participant = if (state.email != null) dataSource.participantByEmail(state.email) else null,
                 user = state
             )
+
+            UserState.Error -> HomeState.Error
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeState.Loading)
 
     fun onSignInResult(res: FirebaseAuthUIAuthenticationResult?) {
+        updateUser()
+    }
+
+    fun updateUser() {
         viewModelScope.launch {
             userSession.updateUser()
         }

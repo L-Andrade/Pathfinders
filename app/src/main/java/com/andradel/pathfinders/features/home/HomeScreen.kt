@@ -3,6 +3,7 @@ package com.andradel.pathfinders.features.home
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,9 +63,9 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(padding)
-                    .padding(all = 20.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(all = 20.dp),
             ) {
                 PathfindersImage(
                     modifier = Modifier
@@ -86,10 +88,26 @@ fun HomeScreen(
                         onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
                         onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) }
                     )
+
+                    HomeState.Error -> ErrorScreen(viewModel::updateUser)
                 }
             }
         }
     )
+}
+
+@Composable
+private fun ErrorScreen(retry: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Text(text = stringResource(id = R.string.generic_error), style = MaterialTheme.typography.titleSmall)
+        Button(onClick = retry) {
+            Text(text = stringResource(id = R.string.try_again))
+        }
+    }
 }
 
 @Composable

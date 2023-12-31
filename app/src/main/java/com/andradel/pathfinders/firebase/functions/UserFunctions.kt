@@ -9,7 +9,6 @@ import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.FirebaseFunctions
-import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -20,9 +19,9 @@ class UserFunctions @Inject constructor(
     private val functions: FirebaseFunctions,
     private val json: Json,
 ) {
-    suspend fun getUser(): User? {
-        val user = auth.currentUser ?: return null
-        val result = user.getIdToken(true).await()
+    suspend fun getUser(): Result<User?> = runCatching {
+        val user = auth.currentUser ?: return Result.success(null)
+        val result = user.getIdToken(true).awaitWithTimeout()
         val userRole = when (result.claims["role"] as? String ?: "") {
             "admin" -> UserRole.Admin
             "class" -> {
@@ -38,8 +37,8 @@ class UserFunctions @Inject constructor(
 
             else -> UserRole.User
         }
-        return User(user.displayName ?: "User", user.email, userRole)
-    }
+        return Result.success(User(user.displayName ?: "User", user.email, userRole))
+    }.throwCancellation()
 
     fun signOut() {
         auth.signOut()
@@ -58,7 +57,7 @@ class UserFunctions @Inject constructor(
                 }
             )
         }
-    }.onFailure { if (it is CancellationException) throw it }
+    }.throwCancellation()
 
     suspend fun setUserRole(email: String, userRole: UserRole): Result<Unit> = runCatching {
         val (role, classes) = when (userRole) {
@@ -69,5 +68,7 @@ class UserFunctions @Inject constructor(
         val data = json.encodeToString(FirebaseRoleRequest(email, role, classes))
         functions.getHttpsCallable("on_set_user_role").call(data).awaitWithTimeout()
         Unit
-    }.onFailure { if (it is CancellationException) throw it }
+    }.throwCancellation()
+
+    private fun <T> Result<T>.throwCancellation(): Result<T> = onFailure { if (it is CancellationException) throw it }
 }
