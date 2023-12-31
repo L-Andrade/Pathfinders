@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
@@ -42,6 +43,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.LottieProperty
@@ -114,6 +116,7 @@ fun AddEditParticipantScreen(
                     addParticipant = viewModel::addParticipant,
                     updateEmail = viewModel::updateEmail,
                     updateName = viewModel::updateName,
+                    updateContact = viewModel::updateContact,
                     updateScoutClass = viewModel::updateScoutClass,
                     updateDate = viewModel::updateDate,
                     modifier = Modifier.alpha(alpha)
@@ -167,6 +170,7 @@ private fun AddEditForm(
     onInvestiture: () -> Unit,
     addParticipant: () -> Unit,
     updateEmail: (String) -> Unit,
+    updateContact: (String) -> Unit,
     updateName: (String) -> Unit,
     updateDate: (Long) -> Unit,
     updateScoutClass: (ParticipantClass) -> Unit,
@@ -184,6 +188,7 @@ private fun AddEditForm(
                 Text(state.nameValidation.errorMessage ?: stringResource(id = R.string.name_hint))
             },
             isError = state.nameValidation.isError,
+            singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(24.dp))
@@ -209,6 +214,20 @@ private fun AddEditForm(
                 Text(state.emailValidation.errorMessage ?: stringResource(id = R.string.email_hint))
             },
             isError = state.emailValidation.isError,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        TextField(
+            value = state.contact,
+            onValueChange = updateContact,
+            label = {
+                Text(state.contactValidation.errorMessage ?: stringResource(id = R.string.contact_hint))
+            },
+            isError = state.contactValidation.isError,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(24.dp))

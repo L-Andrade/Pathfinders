@@ -11,6 +11,7 @@ class ParticipantMapper @Inject constructor() {
             id = id,
             name = fbParticipant.name,
             email = fbParticipant.email,
+            contact = fbParticipant.contact,
             participantClass = fbParticipant.scoutClass,
             dateOfBirth = if (fbParticipant.dateOfBirth != null) LocalDate.parse(fbParticipant.dateOfBirth) else null,
         )
@@ -20,6 +21,7 @@ class ParticipantMapper @Inject constructor() {
         return FirebaseParticipant(
             name = participant.name,
             email = participant.email,
+            contact = participant.contact,
             scoutClass = participant.participantClass,
             dateOfBirth = participant.birthday
         )

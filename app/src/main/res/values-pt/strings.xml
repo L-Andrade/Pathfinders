@@ -7,6 +7,7 @@
     <string name="add_participant">Adicionar participante</string>
     <string name="name_hint">Nome</string>
     <string name="email_hint">Email (Opcional)</string>
+    <string name="contact_hint">Contacto (Opcional)</string>
     <string name="edit">Editar</string>
     <string name="delete">Remover</string>
     <string name="delete_confirmation">Tem a certeza que quer apagar %1$s?</string>

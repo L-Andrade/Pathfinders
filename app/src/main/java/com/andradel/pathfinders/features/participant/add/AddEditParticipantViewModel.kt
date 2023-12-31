@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.R
+import com.andradel.pathfinders.extensions.combine
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
@@ -17,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -36,6 +36,7 @@ class AddEditParticipantViewModel @Inject constructor(
     private val participant = handle.navArgs<OptionalParticipantArg>().participant
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
+    private val contact = MutableStateFlow(participant?.contact.orEmpty())
     private val birthday = MutableStateFlow(participant?.dateOfBirth)
     private val participantResult = MutableStateFlow<ParticipantResult?>(null)
     private val participantClass = MutableStateFlow(participant?.participantClass)
@@ -43,18 +44,21 @@ class AddEditParticipantViewModel @Inject constructor(
     val isEditing = participant != null
 
     val state: StateFlow<AddEditParticipantState> = combine(
-        name, email, participantClass, participantResult, birthday
-    ) { name, email, participantClass, addParticipantResult, birthday ->
+        name, email, contact, participantClass, participantResult, birthday
+    ) { name, email, contact, participantClass, addParticipantResult, birthday ->
         val nameResult = nameValidation.validate(name)
         val emailResult = emailValidation.validate(email)
         AddEditParticipantState(
             name = name,
             email = email,
+            contact = contact,
             birthdayRepresentation = birthday?.toString(),
             birthday = (birthday ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
                 .toEpochMilli(),
             nameValidation = nameResult,
             emailValidation = emailResult,
+            // Always valid contact for now. Not sure if we want to validate this field at the moment
+            contactValidation = ValidationResult.Valid,
             participantClass = participantClass,
             isValid = nameResult.isValid && emailResult.isValid && participantClass != null,
             participantResult = addParticipantResult,
@@ -66,10 +70,12 @@ class AddEditParticipantViewModel @Inject constructor(
         AddEditParticipantState(
             name = "",
             email = "",
+            contact = "",
             birthdayRepresentation = null,
             birthday = 0L,
             nameValidation = nameValidation.validate(""),
             emailValidation = ValidationResult.Valid,
+            contactValidation = ValidationResult.Valid,
             isValid = false,
             participantClass = null,
             participantResult = null,
@@ -87,6 +93,10 @@ class AddEditParticipantViewModel @Inject constructor(
 
     fun updateEmail(email: String) {
         this.email.value = email
+    }
+
+    fun updateContact(contact: String) {
+        this.contact.value = contact
     }
 
     fun updateScoutClass(participantClass: ParticipantClass) {
@@ -110,6 +120,7 @@ class AddEditParticipantViewModel @Inject constructor(
                 val p = NewParticipant(
                     name = state.value.name,
                     email = email.takeIf { it.isNotBlank() },
+                    contact = contact.value.takeIf { it.isNotBlank() },
                     participantClass = participantClass,
                     birthday = birthday.value?.toString()
                 )
