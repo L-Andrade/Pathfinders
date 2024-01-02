@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Singleton
 class UserSession @Inject constructor(
     private val userFunctions: UserFunctions,
-    coroutineScope: CoroutineScope,
+    private val coroutineScope: CoroutineScope,
 ) {
     private val _userState = MutableStateFlow<UserState>(UserState.Loading)
     val userState = _userState.asStateFlow()
@@ -41,6 +41,12 @@ class UserSession @Inject constructor(
     fun signOut() {
         userFunctions.signOut()
         _userState.value = UserState.Guest
+    }
+
+    fun setUserToken(token: String) {
+        coroutineScope.launch {
+            userFunctions.setUserToken(token)
+        }
     }
 }
 

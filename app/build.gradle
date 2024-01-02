@@ -103,6 +103,7 @@ dependencies {
     implementation libs.firebase.database
     implementation libs.firebase.crashlytics
     implementation libs.firebase.functions
+    implementation libs.firebase.messaging
 
     // Serialization
     implementation libs.kotlinx.serialization.json
