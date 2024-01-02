@@ -41,7 +41,7 @@ class AddEditActivityViewModel @Inject constructor(
     private val classes = MutableStateFlow(activity?.classes.orEmpty())
     private val name = MutableStateFlow(activity?.name.orEmpty())
     private val date = MutableStateFlow(activity?.date)
-    private val addActivityResult = MutableStateFlow<AddActivityResult?>(null)
+    private val activityResult = MutableStateFlow<ActivityResult?>(null)
 
     val state = combine(
         name,
@@ -49,21 +49,22 @@ class AddEditActivityViewModel @Inject constructor(
         participants,
         classes,
         criteria,
-        addActivityResult,
+        activityResult,
         userSession.isAdmin,
-    ) { name, date, participants, classes, criteria, addActivityResult, isAdmin ->
+    ) { name, date, participants, classes, criteria, activityResult, isAdmin ->
         val nameValidation = nameValidation.validate(name)
         AddEditActivityState(
             name = name,
             nameValidation = nameValidation,
             dateRepresentation = date?.toString(),
-            date = (date ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant().toEpochMilli(),
+            date = (date ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
+                .toEpochMilli(),
             classes = classes,
             participants = participants,
             criteria = criteria,
-            isValid = nameValidation.isValid,
+            isValid = nameValidation.isValid && activityResult != ActivityResult.Loading,
             isAdmin = isAdmin,
-            addActivityResult = addActivityResult
+            activityResult = activityResult
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())
 
@@ -72,9 +73,13 @@ class AddEditActivityViewModel @Inject constructor(
         get() = activity == null || activity.toNewActivity() != state.value.toNewActivity()
 
     fun addActivity() {
+        activityResult.value = ActivityResult.Loading
         viewModelScope.launch {
-            dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = activity?.id)
-            addActivityResult.value = AddActivityResult.Success
+            dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = activity?.id).onSuccess {
+                activityResult.value = ActivityResult.Success
+            }.onFailure {
+                activityResult.value = ActivityResult.Failure
+            }
         }
     }
 
@@ -122,8 +127,13 @@ class AddEditActivityViewModel @Inject constructor(
 
     fun deleteActivity() {
         if (activity != null) {
+            activityResult.value = ActivityResult.Loading
             viewModelScope.launch {
-                dataSource.deleteActivity(activity.id)
+                dataSource.deleteActivity(activity.id).onSuccess {
+                    activityResult.value = ActivityResult.Success
+                }.onFailure {
+                    activityResult.value = ActivityResult.Failure
+                }
             }
         }
     }

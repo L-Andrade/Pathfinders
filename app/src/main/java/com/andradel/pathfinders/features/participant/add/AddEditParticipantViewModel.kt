@@ -45,7 +45,7 @@ class AddEditParticipantViewModel @Inject constructor(
 
     val state: StateFlow<AddEditParticipantState> = combine(
         name, email, contact, participantClass, participantResult, birthday
-    ) { name, email, contact, participantClass, addParticipantResult, birthday ->
+    ) { name, email, contact, participantClass, result, birthday ->
         val nameResult = nameValidation.validate(name)
         val emailResult = emailValidation.validate(email)
         AddEditParticipantState(
@@ -60,8 +60,9 @@ class AddEditParticipantViewModel @Inject constructor(
             // Always valid contact for now. Not sure if we want to validate this field at the moment
             contactValidation = ValidationResult.Valid,
             participantClass = participantClass,
-            isValid = nameResult.isValid && emailResult.isValid && participantClass != null,
-            participantResult = addParticipantResult,
+            isValid = nameResult.isValid && emailResult.isValid && participantClass != null &&
+                    result !is ParticipantResult.Loading,
+            participantResult = result,
             canDoInvestiture = isEditing && participantClass != ParticipantClass.last && participantClass == participant?.participantClass,
         )
     }.stateIn(
@@ -105,7 +106,8 @@ class AddEditParticipantViewModel @Inject constructor(
 
     fun onInvestiture() {
         val classes = ParticipantClass.entries
-        this.participantClass.value = classes[((participantClass.value?.ordinal ?: 0) + 1).coerceAtMost(classes.lastIndex)]
+        this.participantClass.value =
+            classes[((participantClass.value?.ordinal ?: 0) + 1).coerceAtMost(classes.lastIndex)]
     }
 
     fun addParticipant() {
@@ -124,8 +126,12 @@ class AddEditParticipantViewModel @Inject constructor(
                     participantClass = participantClass,
                     birthday = birthday.value?.toString()
                 )
-                dataSource.addOrUpdateParticipant(p, participant?.id)
-                participantResult.value = ParticipantResult.Success
+                participantResult.value = ParticipantResult.Loading
+                dataSource.addOrUpdateParticipant(p, participant?.id).onSuccess {
+                    participantResult.value = ParticipantResult.Success
+                }.onFailure {
+                    participantResult.value = ParticipantResult.Failure(R.string.generic_error)
+                }
             }
         }
     }

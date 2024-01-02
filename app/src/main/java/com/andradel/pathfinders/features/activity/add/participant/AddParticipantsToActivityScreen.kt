@@ -137,7 +137,8 @@ private fun ParticipantSelectionList(
         item {
             Column(modifier = Modifier
                 .padding(top = 16.dp)
-                .padding(horizontal = 16.dp)) {
+                .padding(horizontal = 16.dp)
+            ) {
                 Header(header = R.string.participant_list) {
                     OutlinedButton(onClick = onAddNewParticipant) {
                         Row(verticalAlignment = Alignment.CenterVertically) {

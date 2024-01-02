@@ -44,9 +44,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.andradel.pathfinders.R
+import com.andradel.pathfinders.extensions.collectChannelFlow
 import com.andradel.pathfinders.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.features.admin.role.model.stringRes
 import com.andradel.pathfinders.model.ParticipantClass
@@ -55,7 +54,6 @@ import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 @Destination(navArgsDelegate = UserArg::class)
@@ -68,19 +66,17 @@ fun EditUserRoleScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     LaunchedEffect(key1 = Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.result.collectLatest { result ->
-                result.onSuccess {
-                    navigator.navigateUp()
-                }.onFailure {
-                    val snackbarResult = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.generic_error),
-                        actionLabel = context.getString(R.string.try_again),
-                        duration = SnackbarDuration.Short,
-                    )
-                    if (snackbarResult == SnackbarResult.ActionPerformed) {
-                        viewModel.save()
-                    }
+        lifecycleOwner.collectChannelFlow(viewModel.result) { result ->
+            result.onSuccess {
+                navigator.navigateUp()
+            }.onFailure {
+                val snackbarResult = snackbarHostState.showSnackbar(
+                    message = context.getString(R.string.generic_error),
+                    actionLabel = context.getString(R.string.try_again),
+                    duration = SnackbarDuration.Short,
+                )
+                if (snackbarResult == SnackbarResult.ActionPerformed) {
+                    viewModel.save()
                 }
             }
         }
@@ -190,7 +186,11 @@ private fun RoleDropdown(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        Text(text = stringResource(R.string.role), style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
+        Text(
+            text = stringResource(R.string.role),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.weight(1f)
+        )
         Surface(
             color = MaterialTheme.colorScheme.surfaceVariant,
             shape = RoundedCornerShape(4.dp),

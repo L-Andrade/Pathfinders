@@ -1,5 +1,6 @@
 package com.andradel.pathfinders.firebase.functions
 
+import com.andradel.pathfinders.extensions.throwCancellation
 import com.andradel.pathfinders.firebase.awaitWithTimeout
 import com.andradel.pathfinders.firebase.functions.model.FirebaseRoleRequest
 import com.andradel.pathfinders.firebase.functions.model.FirebaseUser
@@ -12,7 +13,6 @@ import com.google.firebase.functions.FirebaseFunctions
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
 class UserFunctions @Inject constructor(
     private val auth: FirebaseAuth,
@@ -69,6 +69,4 @@ class UserFunctions @Inject constructor(
         functions.getHttpsCallable("on_set_user_role").call(data).awaitWithTimeout()
         Unit
     }.throwCancellation()
-
-    private fun <T> Result<T>.throwCancellation(): Result<T> = onFailure { if (it is CancellationException) throw it }
 }

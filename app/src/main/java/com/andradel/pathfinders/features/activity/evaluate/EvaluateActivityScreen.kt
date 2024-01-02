@@ -17,12 +17,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -33,10 +36,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
+import com.andradel.pathfinders.extensions.collectChannelFlow
 import com.andradel.pathfinders.model.activity.ActivityArg
 import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.CriteriaScore
@@ -63,7 +69,20 @@ fun EvaluateActivityScreen(
             navigator.navigateUp()
         }
     }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(key1 = Unit) {
+        lifecycleOwner.collectChannelFlow(viewModel.result) { result ->
+            result.onSuccess {
+                navigator.navigateUp()
+            }.onFailure {
+                snackbarHostState.showSnackbar(context.getString(R.string.generic_error))
+            }
+        }
+    }
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = R.string.evaluate_activity,
@@ -75,10 +94,8 @@ fun EvaluateActivityScreen(
                     }
                 },
                 endContent = {
-                    TextButton(onClick = {
-                        viewModel.updateActivityScores()
-                        navigator.navigateUp()
-                    }) {
+                    val loading by viewModel.loading.collectAsState()
+                    TextButton(onClick = viewModel::updateActivityScores, enabled = !loading) {
                         Text(text = stringResource(id = R.string.done))
                     }
                 }

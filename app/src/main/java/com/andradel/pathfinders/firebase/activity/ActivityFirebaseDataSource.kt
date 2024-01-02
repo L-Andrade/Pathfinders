@@ -1,5 +1,7 @@
 package com.andradel.pathfinders.firebase.activity
 
+import com.andradel.pathfinders.extensions.throwCancellation
+import com.andradel.pathfinders.firebase.awaitWithTimeout
 import com.andradel.pathfinders.firebase.getValue
 import com.andradel.pathfinders.firebase.participant.FirebaseParticipant
 import com.andradel.pathfinders.firebase.participant.ParticipantMapper
@@ -13,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -38,7 +39,7 @@ class ActivityFirebaseDataSource @Inject constructor(
         activities.filter { activity -> activity.participants.any { it.id == userId } }
     }
 
-    suspend fun addOrUpdateActivity(activity: NewActivity, activityId: String?) {
+    suspend fun addOrUpdateActivity(activity: NewActivity, activityId: String?): Result<Unit> = runCatching {
         val key = activityId ?: requireNotNull(activitiesRef.push().key)
         val firebaseActivity = with(activity) {
             FirebaseActivity(
@@ -50,8 +51,9 @@ class ActivityFirebaseDataSource @Inject constructor(
                 scores = activity.scores.buildWith(participants, criteria),
             )
         }
-        activitiesRef.child(key).setValue(firebaseActivity).await()
-    }
+        activitiesRef.child(key).setValue(firebaseActivity).awaitWithTimeout()
+        Unit
+    }.throwCancellation()
 
     private fun ParticipantScores.buildWith(
         participants: List<Participant>,
@@ -67,14 +69,16 @@ class ActivityFirebaseDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateScores(activityId: String, scores: ParticipantScores) {
+    suspend fun updateScores(activityId: String, scores: ParticipantScores): Result<Unit> = runCatching {
         val activity = activitiesRef.child(activityId).getValue<FirebaseActivity>()
-        activitiesRef.child(activityId).setValue(activity.copy(scores = scores)).await()
-    }
+        activitiesRef.child(activityId).setValue(activity.copy(scores = scores)).awaitWithTimeout()
+        Unit
+    }.throwCancellation()
 
-    suspend fun deleteActivity(activityId: String) {
-        activitiesRef.child(activityId).removeValue().await()
-    }
+    suspend fun deleteActivity(activityId: String): Result<Unit> = runCatching {
+        activitiesRef.child(activityId).removeValue().awaitWithTimeout()
+        Unit
+    }.throwCancellation()
 
     private fun Map<String, FirebaseActivity>.toActivities(
         participants: Map<String, FirebaseParticipant>,

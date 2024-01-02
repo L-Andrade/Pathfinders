@@ -1,16 +1,17 @@
 package com.andradel.pathfinders.firebase.participant
 
+import com.andradel.pathfinders.extensions.throwCancellation
+import com.andradel.pathfinders.firebase.awaitWithTimeout
 import com.andradel.pathfinders.firebase.getMap
 import com.andradel.pathfinders.firebase.toFlow
 import com.andradel.pathfinders.firebase.toMapFlow
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.Participant
 import com.google.firebase.database.FirebaseDatabase
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 class ParticipantFirebaseDataSource @Inject constructor(
     db: FirebaseDatabase,
@@ -32,14 +33,17 @@ class ParticipantFirebaseDataSource @Inject constructor(
     private fun Map<String, FirebaseParticipant>.toParticipants() =
         map { (key, value) -> mapper.toParticipant(id = key, value) }
 
-    suspend fun addOrUpdateParticipant(participant: NewParticipant, participantId: String?) {
-        val key = participantId ?: requireNotNull(participantsRef.push().key)
-        participantsRef.child(key).setValue(mapper.toFirebaseParticipant(participant)).await()
-    }
+    suspend fun addOrUpdateParticipant(participant: NewParticipant, participantId: String?): Result<Unit> =
+        runCatching {
+            val key = participantId ?: requireNotNull(participantsRef.push().key)
+            participantsRef.child(key).setValue(mapper.toFirebaseParticipant(participant)).awaitWithTimeout()
+            Unit
+        }.throwCancellation()
 
-    suspend fun deleteParticipant(participantId: String) {
-        participantsRef.child(participantId).removeValue().await()
-    }
+    suspend fun deleteParticipant(participantId: String): Result<Unit> = runCatching {
+        participantsRef.child(participantId).removeValue().awaitWithTimeout()
+        Unit
+    }.throwCancellation()
 
     suspend fun isParticipantEmailRegistered(email: String, participantId: String?): Boolean {
         if (email.isBlank()) return false

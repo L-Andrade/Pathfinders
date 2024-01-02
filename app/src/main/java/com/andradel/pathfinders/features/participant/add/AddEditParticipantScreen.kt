@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
@@ -99,7 +100,8 @@ fun AddEditParticipantScreen(
         content = { padding ->
             val result by remember { derivedStateOf { state.participantResult } }
             var showCandle by remember { mutableStateOf(false) }
-            AddParticipantResult(result, navigator) {
+            var loading by remember { mutableStateOf(false) }
+            AddParticipantResult(result, navigator, { loading = it }) {
                 LaunchedEffect(key1 = result) {
                     snackbarHostState.showSnackbar(it)
                 }
@@ -127,6 +129,9 @@ fun AddEditParticipantScreen(
                         color = state.participantClass?.color,
                         onEnd = viewModel::addParticipant,
                     )
+                }
+                if (loading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
         }
@@ -298,12 +303,14 @@ private fun ScoutClassDropDown(
 private fun AddParticipantResult(
     result: ParticipantResult?,
     navigator: DestinationsNavigator,
+    onLoading: (Boolean) -> Unit,
     showSnackbar: @Composable (String) -> Unit
 ) {
+    onLoading(result is ParticipantResult.Loading)
     when (result) {
         is ParticipantResult.Failure -> showSnackbar(stringResource(id = result.message))
         ParticipantResult.Success -> navigator.navigateUp()
-        null -> Unit
+        ParticipantResult.Loading, null -> Unit
     }
 }
 
