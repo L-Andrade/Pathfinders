@@ -51,6 +51,7 @@ import com.andradel.pathfinders.features.admin.role.model.stringRes
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.UserArg
 import com.andradel.pathfinders.model.color
+import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -157,7 +158,7 @@ private fun ClassesCheckboxes(
             key(pClass) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = pClass.name,
+                        text = pClass.title,
                         style = MaterialTheme.typography.labelSmall,
                         textAlign = TextAlign.End,
                         modifier = Modifier.weight(1f)

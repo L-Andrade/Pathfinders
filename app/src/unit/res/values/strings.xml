@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="jovem">Youth</string>
-    <string name="juvenil">Youngster</string>
-    <string name="trinta_mais">30 Plus</string>
+    <string name="remanescente">UA1 - Remanescente</string>
+    <string name="mensageiros">UA2 - Mensageiros</string>
+    <string name="discipulos">UA3 - Discípulos</string>
+    <string name="unidos_em_cristo">UA4 - Unidos em Cristo</string>
+    <string name="agape">UA5 - Agape</string>
+    <string name="trinta_mais">UA6 - 30+</string>
 </resources>

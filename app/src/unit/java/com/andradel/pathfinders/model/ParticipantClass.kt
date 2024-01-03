@@ -9,15 +9,18 @@ import com.andradel.pathfinders.R
 
 @Keep
 enum class ParticipantClass {
-    Juvenil,
-    Jovem,
-    TrintaMais,
+    UA1,
+    UA2,
+    UA3,
+    UA4,
+    UA5,
+    UA6,
     Invalid;
 
     companion object {
         val options = entries - Invalid
 
-        val last = TrintaMais
+        val last = UA6
     }
 }
 
@@ -26,8 +29,11 @@ val ParticipantClass.color: Color
 
 val ParticipantClass.title: String
     @Composable get() = when (this) {
-        ParticipantClass.Juvenil -> R.string.juvenil
-        ParticipantClass.Jovem -> R.string.jovem
-        ParticipantClass.TrintaMais -> R.string.trinta_mais
+        ParticipantClass.UA1 -> R.string.remanescente
+        ParticipantClass.UA2 -> R.string.mensageiros
+        ParticipantClass.UA3 -> R.string.discipulos
+        ParticipantClass.UA4 -> R.string.unidos_em_cristo
+        ParticipantClass.UA5 -> R.string.agape
+        ParticipantClass.UA6 -> R.string.trinta_mais
         ParticipantClass.Invalid -> R.string.invalid_class
     }.let { stringResource(id = it) }
