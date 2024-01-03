@@ -34,27 +34,22 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var uesrSession: UserSession
+    lateinit var userSession: UserSession
 
-    private val requestPermissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
-        if (isGranted) {
-            // FCM SDK (and your app) can post notifications.
-        } else {
-            // TODO: Inform user that that your app will not show notifications.
-        }
+    private val requestPermissionLauncher = registerForActivityResult(RequestPermission()) { _ ->
+        // If not granted, we can show something informing that notifications won't be received
+        // But for now, we won't show anything special
     }
 
     private fun askNotificationPermission() {
-        // TODO: only do it for admin/class admin
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when {
-                checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> {
-                    // FCM SDK (and your app) can post notifications.
-                }
+                checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED -> Unit
 
                 shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
-                    // TODO: display UI asking for notification.
-                    //  If accepted, show it with requestPermissionLauncher.launch(POST_NOTIFICATIONS)
+                    // We should tell the user why we have notifications
+                    // And ask the user if he wants to enable them with. If they accept, use:
+                    // requestPermissionLauncher.launch(POST_NOTIFICATIONS)
                 }
 
                 else -> requestPermissionLauncher.launch(POST_NOTIFICATIONS)
@@ -70,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             val result = Firebase.messaging.token.await()
-            uesrSession.setUserToken(result)
+            userSession.setUserToken(result)
         }
         setContent {
             PathfindersTheme {
