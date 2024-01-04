@@ -17,10 +17,13 @@ import com.andradel.pathfinders.user.isAdmin
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -42,6 +45,7 @@ class AddEditActivityViewModel @Inject constructor(
     private val name = MutableStateFlow(activity?.name.orEmpty())
     private val date = MutableStateFlow(activity?.date)
     private val activityResult = MutableStateFlow<ActivityResult?>(null)
+    private val createForEach = MutableStateFlow(false)
 
     val state = combine(
         name,
@@ -51,7 +55,8 @@ class AddEditActivityViewModel @Inject constructor(
         criteria,
         activityResult,
         userSession.isAdmin,
-    ) { name, date, participants, classes, criteria, activityResult, isAdmin ->
+        createForEach,
+    ) { name, date, participants, classes, criteria, activityResult, isAdmin, createForEach ->
         val nameValidation = nameValidation.validate(name)
         AddEditActivityState(
             name = name,
@@ -64,7 +69,8 @@ class AddEditActivityViewModel @Inject constructor(
             criteria = criteria,
             isValid = nameValidation.isValid && activityResult != ActivityResult.Loading,
             isAdmin = isAdmin,
-            activityResult = activityResult
+            activityResult = activityResult,
+            createForEach = createForEach,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())
 
@@ -75,10 +81,22 @@ class AddEditActivityViewModel @Inject constructor(
     fun addActivity() {
         activityResult.value = ActivityResult.Loading
         viewModelScope.launch {
-            dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = activity?.id).onSuccess {
-                activityResult.value = ActivityResult.Success
-            }.onFailure {
-                activityResult.value = ActivityResult.Failure
+            if (createForEach.value) {
+                supervisorScope {
+                    val deferrables = classes.value.map { pClass ->
+                        async {
+                            dataSource.addOrUpdateActivity(state.value.toNewActivity(listOf(pClass)), activityId = null)
+                        }
+                    }
+                    deferrables.awaitAll()
+                    activityResult.value = ActivityResult.Success
+                }
+            } else {
+                dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = activity?.id).onSuccess {
+                    activityResult.value = ActivityResult.Success
+                }.onFailure {
+                    activityResult.value = ActivityResult.Failure
+                }
             }
         }
     }
@@ -92,14 +110,15 @@ class AddEditActivityViewModel @Inject constructor(
         scores = scores
     )
 
-    private fun AddEditActivityState.toNewActivity(): NewActivity = NewActivity(
-        name = name,
-        date = dateRepresentation,
-        participants = participants,
-        classes = classes,
-        criteria = criteria,
-        scores = activity?.scores.orEmpty()
-    )
+    private fun AddEditActivityState.toNewActivity(classes: List<ParticipantClass> = this.classes): NewActivity =
+        NewActivity(
+            name = name,
+            date = dateRepresentation,
+            participants = participants,
+            classes = classes,
+            criteria = criteria,
+            scores = activity?.scores.orEmpty()
+        )
 
     fun setSelection(participants: List<Participant>) {
         this.participants.value = participants
@@ -136,5 +155,9 @@ class AddEditActivityViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setCreateForEach(createForEach: Boolean) {
+        this.createForEach.value = createForEach
     }
 }

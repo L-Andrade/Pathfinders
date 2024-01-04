@@ -136,6 +136,7 @@ fun AddEditActivityScreen(
                 onAddActivity = viewModel::addActivity,
                 onUpdateName = viewModel::updateName,
                 onUpdateDate = viewModel::updateDate,
+                onCreateForEach = viewModel::setCreateForEach,
                 onSetAllSelected = viewModel::setAllSelected,
                 onSetClassSelected = viewModel::setClassSelected,
                 onSelectCriteria = { navigator.navigate(AddCriteriaToActivityScreenDestination(ArrayList(state.criteria))) },
@@ -161,6 +162,7 @@ private fun AddEditColumn(
     onAddActivity: () -> Unit,
     onUpdateName: (String) -> Unit,
     onUpdateDate: (Long) -> Unit,
+    onCreateForEach: (Boolean) -> Unit,
     onSetAllSelected: (Boolean) -> Unit,
     onSetClassSelected: (ParticipantClass, Boolean) -> Unit,
     onSelectCriteria: () -> Unit,
@@ -194,6 +196,15 @@ private fun AddEditColumn(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Switch(checked = isSelected, onCheckedChange = onSetAllSelected, enabled = state.isAdmin)
+                }
+            }
+            if (!isEditing && state.isAdmin) {
+                Row(
+                    modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(checked = state.createForEach, onCheckedChange = onCreateForEach)
+                    Text(text = stringResource(R.string.create_activity_for_each_class))
                 }
             }
         }
