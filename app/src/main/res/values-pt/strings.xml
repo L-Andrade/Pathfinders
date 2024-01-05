@@ -75,7 +75,7 @@
         <item quantity="many">%1$s anos</item>
     </plurals>
     <string name="last_seen_days">Visto pela última vez há %1$s dias</string>
-    <string name="no_shows">Desaparecidos</string>
+    <string name="no_shows">Ausências</string>
     <string name="admin_screen">Administração</string>
     <string name="generic_error">Ocorreu um erro…</string>
     <string name="try_again">Tentar outra vez</string>
