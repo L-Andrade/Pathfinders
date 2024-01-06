@@ -13,6 +13,7 @@ data class AddEditParticipantState(
     val emailValidation: ValidationResult,
     val contactValidation: ValidationResult,
     val participantClass: ParticipantClass?,
+    val classOptions: List<ParticipantClass>,
     val isValid: Boolean,
     val participantResult: ParticipantResult?,
     val canDoInvestiture: Boolean,

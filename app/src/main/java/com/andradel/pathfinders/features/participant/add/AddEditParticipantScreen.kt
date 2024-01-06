@@ -200,7 +200,7 @@ private fun AddEditForm(
         Row(verticalAlignment = Alignment.CenterVertically) {
             ScoutClassDropDown(
                 state.participantClass,
-                ParticipantClass.options,
+                state.classOptions,
                 updateScoutClass,
                 Modifier.weight(1f)
             )

@@ -10,6 +10,9 @@ import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSour
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.OptionalParticipantArg
+import com.andradel.pathfinders.user.UserRole
+import com.andradel.pathfinders.user.UserSession
+import com.andradel.pathfinders.user.role
 import com.andradel.pathfinders.validation.EmailValidation
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.ValidationResult
@@ -29,6 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditParticipantViewModel @Inject constructor(
     handle: SavedStateHandle,
+    userSession: UserSession,
     private val dataSource: ParticipantFirebaseDataSource,
     private val nameValidation: NameValidation,
     private val emailValidation: EmailValidation,
@@ -44,8 +48,8 @@ class AddEditParticipantViewModel @Inject constructor(
     val isEditing = participant != null
 
     val state: StateFlow<AddEditParticipantState> = combine(
-        name, email, contact, participantClass, participantResult, birthday
-    ) { name, email, contact, participantClass, result, birthday ->
+        name, email, contact, participantClass, participantResult, birthday, userSession.role
+    ) { name, email, contact, participantClass, result, birthday, role ->
         val nameResult = nameValidation.validate(name)
         val emailResult = emailValidation.validate(email)
         AddEditParticipantState(
@@ -60,6 +64,7 @@ class AddEditParticipantViewModel @Inject constructor(
             // Always valid contact for now. Not sure if we want to validate this field at the moment
             contactValidation = ValidationResult.Valid,
             participantClass = participantClass,
+            classOptions = (if (role is UserRole.ClassAdmin) role.classes else ParticipantClass.options).toList(),
             isValid = nameResult.isValid && emailResult.isValid && participantClass != null &&
                     result !is ParticipantResult.Loading,
             participantResult = result,
@@ -79,6 +84,7 @@ class AddEditParticipantViewModel @Inject constructor(
             contactValidation = ValidationResult.Valid,
             isValid = false,
             participantClass = null,
+            classOptions = emptyList(),
             participantResult = null,
             canDoInvestiture = false,
         )
