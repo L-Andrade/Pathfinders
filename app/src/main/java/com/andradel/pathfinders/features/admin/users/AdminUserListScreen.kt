@@ -1,4 +1,4 @@
-package com.andradel.pathfinders.features.admin
+package com.andradel.pathfinders.features.admin.users
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -38,9 +38,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun AdminScreen(
+fun AdminUserListScreen(
     navigator: DestinationsNavigator,
-    viewModel: AdminViewModel = hiltViewModel()
+    viewModel: AdminUserListViewModel = hiltViewModel()
 ) {
     Scaffold(
         topBar = {
@@ -57,12 +57,12 @@ fun AdminScreen(
                     .fillMaxSize()
             ) {
                 when (val s = state) {
-                    AdminScreenState.Error -> ErrorScreen(
+                    AdminUserListScreenState.Error -> ErrorScreen(
                         viewModel::loadUsers,
                         modifier = Modifier.align(Alignment.Center)
                     )
 
-                    is AdminScreenState.Loaded -> LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp)) {
+                    is AdminUserListScreenState.Loaded -> LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp)) {
                         items(s.users, key = { it.email.orEmpty() }) { user ->
                             UserItem(
                                 user = user,
@@ -73,7 +73,7 @@ fun AdminScreen(
                         }
                     }
 
-                    AdminScreenState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    AdminUserListScreenState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
         }
