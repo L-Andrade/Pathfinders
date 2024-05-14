@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
-import com.andradel.pathfinders.features.destinations.AdminUserListScreenDestination
+import com.andradel.pathfinders.features.destinations.AdminScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
 import com.andradel.pathfinders.features.destinations.RemindersScreenDestination
@@ -83,7 +83,7 @@ fun HomeScreen(
                         state = s,
                         onSignOutClick = viewModel::onSignOutClick,
                         onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination) },
-                        onAdminClick = { navigator.navigate(AdminUserListScreenDestination) },
+                        onAdminClick = { navigator.navigate(AdminScreenDestination) },
                         onActivitiesClick = { navigator.navigate(ActivityListScreenDestination) },
                         onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
                         onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) }

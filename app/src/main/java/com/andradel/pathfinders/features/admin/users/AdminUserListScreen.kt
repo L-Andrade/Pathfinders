@@ -44,7 +44,7 @@ fun AdminUserListScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBarTitleWithIcon(titleRes = R.string.admin_screen, onIconClick = navigator::navigateUp)
+            TopAppBarTitleWithIcon(titleRes = R.string.admin_user_list, onIconClick = navigator::navigateUp)
         },
         content = { padding ->
             val state by viewModel.state.collectAsState()

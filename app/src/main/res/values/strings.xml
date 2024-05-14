@@ -75,6 +75,45 @@
     <string name="last_seen_days">Last seen %1$s days ago</string>
     <string name="no_shows">No shows</string>
     <string name="admin_screen">Admin zone</string>
+    <string name="admin_user_list">User list</string>
+    <string name="admin_archive">Archive</string>
+    <string name="create_archive">Create archive</string>
+    <plurals name="select_number_of_activities">
+        <item quantity="one">Select %1$s activity</item>
+        <item quantity="other">Select %1$s activities</item>
+    </plurals>
+    <plurals name="archive_participants">
+        <item quantity="one">%1$s participant</item>
+        <item quantity="other">%1$s participants</item>
+    </plurals>
+    <plurals name="archive_activities">
+        <item quantity="one">%1$s activity</item>
+        <item quantity="other">%1$s activities</item>
+    </plurals>
+    <plurals name="archive_delete_participants">
+        <item quantity="one">Delete %1$s participant</item>
+        <item quantity="other">Delete %1$s participants</item>
+    </plurals>
+    <plurals name="archive_participants_in_other_activities">
+        <item quantity="one">%1$s participant is used in other activities</item>
+        <item quantity="other">%1$s participants are used in other activities</item>
+    </plurals>
+    <plurals name="archive_delete_criteria">
+        <item quantity="one">Delete %1$s criteria</item>
+        <item quantity="other">Delete %1$s criteria</item>
+    </plurals>
+    <plurals name="archive_criteria_in_other_activities">
+        <item quantity="one">%1$s criteria is used in other activities</item>
+        <item quantity="other">%1$s criteria are used in other activities</item>
+    </plurals>
+    <string name="add_by_date_range">Add between dates</string>
+    <string name="add_manually">Add manually</string>
+    <string name="add_all">Add all</string>
+    <string name="archiving">Archiving…</string>
+    <string name="creating_archive">Creating archive</string>
+    <string name="deleting_activities">Deleting activities</string>
+    <string name="deleting_participants">Deleting participants</string>
+    <string name="deleting_criteria">Deleting criteria</string>
     <string name="generic_error">Something went wrong…</string>
     <string name="try_again">Try again</string>
     <string name="edit_user_role">Edit user role</string>

@@ -13,4 +13,5 @@ data class Participant(
     val contact: String?,
     val participantClass: ParticipantClass,
     val dateOfBirth: LocalDate?,
+    val archived: Boolean,
 ) : Parcelable

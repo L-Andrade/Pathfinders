@@ -87,6 +87,7 @@ dependencies {
     androidTestImplementation(platform(libs.compose.bom))
     implementation libs.compose.ui
     implementation libs.compose.ui.preview
+    implementation libs.androidx.lifecycle.runtime.compose
     debugImplementation libs.compose.ui.tooling
     debugImplementation libs.compose.ui.manifest
 

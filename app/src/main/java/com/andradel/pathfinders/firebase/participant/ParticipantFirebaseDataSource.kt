@@ -24,14 +24,14 @@ class ParticipantFirebaseDataSource @Inject constructor(
 
     fun participant(key: String): Flow<Participant?> =
         participantsRef.child(key).toFlow<FirebaseParticipant>().map { (key, fbParticipant) ->
-            mapper.toParticipant(key, fbParticipant)
+            mapper.toParticipant(key, fbParticipant, archived = false)
         }
 
     suspend fun participantByEmail(email: String): Participant? =
         participants.firstOrNull()?.firstOrNull { participant -> email.equals(participant.email, ignoreCase = true) }
 
     private fun Map<String, FirebaseParticipant>.toParticipants() =
-        map { (key, value) -> mapper.toParticipant(id = key, value) }
+        map { (key, value) -> mapper.toParticipant(id = key, value, archived = false) }
 
     suspend fun addOrUpdateParticipant(participant: NewParticipant, participantId: String?): Result<Unit> =
         runCatching {
@@ -50,4 +50,9 @@ class ParticipantFirebaseDataSource @Inject constructor(
         val participants = participantsRef.getMap<FirebaseParticipant>()
         return participants.any { it.value.email.equals(email, ignoreCase = true) && it.key != participantId }
     }
+
+    suspend fun deleteParticipants(participantIds: List<String>): Result<Unit> = runCatching {
+        participantsRef.updateChildren(participantIds.associateWith { null }).awaitWithTimeout()
+        Unit
+    }.throwCancellation()
 }

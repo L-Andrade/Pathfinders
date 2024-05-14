@@ -15,7 +15,9 @@ data class Activity(
     val classes: List<ParticipantClass>,
     val criteria: List<ActivityCriteria>,
     val scores: ParticipantScores,
+    val archived: Boolean,
 ) : Parcelable
+
 fun Activity.participantPoints(participantId: String): Int {
     return scores[participantId]?.values?.sum() ?: 0
 }

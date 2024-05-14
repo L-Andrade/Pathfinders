@@ -77,6 +77,52 @@
     <string name="last_seen_days">Visto pela última vez há %1$s dias</string>
     <string name="no_shows">Ausências</string>
     <string name="admin_screen">Administração</string>
+    <string name="admin_user_list">Lista de utilizadores</string>
+    <string name="admin_archive">Arquivo</string>
+    <string name="create_archive">Criar arquivo</string>
+    <plurals name="select_number_of_activities">
+        <item quantity="one">Selecionar %1$s atividade</item>
+        <item quantity="other">Selecionar %1$s atividades</item>
+        <item quantity="many">Selecionar %1$s atividades</item>
+    </plurals>
+    <plurals name="archive_participants">
+        <item quantity="one">%1$s participante</item>
+        <item quantity="other">%1$s participantes</item>
+        <item quantity="many">%1$s participantes</item>
+    </plurals>
+    <plurals name="archive_activities">
+        <item quantity="one">%1$s atividade</item>
+        <item quantity="other">%1$s atividades</item>
+        <item quantity="many">%1$s atividades</item>
+    </plurals>
+    <plurals name="archive_delete_participants">
+        <item quantity="one">Apagar %1$s participante</item>
+        <item quantity="other">Apagar %1$s participantes</item>
+        <item quantity="many">Apagar %1$s participantes</item>
+    </plurals>
+    <plurals name="archive_participants_in_other_activities">
+        <item quantity="one">%1$s participante está noutras atividades que não serão arquivadas</item>
+        <item quantity="other">%1$s participantes estão noutras atividades que não serão arquivadas</item>
+        <item quantity="many">%1$s participantes estão noutras atividades que não serão arquivadas</item>
+    </plurals>
+    <plurals name="archive_criteria_in_other_activities">
+        <item quantity="one">%1$s critério estão noutras atividades que não serão arquivadas</item>
+        <item quantity="other">%1$s critérios estão noutras atividades que não serão arquivadas</item>
+        <item quantity="many">%1$s critérios estão noutras atividades que não serão arquivadas</item>
+    </plurals>
+    <plurals name="archive_delete_criteria">
+        <item quantity="one">Apagar %1$s critério</item>
+        <item quantity="other">Apagar %1$s critérios</item>
+        <item quantity="many">Apagar %1$s critérios</item>
+    </plurals>
+    <string name="add_by_date_range">Adicionar entre datas</string>
+    <string name="add_manually">Adicionar manualmente</string>
+    <string name="add_all">Adicionar todas</string>
+    <string name="archiving">A arquivar…</string>
+    <string name="creating_archive">Arquivo</string>
+    <string name="deleting_activities">Apagar atividades</string>
+    <string name="deleting_participants">Apagar participantes</string>
+    <string name="deleting_criteria">Deleting criteria</string>
     <string name="generic_error">Ocorreu um erro…</string>
     <string name="try_again">Tentar outra vez</string>
     <string name="edit_user_role">Editar permissões</string>

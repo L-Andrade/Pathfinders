@@ -26,6 +26,7 @@ inline fun <reified T> DatabaseReference.toMapFlow(): Flow<Map<String, T>> = cal
         removeEventListener(listener)
     }
 }
+
 inline fun <reified T> DatabaseReference.toFlow(): Flow<Pair<String, T>> = callbackFlow {
     val type = T::class.java
     val listener = object : ValueEventListener {
@@ -53,6 +54,22 @@ suspend inline fun <reified T> DatabaseReference.getMap(): Map<String, T> = susp
     val listener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             cont.resume(dataSnapshot.toMap(type))
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            cont.resumeWithException(error.toException())
+        }
+    }
+    addListenerForSingleValueEvent(listener)
+    cont.invokeOnCancellation {
+        removeEventListener(listener)
+    }
+}
+
+suspend fun DatabaseReference.exists(): Boolean = suspendCancellableCoroutine { cont ->
+    val listener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            cont.resume(dataSnapshot.exists())
         }
 
         override fun onCancelled(error: DatabaseError) {

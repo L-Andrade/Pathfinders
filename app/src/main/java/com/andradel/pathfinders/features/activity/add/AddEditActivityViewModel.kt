@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.extensions.combine
+import com.andradel.pathfinders.extensions.toMillis
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
@@ -27,7 +28,6 @@ import kotlinx.coroutines.supervisorScope
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -62,8 +62,7 @@ class AddEditActivityViewModel @Inject constructor(
             name = name,
             nameValidation = nameValidation,
             dateRepresentation = date?.toString(),
-            date = (date ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
-                .toEpochMilli(),
+            date = (date ?: LocalDate.now()).atStartOfDay().toMillis(),
             classes = classes,
             participants = participants,
             criteria = criteria,
