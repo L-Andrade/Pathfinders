@@ -5,16 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityCriteriaFirebaseDataSource
-import com.andradel.pathfinders.model.activity.ActivityCriteria
-import com.andradel.pathfinders.model.activity.CriteriaSelectionArg
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
+import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AddCriteriaToActivityViewModel @Inject constructor(

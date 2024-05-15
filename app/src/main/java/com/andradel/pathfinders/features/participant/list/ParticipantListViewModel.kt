@@ -1,12 +1,15 @@
 package com.andradel.pathfinders.features.participant.list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.participantPoints
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.model.participant.ParticipantListArg
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,23 +17,28 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ParticipantListViewModel @Inject constructor(
+    handle: SavedStateHandle,
     private val dataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
     userSession: UserSession,
 ) : ViewModel() {
     private val collapsed = MutableStateFlow<Map<ParticipantClass, Boolean>>(emptyMap())
     private val sorting = MutableStateFlow(ParticipantSort.NameAsc)
+    private val args = handle.navArgs<ParticipantListArg>()
+    val archiveName = args.archiveName
+    private val isArchived = archiveName != null
 
     val state: StateFlow<ParticipantListState> =
         combine(
-            dataSource.participants,
-            activityDataSource.activities,
+            dataSource.participants(archiveName),
+            activityDataSource.activities(archiveName),
             collapsed,
             sorting,
         ) { participants, activities, collapsed, sorting ->
@@ -46,7 +54,7 @@ class ParticipantListViewModel @Inject constructor(
             ParticipantListState.Loaded(groupedParticipants, sorting)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ParticipantListState.Loading)
 
-    val isAdmin: StateFlow<Boolean> = userSession.isAdmin
+    val canModify: StateFlow<Boolean> = userSession.isAdmin.map { isAdmin -> isAdmin && !isArchived }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     fun deleteParticipant(participant: Participant) {

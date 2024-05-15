@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -32,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andradel.pathfinders.R
+import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
 import com.andradel.pathfinders.features.destinations.CreateArchiveScreenDestination
+import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -58,7 +61,8 @@ fun ArchiveListScreen(
                         items(s.archives, key = { it.name }) { item ->
                             ArchiveItem(
                                 item = item,
-                                onClick = {},
+                                onActivitiesClick = { navigator.navigate(ActivityListScreenDestination(item.name)) },
+                                onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination(item.name)) },
                                 onDelete = { viewModel.onDeleteArchive(item.name) }
                             )
                         }
@@ -95,8 +99,14 @@ private fun CreateArchive(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ArchiveItem(item: ArchiveItem, onClick: () -> Unit, onDelete: () -> Unit, modifier: Modifier = Modifier) {
-    Card(onClick = onClick, modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+private fun ArchiveItem(
+    item: ArchiveItem,
+    onParticipantsClick: () -> Unit,
+    onActivitiesClick: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         Column(modifier = Modifier.padding(all = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = item.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
@@ -107,28 +117,52 @@ private fun ArchiveItem(item: ArchiveItem, onClick: () -> Unit, onDelete: () -> 
                     )
                 }
             }
-            Text(
-                text = pluralStringResource(id = R.plurals.archive_activities, item.activities, item.activities),
-                style = MaterialTheme.typography.labelMedium
-            )
-            Text(
-                text = pluralStringResource(id = R.plurals.archive_participants, item.participants, item.participants),
-                style = MaterialTheme.typography.labelMedium
-            )
             if (item.startDate != null && item.endDate != null) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(text = item.startDate, style = MaterialTheme.typography.labelMedium)
-                    Icon(
-                        Icons.AutoMirrored.Default.ArrowForward,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                Dates(item.startDate, item.endDate)
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = onActivitiesClick, modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = pluralStringResource(
+                            id = R.plurals.archive_activities, item.activities, item.activities
+                        ),
+                        style = MaterialTheme.typography.labelMedium
                     )
-                    Text(text = item.endDate, style = MaterialTheme.typography.labelMedium)
+                }
+                Button(onClick = onParticipantsClick, modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = pluralStringResource(
+                            id = R.plurals.archive_participants, item.participants, item.participants
+                        ),
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Dates(startDate: String, endDate: String, modifier: Modifier = Modifier) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_calendar),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp)
+        )
+        Text(text = startDate, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(start = 4.dp))
+        Icon(
+            Icons.AutoMirrored.Default.ArrowForward,
+            contentDescription = null,
+            modifier = Modifier
+                .size(24.dp)
+                .padding(horizontal = 4.dp)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.ic_calendar),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp)
+        )
+        Text(text = endDate, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(start = 4.dp))
     }
 }

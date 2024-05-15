@@ -1,6 +1,7 @@
 package com.andradel.pathfinders.firebase.activity
 
 import com.andradel.pathfinders.extensions.throwCancellation
+import com.andradel.pathfinders.firebase.archiveChild
 import com.andradel.pathfinders.firebase.awaitWithTimeout
 import com.andradel.pathfinders.firebase.getValue
 import com.andradel.pathfinders.firebase.participant.FirebaseParticipant
@@ -15,46 +16,49 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ActivityFirebaseDataSource @Inject constructor(
-    db: FirebaseDatabase,
+    private val db: FirebaseDatabase,
     private val mapper: ActivityMapper,
 ) {
-    private val activitiesRef = db.reference.child("activities")
-    private val participantsRef = db.reference.child("participants")
-    private val criteriaRef = db.reference.child("criteria")
+    private fun activitiesRef(archiveName: String?) = db.reference.archiveChild(archiveName, "activities")
+    private fun participantsRef(archiveName: String?) = db.reference.archiveChild(archiveName, "participants")
+    private fun criteriaRef(archiveName: String?) = db.reference.archiveChild(archiveName, "criteria")
 
-    val activities: Flow<List<Activity>> =
+    fun activities(archiveName: String?): Flow<List<Activity>> =
         combine(
-            activitiesRef.ref.toMapFlow<FirebaseActivity>(),
-            participantsRef.ref.toMapFlow<FirebaseParticipant>(),
-            criteriaRef.ref.toMapFlow<FirebaseActivityCriteria>(),
+            activitiesRef(archiveName).ref.toMapFlow<FirebaseActivity>(),
+            participantsRef(archiveName).ref.toMapFlow<FirebaseParticipant>(),
+            criteriaRef(archiveName).ref.toMapFlow<FirebaseActivityCriteria>(),
         ) { activities, participants, criteria ->
-            mapper.toActivities(activities, participants, criteria, archived = false)
+            mapper.toActivities(activities, participants, criteria, archiveName)
         }
 
-    fun activitiesForUser(userId: String): Flow<List<Activity>> = activities.map { activities ->
-        activities.filter { activity -> activity.participants.any { it.id == userId } }
-    }
+    fun activitiesForUser(archiveName: String?, userId: String): Flow<List<Activity>> =
+        activities(archiveName).map { activities ->
+            activities.filter { activity -> activity.participants.any { it.id == userId } }
+        }
 
     suspend fun addOrUpdateActivity(activity: NewActivity, activityId: String?): Result<Unit> = runCatching {
-        val key = activityId ?: requireNotNull(activitiesRef.push().key)
+        val ref = activitiesRef(null)
+        val key = activityId ?: requireNotNull(ref.push().key)
         val firebaseActivity = mapper.toFirebaseActivity(activity)
-        activitiesRef.child(key).setValue(firebaseActivity).awaitWithTimeout()
+        ref.child(key).setValue(firebaseActivity).awaitWithTimeout()
         Unit
     }.throwCancellation()
 
     suspend fun updateScores(activityId: String, scores: ParticipantScores): Result<Unit> = runCatching {
-        val activity = activitiesRef.child(activityId).getValue<FirebaseActivity>()
-        activitiesRef.child(activityId).setValue(activity.copy(scores = scores)).awaitWithTimeout()
+        val ref = activitiesRef(null)
+        val activity = ref.child(activityId).getValue<FirebaseActivity>()
+        ref.child(activityId).setValue(activity.copy(scores = scores)).awaitWithTimeout()
         Unit
     }.throwCancellation()
 
     suspend fun deleteActivity(activityId: String): Result<Unit> = runCatching {
-        activitiesRef.child(activityId).removeValue().awaitWithTimeout()
+        activitiesRef(null).child(activityId).removeValue().awaitWithTimeout()
         Unit
     }.throwCancellation()
 
     suspend fun deleteActivities(activityIds: List<String>): Result<Unit> = runCatching {
-        activitiesRef.updateChildren(activityIds.associateWith { null }).awaitWithTimeout()
+        activitiesRef(null).updateChildren(activityIds.associateWith { null }).awaitWithTimeout()
         Unit
     }.throwCancellation()
 }

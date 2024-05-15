@@ -12,7 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
@@ -44,8 +44,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
 import com.andradel.pathfinders.model.activity.ActivityArg
-import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.CriteriaScore
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
@@ -120,6 +120,7 @@ fun EvaluateActivityScreen(
                 val participantCriteriaScores by remember(state) { derivedStateOf { state[participant.id].orEmpty() } }
                 ParticipantTab(
                     criteria = activity.criteria,
+                    isArchived = activity.archiveName != null,
                     scores = participantCriteriaScores,
                     onUpdateScore = { criteriaId, score -> viewModel.setScore(participant, criteriaId, score) }
                 )
@@ -139,7 +140,9 @@ private fun ParticipantTabs(
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
-            TabRowDefaults.Indicator(modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]))
+            TabRowDefaults.SecondaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
+            )
         },
         edgePadding = 8.dp,
         modifier = modifier
@@ -159,6 +162,7 @@ private fun ParticipantTabs(
 @Composable
 private fun ParticipantTab(
     criteria: List<ActivityCriteria>,
+    isArchived: Boolean,
     scores: CriteriaScore,
     onUpdateScore: (String, Int) -> Unit,
     modifier: Modifier = Modifier,
@@ -181,6 +185,7 @@ private fun ParticipantTab(
                 )
                 Slider(
                     value = value,
+                    enabled = !isArchived,
                     onValueChange = { value = it },
                     onValueChangeFinished = {
                         value = value.roundToInt().toFloat()
@@ -189,7 +194,7 @@ private fun ParticipantTab(
                     valueRange = 0f..c.maxScore.toFloat(),
                     steps = c.maxScore - 1
                 )
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             }
         }
     }

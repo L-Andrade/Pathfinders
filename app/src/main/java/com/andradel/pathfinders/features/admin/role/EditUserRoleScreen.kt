@@ -49,9 +49,9 @@ import com.andradel.pathfinders.extensions.collectChannelFlow
 import com.andradel.pathfinders.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.features.admin.role.model.stringRes
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.activity.UserArg
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.model.user.UserArg
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

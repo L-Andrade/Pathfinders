@@ -2,6 +2,7 @@ package com.andradel.pathfinders.model.activity
 
 import android.os.Parcelable
 import com.andradel.pathfinders.model.ParticipantClass
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
@@ -15,7 +16,7 @@ data class Activity(
     val classes: List<ParticipantClass>,
     val criteria: List<ActivityCriteria>,
     val scores: ParticipantScores,
-    val archived: Boolean,
+    val archiveName: String?,
 ) : Parcelable
 
 fun Activity.participantPoints(participantId: String): Int {

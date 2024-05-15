@@ -3,9 +3,9 @@ package com.andradel.pathfinders.firebase.activity
 import com.andradel.pathfinders.firebase.participant.FirebaseParticipant
 import com.andradel.pathfinders.firebase.participant.ParticipantMapper
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.ParticipantScores
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import java.time.LocalDate
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class ActivityMapper @Inject constructor(
         activities: Map<String, FirebaseActivity>,
         participants: Map<String, FirebaseParticipant>,
         criteria: Map<String, FirebaseActivityCriteria>,
-        archived: Boolean,
+        archiveName: String?,
     ): List<Activity> {
         return activities.map { (key, value) ->
             Activity(
@@ -26,12 +26,12 @@ class ActivityMapper @Inject constructor(
                 value.name,
                 if (!value.date.isNullOrBlank()) LocalDate.parse(value.date) else null,
                 value.participantIds.mapNotNull { id ->
-                    participants[id]?.let { participantMapper.toParticipant(id, it, archived = archived) }
+                    participants[id]?.let { participantMapper.toParticipant(id, it, archiveName) }
                 },
                 value.classes,
                 value.criteriaIds.mapNotNull { id -> criteria[id]?.let { criteriaMapper.toCriteria(id, it) } },
                 value.scores,
-                archived = archived,
+                archiveName,
             )
         }
     }

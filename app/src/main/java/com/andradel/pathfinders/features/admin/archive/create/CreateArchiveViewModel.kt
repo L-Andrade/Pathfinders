@@ -8,7 +8,7 @@ import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.archive.ArchiveFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityCriteria
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.isValid
@@ -38,7 +38,7 @@ class CreateArchiveViewModel @Inject constructor(
     private val deleteParticipants = MutableStateFlow(false)
     private val deleteCriteria = MutableStateFlow(false)
 
-    private val allActivities = activityDataSource.activities
+    private val allActivities = activityDataSource.activities(null)
 
     private val _result = Channel<Result<Unit>>()
     val result = _result.receiveAsFlow()

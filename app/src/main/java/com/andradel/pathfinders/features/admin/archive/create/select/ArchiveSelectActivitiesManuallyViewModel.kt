@@ -29,7 +29,7 @@ class ArchiveSelectActivitiesManuallyViewModel @Inject constructor(
     private val _result = Channel<ActivitySelectionArg>()
     val result = _result.receiveAsFlow()
 
-    val state = combine(selection, dataSource.activities) { selection, activities ->
+    val state = combine(selection, dataSource.activities(null)) { selection, activities ->
         ArchiveSelectActivitiesManuallyState.Selection(
             activities.map { activity ->
                 SelectableActivity(
@@ -50,7 +50,7 @@ class ArchiveSelectActivitiesManuallyViewModel @Inject constructor(
 
     fun onSelectActivities() {
         viewModelScope.launch {
-            val activities = dataSource.activities.first()
+            val activities = dataSource.activities(null).first()
             _result.send(ActivitySelectionArg(ArrayList(activities.filter { it.id in selection.value })))
         }
     }

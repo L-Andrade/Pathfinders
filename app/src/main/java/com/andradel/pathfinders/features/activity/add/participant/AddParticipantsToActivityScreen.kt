@@ -36,9 +36,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddEditParticipantScreenDestination
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon

@@ -115,6 +115,7 @@
         <item quantity="other">Apagar %1$s critérios</item>
         <item quantity="many">Apagar %1$s critérios</item>
     </plurals>
+    <string name="archived_activity">Esta atividade está arquivada e não pode ser alterada.</string>
     <string name="add_by_date_range">Adicionar entre datas</string>
     <string name="add_manually">Adicionar manualmente</string>
     <string name="add_all">Adicionar todas</string>

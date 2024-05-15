@@ -9,9 +9,9 @@ import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.OptionalActivityArg
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
@@ -38,6 +38,7 @@ class AddEditActivityViewModel @Inject constructor(
     private val nameValidation: NameValidation,
 ) : ViewModel() {
     private val activity = handle.navArgs<OptionalActivityArg>().activity
+    private val isArchived = activity?.archiveName != null
 
     private val participants = MutableStateFlow(activity?.participants.orEmpty())
     private val criteria = MutableStateFlow(activity?.criteria.orEmpty())
@@ -66,14 +67,15 @@ class AddEditActivityViewModel @Inject constructor(
             classes = classes,
             participants = participants,
             criteria = criteria,
-            isValid = nameValidation.isValid && activityResult != ActivityResult.Loading,
-            isAdmin = isAdmin,
+            isValid = nameValidation.isValid && activityResult != ActivityResult.Loading && !isArchived,
+            isAdmin = isAdmin && !isArchived,
+            isArchived = isArchived,
             activityResult = activityResult,
             createForEach = createForEach,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())
 
-    val isEditing = activity != null
+    val isEditing = activity != null && !isArchived
     val isUnsaved: Boolean
         get() = activity == null || activity.toNewActivity() != state.value.toNewActivity()
 

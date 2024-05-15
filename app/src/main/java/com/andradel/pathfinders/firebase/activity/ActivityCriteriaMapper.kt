@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.firebase.activity
 
-import com.andradel.pathfinders.model.activity.ActivityCriteria
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import javax.inject.Inject
 
 class ActivityCriteriaMapper @Inject constructor() {

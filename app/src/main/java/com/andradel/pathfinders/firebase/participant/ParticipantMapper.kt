@@ -6,7 +6,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class ParticipantMapper @Inject constructor() {
-    fun toParticipant(id: String, fbParticipant: FirebaseParticipant, archived: Boolean): Participant {
+    fun toParticipant(id: String, fbParticipant: FirebaseParticipant, archiveName: String?): Participant {
         return Participant(
             id = id,
             name = fbParticipant.name,
@@ -14,7 +14,7 @@ class ParticipantMapper @Inject constructor() {
             contact = fbParticipant.contact,
             participantClass = fbParticipant.scoutClass,
             dateOfBirth = if (fbParticipant.dateOfBirth != null) LocalDate.parse(fbParticipant.dateOfBirth) else null,
-            archived = archived,
+            archiveName = archiveName,
         )
     }
 

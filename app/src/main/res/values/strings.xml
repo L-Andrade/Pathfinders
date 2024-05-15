@@ -106,6 +106,7 @@
         <item quantity="one">%1$s criteria is used in other activities</item>
         <item quantity="other">%1$s criteria are used in other activities</item>
     </plurals>
+    <string name="archived_activity">This activity is archived and can not be changed.</string>
     <string name="add_by_date_range">Add between dates</string>
     <string name="add_manually">Add manually</string>
     <string name="add_all">Add all</string>

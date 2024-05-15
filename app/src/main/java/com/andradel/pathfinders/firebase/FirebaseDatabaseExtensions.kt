@@ -114,3 +114,6 @@ suspend inline fun <reified T> DatabaseReference.getGenericValue(): T = suspendC
         removeEventListener(listener)
     }
 }
+
+fun DatabaseReference.archiveChild(archiveName: String?, child: String): DatabaseReference =
+    if (archiveName != null) child("archive/$archiveName/$child") else child(child)

@@ -1,8 +1,7 @@
-package com.andradel.pathfinders.model.activity
+package com.andradel.pathfinders.model.participant
 
 import android.os.Parcelable
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.participant.Participant
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 

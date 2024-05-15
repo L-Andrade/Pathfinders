@@ -38,7 +38,9 @@ import com.andradel.pathfinders.features.destinations.AdminScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
 import com.andradel.pathfinders.features.destinations.RemindersScreenDestination
+import com.andradel.pathfinders.model.activity.ActivityListArg
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.model.participant.ParticipantListArg
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.isClassAdmin
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -82,9 +84,9 @@ fun HomeScreen(
                     is HomeState.Loaded -> LoggedInScreen(
                         state = s,
                         onSignOutClick = viewModel::onSignOutClick,
-                        onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination) },
+                        onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination(ParticipantListArg())) },
                         onAdminClick = { navigator.navigate(AdminScreenDestination) },
-                        onActivitiesClick = { navigator.navigate(ActivityListScreenDestination) },
+                        onActivitiesClick = { navigator.navigate(ActivityListScreenDestination(ActivityListArg())) },
                         onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
                         onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) }
                     )

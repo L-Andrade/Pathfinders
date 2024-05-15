@@ -7,8 +7,8 @@ import com.andradel.pathfinders.firebase.exists
 import com.andradel.pathfinders.firebase.participant.ParticipantMapper
 import com.andradel.pathfinders.firebase.toMapFlow
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.archive.Archive
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
@@ -32,12 +32,13 @@ class ArchiveFirebaseDataSource @Inject constructor(
                     activities = value.activities,
                     participants = value.participants,
                     criteria = value.criteria,
-                    archived = true
+                    archiveName = key
                 ),
                 participants = value.participants.map {
                     participantMapper.toParticipant(
                         id = it.key,
-                        fbParticipant = it.value, archived = true
+                        fbParticipant = it.value,
+                        archiveName = key,
                     )
                 },
                 criteria = value.criteria.map { criteriaMapper.toCriteria(it.key, it.value) },
