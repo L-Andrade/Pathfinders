@@ -24,6 +24,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,6 +39,7 @@ import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
 import com.andradel.pathfinders.features.destinations.CreateArchiveScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
+import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -110,12 +114,7 @@ private fun ArchiveItem(
         Column(modifier = Modifier.padding(all = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = item.name, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-                IconButton(onClick = onDelete) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = stringResource(id = R.string.delete)
-                    )
-                }
+                DeleteButton(item.name, onDelete)
             }
             if (item.startDate != null && item.endDate != null) {
                 Dates(item.startDate, item.endDate)
@@ -139,6 +138,28 @@ private fun ArchiveItem(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun DeleteButton(name: String, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+    var showConfirmation by remember { mutableStateOf(false) }
+    if (showConfirmation) {
+        ConfirmationDialog(
+            title = stringResource(id = R.string.delete),
+            body = stringResource(id = R.string.delete_confirmation, name),
+            onDismiss = { showConfirmation = false },
+            onConfirm = {
+                onDelete()
+                showConfirmation = false
+            },
+        )
+    }
+    IconButton(onClick = { showConfirmation = true }, modifier = modifier) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_delete),
+            contentDescription = stringResource(id = R.string.delete)
+        )
     }
 }
 

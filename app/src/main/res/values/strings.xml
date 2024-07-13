@@ -126,4 +126,6 @@
     <string name="default_notification_channel_id">Default</string>
     <string name="create_activity_for_each_class">Create one activity for each selected class</string>
     <string name="class_unknown">Unknown</string>
+    <string name="archive_confirmation_title">You are creating an archive</string>
+    <string name="archive_confirmation_description">The selected activities will be removed from the current timeline and will only be visible in this archive.\n\nAre you sure?</string>
 </resources>

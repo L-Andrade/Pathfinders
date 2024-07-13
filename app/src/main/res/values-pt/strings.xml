@@ -135,4 +135,6 @@
     <string name="default_notification_channel_id">Default</string>
     <string name="create_activity_for_each_class">Criar uma atividade para cada classe selecionada</string>
     <string name="class_unknown">N/A</string>
+    <string name="archive_confirmation_title">Está a criar um arquivo</string>
+    <string name="archive_confirmation_description">As atividades selecionadas vão ser removidas da vista geral e só serão visíveis neste arquivo.\n\nTem a certeza?</string>
 </resources>

@@ -60,6 +60,7 @@ import com.andradel.pathfinders.features.destinations.ArchiveSelectActivitiesMan
 import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.activity.ActivitySelectionArg
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.validation.ValidationResult
 import com.andradel.pathfinders.validation.errorMessage
@@ -162,18 +163,41 @@ fun CreateArchiveScreen(
                 }
             }
             HorizontalDivider()
-            Button(
-                onClick = viewModel::addArchive,
-                enabled = state.canSave,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Icon(painter = painterResource(id = R.drawable.ic_save), contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = stringResource(id = R.string.add))
-            }
+            CreateArchiveButton(
+                onAdd = viewModel::addArchive,
+                canSave = state.canSave,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
+    }
+}
+
+@Composable
+private fun CreateArchiveButton(
+    onAdd: () -> Unit,
+    canSave: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    var showConfirmation by remember { mutableStateOf(false) }
+    if (showConfirmation) {
+        ConfirmationDialog(
+            title = stringResource(id = R.string.archive_confirmation_title),
+            body = stringResource(id = R.string.archive_confirmation_description),
+            onDismiss = { showConfirmation = false },
+            onConfirm = {
+                onAdd()
+                showConfirmation = false
+            }
+        )
+    }
+    Button(
+        onClick = { showConfirmation = true },
+        enabled = canSave,
+        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Icon(painter = painterResource(id = R.drawable.ic_save), contentDescription = null)
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = stringResource(id = R.string.add))
     }
 }
 
