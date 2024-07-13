@@ -6,6 +6,7 @@ import com.andradel.pathfinders.firebase.functions.model.FirebaseRoleRequest
 import com.andradel.pathfinders.firebase.functions.model.FirebaseUser
 import com.andradel.pathfinders.firebase.functions.model.Role
 import com.andradel.pathfinders.firebase.getGenericValue
+import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
@@ -61,7 +62,7 @@ class UserFunctions @Inject constructor(
                 email = fbUser.email,
                 role = when (fbUser.role) {
                     Role.Admin -> UserRole.Admin
-                    Role.ClassAdmin -> UserRole.ClassAdmin(fbUser.classes)
+                    Role.ClassAdmin -> UserRole.ClassAdmin(fbUser.classes.map { it.toClass() }.toSet())
                     Role.User -> UserRole.User
                 }
             )

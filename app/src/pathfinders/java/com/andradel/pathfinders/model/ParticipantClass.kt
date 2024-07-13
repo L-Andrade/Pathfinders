@@ -14,10 +14,11 @@ enum class ParticipantClass {
     Explorador,
     Companheiro,
     Embaixador,
-    Invalid;
+    Invalid,
+    Unknown;
 
     companion object {
-        val options = entries - Invalid
+        val options = entries - Invalid - Unknown
 
         val last = Embaixador
     }

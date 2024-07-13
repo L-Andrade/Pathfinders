@@ -1,5 +1,6 @@
 package com.andradel.pathfinders.firebase.participant
 
+import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.Participant
 import java.time.LocalDate
@@ -12,7 +13,7 @@ class ParticipantMapper @Inject constructor() {
             name = fbParticipant.name,
             email = fbParticipant.email,
             contact = fbParticipant.contact,
-            participantClass = fbParticipant.scoutClass,
+            participantClass = fbParticipant.scoutClass.toClass(),
             dateOfBirth = if (fbParticipant.dateOfBirth != null) LocalDate.parse(fbParticipant.dateOfBirth) else null,
             archiveName = archiveName,
         )
@@ -23,7 +24,7 @@ class ParticipantMapper @Inject constructor() {
             name = participant.name,
             email = participant.email,
             contact = participant.contact,
-            scoutClass = participant.participantClass,
+            scoutClass = participant.participantClass.name,
             dateOfBirth = participant.birthday
         )
     }
@@ -33,7 +34,7 @@ class ParticipantMapper @Inject constructor() {
             name = participant.name,
             email = participant.email,
             contact = participant.contact,
-            scoutClass = participant.participantClass,
+            scoutClass = participant.participantClass.name,
             dateOfBirth = participant.dateOfBirth?.toString()
         )
     }

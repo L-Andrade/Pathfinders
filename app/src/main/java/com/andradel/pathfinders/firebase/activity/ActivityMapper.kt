@@ -2,6 +2,7 @@ package com.andradel.pathfinders.firebase.activity
 
 import com.andradel.pathfinders.firebase.participant.FirebaseParticipant
 import com.andradel.pathfinders.firebase.participant.ParticipantMapper
+import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.ParticipantScores
@@ -28,7 +29,7 @@ class ActivityMapper @Inject constructor(
                 value.participantIds.mapNotNull { id ->
                     participants[id]?.let { participantMapper.toParticipant(id, it, archiveName) }
                 },
-                value.classes,
+                value.classes.map { it.toClass() },
                 value.criteriaIds.mapNotNull { id -> criteria[id]?.let { criteriaMapper.toCriteria(id, it) } },
                 value.scores,
                 archiveName,
@@ -42,7 +43,7 @@ class ActivityMapper @Inject constructor(
                 name = name,
                 date = date?.toString(),
                 participantIds = participants.map { it.id },
-                classes = classes,
+                classes = classes.map { it.name },
                 criteriaIds = criteria.map { it.id },
                 scores = scores.buildWith(participants, criteria),
             )
@@ -55,7 +56,7 @@ class ActivityMapper @Inject constructor(
                 name = name,
                 date = date,
                 participantIds = participants.map { it.id },
-                classes = classes,
+                classes = classes.map { it.name },
                 criteriaIds = criteria.map { it.id },
                 scores = scores.buildWith(participants, criteria),
             )
