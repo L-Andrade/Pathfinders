@@ -6,12 +6,15 @@ import com.andradel.pathfinders.firebase.functions.model.FirebaseRoleRequest
 import com.andradel.pathfinders.firebase.functions.model.FirebaseUser
 import com.andradel.pathfinders.firebase.functions.model.Role
 import com.andradel.pathfinders.firebase.getGenericValue
+import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -43,6 +46,7 @@ class UserFunctions @Inject constructor(
 
             else -> UserRole.User
         }
+        Firebase.crashlytics.setUserId(user.uid)
         return Result.success(User(user.displayName ?: "User", user.email, userRole))
     }.throwCancellation()
 
@@ -58,7 +62,7 @@ class UserFunctions @Inject constructor(
                 email = fbUser.email,
                 role = when (fbUser.role) {
                     Role.Admin -> UserRole.Admin
-                    Role.ClassAdmin -> UserRole.ClassAdmin(fbUser.classes)
+                    Role.ClassAdmin -> UserRole.ClassAdmin(fbUser.classes.map { it.toClass() }.toSet())
                     Role.User -> UserRole.User
                 }
             )

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
-import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,7 +27,7 @@ class AddParticipantsToActivityViewModel @Inject constructor(
     private val filteringByClass = MutableStateFlow(selectedClasses.isNotEmpty())
 
     val state: StateFlow<AddParticipantsToActivityState> =
-        combine(selection, dataSource.participants, filteringByClass) { selection, participants, filteringByClass ->
+        combine(selection, dataSource.participants(null), filteringByClass) { selection, participants, filteringByClass ->
             AddParticipantsToActivityState.Loaded(
                 selection = selection,
                 participants = participants

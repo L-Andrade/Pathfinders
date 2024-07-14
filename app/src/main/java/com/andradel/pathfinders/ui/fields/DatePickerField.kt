@@ -34,13 +34,14 @@ fun DatePickerField(
     dateMillis: Long,
     updateDate: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     @StringRes hint: Int = R.string.date
 ) {
     var showingDatePicker by remember { mutableStateOf(false) }
     val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
     Box(
         modifier = modifier
-            .clickable { showingDatePicker = true }
+            .clickable(enabled = enabled) { showingDatePicker = true }
             .clip(RoundedCornerShape(topEnd = 4.dp, topStart = 4.dp))
             .fillMaxWidth()
             .background(backgroundColor)
@@ -56,7 +57,6 @@ fun DatePickerField(
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

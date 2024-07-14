@@ -1,6 +1,5 @@
 package com.andradel.pathfinders.firebase.functions.model
 
-import com.andradel.pathfinders.model.ParticipantClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -9,7 +8,7 @@ data class FirebaseUser(
     val name: String?,
     val email: String?,
     val role: Role = Role.User,
-    val classes: Set<ParticipantClass> = emptySet(),
+    val classes: Set<String> = emptySet(),
 )
 
 @Serializable

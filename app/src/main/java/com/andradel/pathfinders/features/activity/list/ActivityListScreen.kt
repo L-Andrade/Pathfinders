@@ -38,6 +38,7 @@ import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddEditActivityScreenDestination
 import com.andradel.pathfinders.features.destinations.EvaluateActivityScreenDestination
 import com.andradel.pathfinders.model.activity.Activity
+import com.andradel.pathfinders.model.activity.ActivityListArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
@@ -45,7 +46,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-@Destination
+@Destination(navArgsDelegate = ActivityListArg::class)
 fun ActivityListScreen(
     navigator: DestinationsNavigator,
     viewModel: ActivityListViewModel = hiltViewModel()

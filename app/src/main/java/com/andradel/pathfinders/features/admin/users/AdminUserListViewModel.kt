@@ -1,4 +1,4 @@
-package com.andradel.pathfinders.features.admin
+package com.andradel.pathfinders.features.admin.users
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,19 +14,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminViewModel @Inject constructor(
+class AdminUserListViewModel @Inject constructor(
     private val userFunctions: UserFunctions,
 ) : ViewModel() {
     private val users = MutableSharedFlow<Result<List<User>>>()
     private val loading = MutableStateFlow(false)
     val state = combine(users, loading) { result, loading ->
         if (loading) {
-            AdminScreenState.Loading
+            AdminUserListScreenState.Loading
         } else {
             val items = result.getOrNull()
-            if (items != null) AdminScreenState.Loaded(items) else AdminScreenState.Error
+            if (items != null) AdminUserListScreenState.Loaded(items) else AdminUserListScreenState.Error
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AdminScreenState.Loading)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AdminUserListScreenState.Loading)
 
     fun loadUsers() {
         loading.value = true

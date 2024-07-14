@@ -4,13 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.extensions.combine
+import com.andradel.pathfinders.extensions.toMillis
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityCriteria
 import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.OptionalActivityArg
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
@@ -27,7 +28,6 @@ import kotlinx.coroutines.supervisorScope
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +38,7 @@ class AddEditActivityViewModel @Inject constructor(
     private val nameValidation: NameValidation,
 ) : ViewModel() {
     private val activity = handle.navArgs<OptionalActivityArg>().activity
+    private val isArchived = activity?.archiveName != null
 
     private val participants = MutableStateFlow(activity?.participants.orEmpty())
     private val criteria = MutableStateFlow(activity?.criteria.orEmpty())
@@ -62,19 +63,19 @@ class AddEditActivityViewModel @Inject constructor(
             name = name,
             nameValidation = nameValidation,
             dateRepresentation = date?.toString(),
-            date = (date ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
-                .toEpochMilli(),
+            date = (date ?: LocalDate.now()).atStartOfDay().toMillis(),
             classes = classes,
             participants = participants,
             criteria = criteria,
-            isValid = nameValidation.isValid && activityResult != ActivityResult.Loading,
-            isAdmin = isAdmin,
+            isValid = nameValidation.isValid && activityResult != ActivityResult.Loading && !isArchived,
+            isAdmin = isAdmin && !isArchived,
+            isArchived = isArchived,
             activityResult = activityResult,
             createForEach = createForEach,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())
 
-    val isEditing = activity != null
+    val isEditing = activity != null && !isArchived
     val isUnsaved: Boolean
         get() = activity == null || activity.toNewActivity() != state.value.toNewActivity()
 

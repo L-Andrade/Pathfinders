@@ -22,7 +22,7 @@ class RemindersViewModel @Inject constructor(
 ) : ViewModel() {
     private val dayMonthFormatter = DateTimeFormatter.ofPattern("dd MMMM")
 
-    private val birthdays = participantDataSource.participants.map { participants ->
+    private val birthdays = participantDataSource.participants(null).map { participants ->
         val today = LocalDate.now()
         val interval = today.minusDays(7) to today.plusDays(14)
         val birthdays = participants.asSequence()
@@ -42,7 +42,7 @@ class RemindersViewModel @Inject constructor(
     }
 
     private val noShows = combine(
-        activityDataSource.activities, participantDataSource.participants
+        activityDataSource.activities(null), participantDataSource.participants(null)
     ) { activities, participants ->
         val today = LocalDate.now()
         val noShows = participants.mapNotNull { participant ->

@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.features.activity.add.criteria
 
-import com.andradel.pathfinders.model.activity.ActivityCriteria
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
 
 sealed interface AddCriteriaToActivityState {
     object Loading : AddCriteriaToActivityState

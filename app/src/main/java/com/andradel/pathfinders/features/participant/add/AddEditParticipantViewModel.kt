@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.combine
+import com.andradel.pathfinders.extensions.toMillis
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
@@ -26,7 +27,6 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,8 +57,7 @@ class AddEditParticipantViewModel @Inject constructor(
             email = email,
             contact = contact,
             birthdayRepresentation = birthday?.toString(),
-            birthday = (birthday ?: LocalDate.now()).atStartOfDay().atZone(ZoneOffset.systemDefault()).toInstant()
-                .toEpochMilli(),
+            birthday = (birthday ?: LocalDate.now()).atStartOfDay().toMillis(),
             nameValidation = nameResult,
             emailValidation = emailResult,
             // Always valid contact for now. Not sure if we want to validate this field at the moment

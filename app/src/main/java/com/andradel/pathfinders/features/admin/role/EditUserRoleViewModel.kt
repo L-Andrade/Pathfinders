@@ -7,7 +7,7 @@ import com.andradel.pathfinders.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.functions.UserFunctions
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.activity.UserArg
+import com.andradel.pathfinders.model.user.UserArg
 import com.andradel.pathfinders.user.UserRole
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

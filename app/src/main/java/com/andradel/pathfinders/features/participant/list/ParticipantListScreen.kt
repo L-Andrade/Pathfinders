@@ -46,12 +46,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddEditParticipantScreenDestination
 import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.model.participant.ParticipantListArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
@@ -61,19 +63,19 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 
 @Composable
-@Destination
+@Destination(navArgsDelegate = ParticipantListArg::class)
 fun ParticipantListScreen(
     navigator: DestinationsNavigator,
     viewModel: ParticipantListViewModel = hiltViewModel()
 ) {
-    val isAdmin by viewModel.isAdmin.collectAsState()
+    val canModify by viewModel.canModify.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = R.string.participant_list,
                 onIconClick = { navigator.navigateUp() },
                 endContent = {
-                    if (isAdmin) {
+                    if (canModify) {
                         TextButton(onClick = { navigator.navigate(AddEditParticipantScreenDestination()) }) {
                             Text(text = stringResource(id = R.string.add_participant))
                         }
@@ -92,9 +94,9 @@ fun ParticipantListScreen(
                     is ParticipantListState.Loaded -> ParticipantList(
                         section = s.participants,
                         selectedSorting = s.sort,
-                        showButtons = isAdmin,
+                        showButtons = canModify,
                         onParticipantClick = {
-                            navigator.navigate(ParticipantProfileScreenDestination(it))
+                            navigator.navigate(ParticipantProfileScreenDestination(it, viewModel.archiveName))
                         },
                         deleteParticipant = viewModel::deleteParticipant,
                         onEditParticipant = {

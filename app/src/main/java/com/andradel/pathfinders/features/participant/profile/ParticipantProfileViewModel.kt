@@ -8,11 +8,11 @@ import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.participant.ParticipantArg
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
 class ParticipantProfileViewModel @Inject constructor(
@@ -20,12 +20,13 @@ class ParticipantProfileViewModel @Inject constructor(
     dataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource
 ) : ViewModel() {
-    private val participant = handle.navArgs<ParticipantArg>().participant
+    private val args = handle.navArgs<ParticipantArg>()
+    private val participant = args.participant
 
     val state: StateFlow<ParticipantProfileState> =
         combine(
-            dataSource.participant(participant.id),
-            activityDataSource.activitiesForUser(participant.id)
+            dataSource.participant(args.archiveName, participant.id),
+            activityDataSource.activitiesForUser(args.archiveName, participant.id)
         ) { participant, activities ->
             ParticipantProfileState.Loaded(participant ?: this.participant, activities)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ParticipantProfileState.Loading(participant))

@@ -15,12 +15,14 @@ enum class ParticipantClass {
     UA4,
     UA5,
     UA6,
-    Invalid;
+    // UA7
+    Invalid,
+    Unknown;
 
     companion object {
-        val options = entries - Invalid
+        val options = entries - Unknown
 
-        val last = UA6
+        val last = Invalid
     }
 }
 
@@ -35,5 +37,7 @@ val ParticipantClass.title: String
         ParticipantClass.UA4 -> R.string.unidos_em_cristo
         ParticipantClass.UA5 -> R.string.agape
         ParticipantClass.UA6 -> R.string.trinta_mais
-        ParticipantClass.Invalid -> R.string.invalid_class
+        // TODO: Next version, we need to properly use invalid, and most likely classes that are not hardcoded
+        ParticipantClass.Invalid -> R.string.adolescentes
+        ParticipantClass.Unknown -> R.string.class_unknown
     }.let { stringResource(id = it) }

@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
             UserState.Guest -> HomeState.Guest
             UserState.Loading -> HomeState.Loading
             is User -> HomeState.Loaded(
-                participant = if (state.email != null) dataSource.participantByEmail(state.email) else null,
+                participant = if (state.email != null) dataSource.participantByEmail(null, state.email) else null,
                 user = state
             )
 

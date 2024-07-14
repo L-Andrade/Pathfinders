@@ -3,25 +3,29 @@ package com.andradel.pathfinders.features.activity.add
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,10 +48,10 @@ import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddCriteriaToActivityScreenDestination
 import com.andradel.pathfinders.features.destinations.AddParticipantsToActivityScreenDestination
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.activity.CriteriaSelectionArg
 import com.andradel.pathfinders.model.activity.OptionalActivityArg
-import com.andradel.pathfinders.model.activity.ParticipantSelectionArg
 import com.andradel.pathfinders.model.color
+import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
+import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
@@ -129,17 +133,18 @@ fun AddEditActivityScreen(
                 navigator::navigateUp
             )
         }
-        Box(modifier = Modifier.padding(padding)) {
+        Column(modifier = Modifier.padding(padding)) {
             AddEditColumn(
                 state = state,
                 isEditing = viewModel.isEditing,
-                onAddActivity = viewModel::addActivity,
                 onUpdateName = viewModel::updateName,
                 onUpdateDate = viewModel::updateDate,
                 onCreateForEach = viewModel::setCreateForEach,
                 onSetAllSelected = viewModel::setAllSelected,
                 onSetClassSelected = viewModel::setClassSelected,
-                onSelectCriteria = { navigator.navigate(AddCriteriaToActivityScreenDestination(ArrayList(state.criteria))) },
+                onSelectCriteria = {
+                    navigator.navigate(AddCriteriaToActivityScreenDestination(ArrayList(state.criteria)))
+                },
                 onSelectParticipants = {
                     navigator.navigate(
                         AddParticipantsToActivityScreenDestination(
@@ -147,8 +152,20 @@ fun AddEditActivityScreen(
                         )
                     )
                 },
+                modifier = Modifier.weight(1f)
             )
-            if (loading) {
+            HorizontalDivider()
+            AddEditButton(
+                isEditing = viewModel.isEditing,
+                onAddActivity = viewModel::addActivity,
+                state = state,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 8.dp)
+            )
+        }
+        if (loading) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
@@ -159,7 +176,6 @@ fun AddEditActivityScreen(
 private fun AddEditColumn(
     state: AddEditActivityState,
     isEditing: Boolean,
-    onAddActivity: () -> Unit,
     onUpdateName: (String) -> Unit,
     onUpdateDate: (Long) -> Unit,
     onCreateForEach: (Boolean) -> Unit,
@@ -170,15 +186,30 @@ private fun AddEditColumn(
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier) {
+        if (state.isArchived) {
+            item {
+                Card(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(all = 16.dp)) {
+                        Icon(painter = painterResource(id = R.drawable.ic_lock), contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(id = R.string.archived_activity),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            }
+        }
         item {
             Spacer(modifier = Modifier.size(16.dp))
-            NameField(state.name, state.nameValidation, onUpdateName)
+            NameField(state.name, state.nameValidation, state.isArchived, onUpdateName)
         }
         item {
             Spacer(modifier = Modifier.size(16.dp))
             DatePickerField(
                 dateRepresentation = state.dateRepresentation,
                 dateMillis = state.date,
+                enabled = !state.isArchived,
                 updateDate = onUpdateDate,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -189,13 +220,15 @@ private fun AddEditColumn(
                 val isSelected by remember(state) {
                     derivedStateOf { state.classes.size == ParticipantClass.options.size }
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(id = if (isSelected) R.string.unselect_all else R.string.select_all),
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Switch(checked = isSelected, onCheckedChange = onSetAllSelected, enabled = state.isAdmin)
+                if (!state.isArchived) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = stringResource(id = if (isSelected) R.string.unselect_all else R.string.select_all),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Switch(checked = isSelected, onCheckedChange = onSetAllSelected, enabled = state.isAdmin)
+                    }
                 }
             }
             if (!isEditing && state.isAdmin) {
@@ -223,6 +256,7 @@ private fun AddEditColumn(
             HeaderWithAddButton(
                 header = R.string.criteria,
                 onClick = onSelectCriteria,
+                showButton = !state.isArchived,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -244,6 +278,7 @@ private fun AddEditColumn(
             HeaderWithAddButton(
                 header = R.string.participant_list,
                 onClick = onSelectParticipants,
+                showButton = !state.isArchived,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -260,14 +295,6 @@ private fun AddEditColumn(
                 )
             }
         }
-        item {
-            AddEditButton(
-                isEditing = isEditing,
-                onAddActivity = onAddActivity,
-                state = state,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
     }
 }
 
@@ -278,17 +305,13 @@ private fun AddEditButton(
     state: AddEditActivityState,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        Button(
-            onClick = onAddActivity,
-            enabled = state.isValid,
-            modifier = Modifier
-                .align(alignment = Alignment.CenterEnd)
-                .padding(horizontal = 16.dp)
-        ) {
-            val stringId = if (isEditing) R.string.edit_activity else R.string.add_activity
-            Text(stringResource(id = stringId))
-        }
+    Button(
+        onClick = onAddActivity,
+        enabled = state.isValid,
+        modifier = modifier.padding(horizontal = 16.dp)
+    ) {
+        val stringId = if (isEditing) R.string.edit_activity else R.string.add_activity
+        Text(stringResource(id = stringId))
     }
 }
 
@@ -340,11 +363,13 @@ private fun ScoutClassCheckbox(
 private fun NameField(
     name: String,
     nameValidation: ValidationResult?,
+    readOnly: Boolean,
     onUpdateName: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TextField(
         value = name,
+        readOnly = readOnly,
         onValueChange = onUpdateName,
         label = {
             Text(nameValidation?.errorMessage ?: stringResource(id = R.string.name_hint))
@@ -360,16 +385,19 @@ private fun NameField(
 private fun HeaderWithAddButton(
     @StringRes header: Int,
     onClick: () -> Unit,
+    showButton: Boolean,
     modifier: Modifier = Modifier
 ) {
     Header(header = header, modifier = modifier) {
-        OutlinedButton(onClick = onClick) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = stringResource(id = R.string.select)
-                )
-                Text(text = stringResource(id = R.string.select))
+        if (showButton) {
+            OutlinedButton(onClick = onClick) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_add),
+                        contentDescription = stringResource(id = R.string.select)
+                    )
+                    Text(text = stringResource(id = R.string.select))
+                }
             }
         }
     }

@@ -30,8 +30,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.model.activity.ActivityCriteria
-import com.andradel.pathfinders.model.activity.CriteriaSelectionArg
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
+import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
