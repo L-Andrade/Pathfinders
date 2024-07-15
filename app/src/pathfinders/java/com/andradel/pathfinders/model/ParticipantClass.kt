@@ -31,7 +31,7 @@ val ParticipantClass.color: Color
         ParticipantClass.Explorador -> Color.Yellow
         ParticipantClass.Companheiro -> Color.Blue
         ParticipantClass.Embaixador -> Color(0xFFb83404)
-        ParticipantClass.Invalid -> MaterialTheme.colorScheme.primary
+        ParticipantClass.Invalid, ParticipantClass.Unknown -> MaterialTheme.colorScheme.primary
     }
 
 val ParticipantClass.title: String
@@ -42,4 +42,5 @@ val ParticipantClass.title: String
         ParticipantClass.Companheiro -> R.string.companheiro
         ParticipantClass.Embaixador -> R.string.embaixador
         ParticipantClass.Invalid -> R.string.invalid_class
+        ParticipantClass.Unknown -> R.string.class_unknown
     }.let { stringResource(id = it) }
