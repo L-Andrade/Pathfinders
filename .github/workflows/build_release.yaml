@@ -31,7 +31,7 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FB_UNIT_APP_ID }}
-          serviceCredentialsFile: ./app/src/unitRelease/google-services.json
+          serviceCredentialsFileContent: ${{ secrets.FB_UNIT_CREDENTIALS_APP_DIST }}
           file: app/build/outputs/apk/release/app-unit-release.apk
 
   build-pathfinders:
@@ -58,7 +58,7 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FB_PATHFINDERS_APP_ID }}
-          serviceCredentialsFile: ./app/src/pathfindersRelease/google-services.json
+          serviceCredentialsFileContent: ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
           file: app/build/outputs/apk/release/app-pathfinders-release.apk
 
   cleanup:
