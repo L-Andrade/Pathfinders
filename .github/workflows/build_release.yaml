@@ -18,6 +18,9 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
+      - name: Add content to temporary google-services file
+        run: echo "${{ secrets.FB_UNIT_CREDENTIALS }}" > app/src/unit/release/google-services.json
+
       - name: Build Unit release
         run: ./gradlew assembleUnitRelease
 
@@ -39,6 +42,9 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
+      - name: Add content to temporary google-services file
+        run: echo "${{ secrets.FB_PATHFINDERS_CREDENTIALS }}" > app/src/pathfinders/release/google-services.json
+
       - name: Build Pathfinders release
         run: ./gradlew assemblePathfindersRelease
 
@@ -48,3 +54,14 @@ jobs:
           appId: ${{ secrets.FB_PATHFINDERS_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
           file: app/build/outputs/apk/release/app-pathfinders-release.apk
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [build-unit, build-pathfinders]
+    if: always()
+    steps:
+      - name: Delete Unit temporary file
+        run: rm -rf app/src/unit/release/google-services.json
+
+      - name: Delete Pathfinders temporary file
+        run: rm -rf app/src/pathfinders/release/google-services.json
