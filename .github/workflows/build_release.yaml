@@ -1,0 +1,50 @@
+name: Build & upload to Firebase App Distribution
+
+on:
+  push:
+    tags:
+      - *
+  workflow_dispatch:
+
+jobs:
+  build-unit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Build Unit release
+        run: ./gradlew assembleUnitRelease
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FB_UNIT_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FB_UNIT_CREDENTIALS }}
+          file: app/build/outputs/apk/release/app-unit-release.apk
+
+  build-pathfinders:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Build Pathfinders release
+        run: ./gradlew assemblePathfindersRelease
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FB_PATHFINDERS_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
+          file: app/build/outputs/apk/release/app-pathfinders-release.apk
