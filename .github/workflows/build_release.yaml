@@ -19,7 +19,10 @@ jobs:
           java-version: 17
 
       - name: Add content to temporary google-services file
-        run: echo -e "${{ secrets.FB_UNIT_CREDENTIALS }}" > ./app/src/unitRelease/google-services.json
+        run: |
+          cat << 'EOF' > ./app/src/unitRelease/google-services.json
+          ${{ secrets.FB_UNIT_CREDENTIALS }}
+          EOF
 
       - name: Build Unit release
         run: ./gradlew assembleUnitRelease
@@ -43,7 +46,10 @@ jobs:
           java-version: 17
 
       - name: Add content to temporary google-services file
-        run: echo -e "${{ secrets.FB_PATHFINDERS_CREDENTIALS }}" > ./app/src/pathfindersRelease/google-services.json
+        run: |
+          cat << 'EOF' > ./app/src/pathfindersRelease/google-services.json
+          ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
+          EOF
 
       - name: Build Pathfinders release
         run: ./gradlew assemblePathfindersRelease
