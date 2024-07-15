@@ -51,7 +51,7 @@ class CreateArchiveViewModel @Inject constructor(
         name,
         activities,
         deleteParticipants,
-        deleteCriteria
+        deleteCriteria,
     ) { allActivities, name, activities, deleteParticipants, deleteCriteria ->
         val nameResult = nameValidation.validate(name)
         val affectedParticipants = activities.affectedParticipants.map { it.id }
@@ -74,7 +74,7 @@ class CreateArchiveViewModel @Inject constructor(
                 otherActivities.flatMap { it.criteria }
                     .filter { it.id in affectedCriteria }.distinctBy { it.id }.size,
             ).takeIf { it.size > 0 },
-            canSave = activities.isNotEmpty() && nameResult.isValid
+            canSave = activities.isNotEmpty() && nameResult.isValid,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CreateArchiveState())
 
@@ -125,7 +125,7 @@ class CreateArchiveViewModel @Inject constructor(
                 name = name.value,
                 activities = activities,
                 participants = activities.affectedParticipants,
-                criteria = activities.affectedCriteria
+                criteria = activities.affectedCriteria,
             ).onSuccess {
                 _progressState.update {
                     it?.copy(createdArchive = ArchiveState.Success, deletedActivities = ArchiveState.InProgress)

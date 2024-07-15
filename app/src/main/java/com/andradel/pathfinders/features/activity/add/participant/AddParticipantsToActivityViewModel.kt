@@ -10,7 +10,6 @@ import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -26,17 +25,20 @@ class AddParticipantsToActivityViewModel @Inject constructor(
     private val selectedClasses = handle.navArgs<ParticipantSelectionArg>().classes
     private val filteringByClass = MutableStateFlow(selectedClasses.isNotEmpty())
 
-    val state: StateFlow<AddParticipantsToActivityState> =
-        combine(selection, dataSource.participants(null), filteringByClass) { selection, participants, filteringByClass ->
-            AddParticipantsToActivityState.Loaded(
-                selection = selection,
-                participants = participants
-                    .filter { it !in selection }
-                    .let { list -> if (filteringByClass) list.filter { it.participantClass in selectedClasses } else list },
-                filteringByClass = filteringByClass,
-                classes = selectedClasses,
-            )
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddParticipantsToActivityState.Loading)
+    val state = combine(
+        selection,
+        dataSource.participants(null),
+        filteringByClass,
+    ) { selection, participants, filteringByClass ->
+        AddParticipantsToActivityState.Loaded(
+            selection = selection,
+            participants = participants
+                .filter { it !in selection }
+                .let { list -> if (filteringByClass) list.filter { it.participantClass in selectedClasses } else list },
+            filteringByClass = filteringByClass,
+            classes = selectedClasses,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddParticipantsToActivityState.Loading)
 
     val isUnsaved
         get() = initialSelection != selection.value

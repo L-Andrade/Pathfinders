@@ -46,10 +46,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun ArchiveListScreen(
-    navigator: DestinationsNavigator,
-    viewModel: ArchiveListViewModel = hiltViewModel()
-) {
+fun ArchiveListScreen(navigator: DestinationsNavigator, viewModel: ArchiveListViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_archive, onIconClick = navigator::navigateUp)
@@ -66,8 +63,10 @@ fun ArchiveListScreen(
                             ArchiveItem(
                                 item = item,
                                 onActivitiesClick = { navigator.navigate(ActivityListScreenDestination(item.name)) },
-                                onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination(item.name)) },
-                                onDelete = { viewModel.onDeleteArchive(item.name) }
+                                onParticipantsClick = {
+                                    navigator.navigate(ParticipantListScreenDestination(item.name))
+                                },
+                                onDelete = { viewModel.onDeleteArchive(item.name) },
                             )
                         }
                     }
@@ -75,12 +74,12 @@ fun ArchiveListScreen(
                 ArchiveListState.Loading -> Box(
                     modifier = Modifier
                         .padding(padding)
-                        .fillMaxSize()
+                        .fillMaxSize(),
                 ) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
-        }
+        },
     )
 }
 
@@ -92,7 +91,7 @@ private fun CreateArchive(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 Text(
                     text = stringResource(id = R.string.create_archive),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 Icon(painter = painterResource(id = R.drawable.ic_chevron_right), contentDescription = null)
             }
@@ -108,7 +107,7 @@ private fun ArchiveItem(
     onParticipantsClick: () -> Unit,
     onActivitiesClick: () -> Unit,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
         Column(modifier = Modifier.padding(all = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -123,17 +122,17 @@ private fun ArchiveItem(
                 Button(onClick = onActivitiesClick, modifier = Modifier.weight(1f)) {
                     Text(
                         text = pluralStringResource(
-                            id = R.plurals.archive_activities, item.activities, item.activities
+                            id = R.plurals.archive_activities, item.activities, item.activities,
                         ),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
                 Button(onClick = onParticipantsClick, modifier = Modifier.weight(1f)) {
                     Text(
                         text = pluralStringResource(
-                            id = R.plurals.archive_participants, item.participants, item.participants
+                            id = R.plurals.archive_participants, item.participants, item.participants,
                         ),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
             }
@@ -158,7 +157,7 @@ private fun DeleteButton(name: String, onDelete: () -> Unit, modifier: Modifier 
     IconButton(onClick = { showConfirmation = true }, modifier = modifier) {
         Icon(
             painter = painterResource(id = R.drawable.ic_delete),
-            contentDescription = stringResource(id = R.string.delete)
+            contentDescription = stringResource(id = R.string.delete),
         )
     }
 }
@@ -169,7 +168,7 @@ private fun Dates(startDate: String, endDate: String, modifier: Modifier = Modif
         Icon(
             painter = painterResource(id = R.drawable.ic_calendar),
             contentDescription = null,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(16.dp),
         )
         Text(text = startDate, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(start = 4.dp))
         Icon(
@@ -177,12 +176,12 @@ private fun Dates(startDate: String, endDate: String, modifier: Modifier = Modif
             contentDescription = null,
             modifier = Modifier
                 .size(24.dp)
-                .padding(horizontal = 4.dp)
+                .padding(horizontal = 4.dp),
         )
         Icon(
             painter = painterResource(id = R.drawable.ic_calendar),
             contentDescription = null,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(16.dp),
         )
         Text(text = endDate, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(start = 4.dp))
     }

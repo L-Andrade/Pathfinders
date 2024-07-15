@@ -8,5 +8,5 @@ data class Archive(
     val name: String,
     val activities: List<Activity>,
     val participants: List<Participant>,
-    val criteria: List<ActivityCriteria>
+    val criteria: List<ActivityCriteria>,
 )

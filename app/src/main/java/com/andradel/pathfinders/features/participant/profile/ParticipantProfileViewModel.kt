@@ -18,7 +18,7 @@ import javax.inject.Inject
 class ParticipantProfileViewModel @Inject constructor(
     handle: SavedStateHandle,
     dataSource: ParticipantFirebaseDataSource,
-    activityDataSource: ActivityFirebaseDataSource
+    activityDataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
     private val args = handle.navArgs<ParticipantArg>()
     private val participant = args.participant
@@ -26,7 +26,7 @@ class ParticipantProfileViewModel @Inject constructor(
     val state: StateFlow<ParticipantProfileState> =
         combine(
             dataSource.participant(args.archiveName, participant.id),
-            activityDataSource.activitiesForUser(args.archiveName, participant.id)
+            activityDataSource.activitiesForUser(args.archiveName, participant.id),
         ) { participant, activities ->
             ParticipantProfileState.Loaded(participant ?: this.participant, activities)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ParticipantProfileState.Loading(participant))

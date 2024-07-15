@@ -48,7 +48,7 @@ class AddEditParticipantViewModel @Inject constructor(
     val isEditing = participant != null
 
     val state: StateFlow<AddEditParticipantState> = combine(
-        name, email, contact, participantClass, participantResult, birthday, userSession.role
+        name, email, contact, participantClass, participantResult, birthday, userSession.role,
     ) { name, email, contact, participantClass, result, birthday, role ->
         val nameResult = nameValidation.validate(name)
         val emailResult = emailValidation.validate(email)
@@ -65,9 +65,10 @@ class AddEditParticipantViewModel @Inject constructor(
             participantClass = participantClass,
             classOptions = (if (role is UserRole.ClassAdmin) role.classes else ParticipantClass.options).toList(),
             isValid = nameResult.isValid && emailResult.isValid && participantClass != null &&
-                    result !is ParticipantResult.Loading,
+                result !is ParticipantResult.Loading,
             participantResult = result,
-            canDoInvestiture = isEditing && participantClass != ParticipantClass.last && participantClass == participant?.participantClass,
+            canDoInvestiture = isEditing &&
+                participantClass != ParticipantClass.last && participantClass == participant?.participantClass,
         )
     }.stateIn(
         viewModelScope,
@@ -86,7 +87,7 @@ class AddEditParticipantViewModel @Inject constructor(
             classOptions = emptyList(),
             participantResult = null,
             canDoInvestiture = false,
-        )
+        ),
     )
 
     fun updateName(name: String) {
@@ -129,7 +130,7 @@ class AddEditParticipantViewModel @Inject constructor(
                     email = email.takeIf { it.isNotBlank() },
                     contact = contact.value.takeIf { it.isNotBlank() },
                     participantClass = participantClass,
-                    birthday = birthday.value?.toString()
+                    birthday = birthday.value?.toString(),
                 )
                 participantResult.value = ParticipantResult.Loading
                 dataSource.addOrUpdateParticipant(p, participant?.id).onSuccess {

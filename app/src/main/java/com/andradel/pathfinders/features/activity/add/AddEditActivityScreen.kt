@@ -70,7 +70,7 @@ fun AddEditActivityScreen(
     navigator: DestinationsNavigator,
     resultRecipient: ResultRecipient<AddParticipantsToActivityScreenDestination, ParticipantSelectionArg>,
     criteriaRecipient: ResultRecipient<AddCriteriaToActivityScreenDestination, CriteriaSelectionArg>,
-    viewModel: AddEditActivityViewModel = hiltViewModel()
+    viewModel: AddEditActivityViewModel = hiltViewModel(),
 ) {
     resultRecipient.onNavResult { result ->
         if (result is NavResult.Value) viewModel.setSelection(result.value.selection)
@@ -104,14 +104,14 @@ fun AddEditActivityScreen(
                     IconButton(enabled = state.isValid, onClick = viewModel::addActivity) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_save),
-                            contentDescription = stringResource(id = R.string.save)
+                            contentDescription = stringResource(id = R.string.save),
                         )
                     }
                     DeleteActivityIcon(canDelete = viewModel.isEditing && state.isAdmin, name = state.name) {
                         viewModel.deleteActivity()
                         navigator.navigateUp()
                     }
-                }
+                },
             )
         },
     ) { padding ->
@@ -130,7 +130,7 @@ fun AddEditActivityScreen(
                 title = stringResource(id = R.string.activity_not_saved_title),
                 body = stringResource(id = R.string.activity_not_saved_description),
                 onDismiss = { showUnsavedDialog = false },
-                navigator::navigateUp
+                navigator::navigateUp,
             )
         }
         Column(modifier = Modifier.padding(padding)) {
@@ -148,11 +148,11 @@ fun AddEditActivityScreen(
                 onSelectParticipants = {
                     navigator.navigate(
                         AddParticipantsToActivityScreenDestination(
-                            ParticipantSelectionArg(state.participants, state.classes)
-                        )
+                            ParticipantSelectionArg(state.participants, state.classes),
+                        ),
                     )
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             HorizontalDivider()
             AddEditButton(
@@ -161,7 +161,7 @@ fun AddEditActivityScreen(
                 state = state,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
             )
         }
         if (loading) {
@@ -194,7 +194,7 @@ private fun AddEditColumn(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(id = R.string.archived_activity),
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     }
                 }
@@ -211,7 +211,7 @@ private fun AddEditColumn(
                 dateMillis = state.date,
                 enabled = !state.isArchived,
                 updateDate = onUpdateDate,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
         item {
@@ -224,7 +224,7 @@ private fun AddEditColumn(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = stringResource(id = if (isSelected) R.string.unselect_all else R.string.select_all),
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.titleSmall,
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Switch(checked = isSelected, onCheckedChange = onSetAllSelected, enabled = state.isAdmin)
@@ -234,7 +234,7 @@ private fun AddEditColumn(
             if (!isEditing && state.isAdmin) {
                 Row(
                     modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(checked = state.createForEach, onCheckedChange = onCreateForEach)
                     Text(text = stringResource(R.string.create_activity_for_each_class))
@@ -248,7 +248,7 @@ private fun AddEditColumn(
                 participantClass = scoutClass,
                 onCheckedChange = { onSetClassSelected(scoutClass, it) },
                 enabled = state.isAdmin,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
         item {
@@ -257,7 +257,7 @@ private fun AddEditColumn(
                 header = R.string.criteria,
                 onClick = onSelectCriteria,
                 showButton = !state.isArchived,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
         if (state.criteria.isNotEmpty()) {
@@ -269,7 +269,7 @@ private fun AddEditColumn(
             item {
                 Text(
                     text = stringResource(id = R.string.no_criteria_selected),
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 )
             }
         }
@@ -279,7 +279,7 @@ private fun AddEditColumn(
                 header = R.string.participant_list,
                 onClick = onSelectParticipants,
                 showButton = !state.isArchived,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
         if (state.participants.isNotEmpty()) {
@@ -291,7 +291,7 @@ private fun AddEditColumn(
             item {
                 Text(
                     text = stringResource(id = R.string.no_participants_selected),
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
                 )
             }
         }
@@ -308,7 +308,7 @@ private fun AddEditButton(
     Button(
         onClick = onAddActivity,
         enabled = state.isValid,
-        modifier = modifier.padding(horizontal = 16.dp)
+        modifier = modifier.padding(horizontal = 16.dp),
     ) {
         val stringId = if (isEditing) R.string.edit_activity else R.string.add_activity
         Text(stringResource(id = stringId))
@@ -316,17 +316,13 @@ private fun AddEditButton(
 }
 
 @Composable
-private fun DeleteActivityIcon(
-    canDelete: Boolean,
-    name: String,
-    onDelete: () -> Unit,
-) {
+private fun DeleteActivityIcon(canDelete: Boolean, name: String, onDelete: () -> Unit) {
     if (canDelete) {
         var deleteDialog by remember { mutableStateOf(false) }
         IconButton(onClick = { deleteDialog = true }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete),
-                contentDescription = stringResource(id = R.string.delete)
+                contentDescription = stringResource(id = R.string.delete),
             )
         }
         if (deleteDialog) {
@@ -334,7 +330,7 @@ private fun DeleteActivityIcon(
                 onDismiss = { deleteDialog = false },
                 onConfirm = onDelete,
                 title = stringResource(id = R.string.delete),
-                body = stringResource(id = R.string.delete_confirmation, name)
+                body = stringResource(id = R.string.delete_confirmation, name),
             )
         }
     }
@@ -346,14 +342,14 @@ private fun ScoutClassCheckbox(
     enabled: Boolean,
     participantClass: ParticipantClass,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Checkbox(
             checked = selected,
             onCheckedChange = onCheckedChange,
             enabled = enabled,
-            colors = CheckboxDefaults.colors(checkedColor = participantClass.color)
+            colors = CheckboxDefaults.colors(checkedColor = participantClass.color),
         )
         Text(text = participantClass.title)
     }
@@ -377,7 +373,7 @@ private fun NameField(
         isError = nameValidation?.isError ?: false,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp),
     )
 }
 
@@ -386,7 +382,7 @@ private fun HeaderWithAddButton(
     @StringRes header: Int,
     onClick: () -> Unit,
     showButton: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Header(header = header, modifier = modifier) {
         if (showButton) {
@@ -394,7 +390,7 @@ private fun HeaderWithAddButton(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = stringResource(id = R.string.select)
+                        contentDescription = stringResource(id = R.string.select),
                     )
                     Text(text = stringResource(id = R.string.select))
                 }
@@ -404,16 +400,12 @@ private fun HeaderWithAddButton(
 }
 
 @Composable
-private fun Header(
-    @StringRes header: Int,
-    modifier: Modifier = Modifier,
-    endContent: @Composable () -> Unit = {},
-) {
+private fun Header(@StringRes header: Int, modifier: Modifier = Modifier, endContent: @Composable () -> Unit = {}) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(id = header),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         endContent()
     }

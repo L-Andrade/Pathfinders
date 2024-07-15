@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class FirebaseRoleRequest(
     val email: String,
     val role: Role,
-    val classes: Set<ParticipantClass>?
+    val classes: Set<ParticipantClass>?,
 )

@@ -32,7 +32,7 @@ class ArchiveFirebaseDataSource @Inject constructor(
                     activities = value.activities,
                     participants = value.participants,
                     criteria = value.criteria,
-                    archiveName = key
+                    archiveName = key,
                 ),
                 participants = value.participants.map {
                     participantMapper.toParticipant(
@@ -50,7 +50,7 @@ class ArchiveFirebaseDataSource @Inject constructor(
         name: String,
         activities: List<Activity>,
         participants: List<Participant>,
-        criteria: List<ActivityCriteria>
+        criteria: List<ActivityCriteria>,
     ): Result<Unit> = runCatching {
         if (archiveRef.child(name).exists()) {
             return Result.failure(IllegalArgumentException("Archive name already exists"))
@@ -60,7 +60,7 @@ class ArchiveFirebaseDataSource @Inject constructor(
                 activities = activities.associate { it.id to activityMapper.toFirebaseActivity(it) },
                 criteria = criteria.associate { it.id to criteriaMapper.toFirebaseCriteria(it) },
                 participants = participants.associate { it.id to participantMapper.toFirebaseParticipant(it) },
-            )
+            ),
         ).await()
         Unit
     }.throwCancellation()

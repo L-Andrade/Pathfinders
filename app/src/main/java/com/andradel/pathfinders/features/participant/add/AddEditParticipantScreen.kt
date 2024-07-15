@@ -73,7 +73,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = OptionalParticipantArg::class)
 fun AddEditParticipantScreen(
     navigator: DestinationsNavigator,
-    viewModel: AddEditParticipantViewModel = hiltViewModel()
+    viewModel: AddEditParticipantViewModel = hiltViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
@@ -87,14 +87,14 @@ fun AddEditParticipantScreen(
                     IconButton(enabled = state.isValid, onClick = viewModel::addParticipant) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_save),
-                            contentDescription = stringResource(id = R.string.save)
+                            contentDescription = stringResource(id = R.string.save),
                         )
                     }
                     DeleteParticipantIcon(viewModel.isEditing, state.name) {
                         viewModel.deleteParticipant()
                         navigator.navigateUp()
                     }
-                }
+                },
             )
         },
         content = { padding ->
@@ -121,7 +121,7 @@ fun AddEditParticipantScreen(
                     updateContact = viewModel::updateContact,
                     updateScoutClass = viewModel::updateScoutClass,
                     updateDate = viewModel::updateDate,
-                    modifier = Modifier.alpha(alpha)
+                    modifier = Modifier.alpha(alpha),
                 )
                 AnimatedVisibility(showCandle, modifier = Modifier.align(Alignment.Center)) {
                     CandleAnimation(
@@ -134,7 +134,7 @@ fun AddEditParticipantScreen(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
-        }
+        },
     )
 }
 
@@ -146,12 +146,12 @@ private fun CandleAnimation(start: Boolean, color: Color?, onEnd: () -> Unit, mo
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
             value = SimpleColorFilter((color ?: MaterialTheme.colorScheme.primary).toArgb()),
-            keyPath = arrayOf("surface31887", "surface31887", "meltedCandleColor", "**")
+            keyPath = arrayOf("surface31887", "surface31887", "meltedCandleColor", "**"),
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR_FILTER,
             value = SimpleColorFilter((color ?: MaterialTheme.colorScheme.primary).toArgb()),
-            keyPath = arrayOf("surface31887", "surface31887", "candleColor", "**")
+            keyPath = arrayOf("surface31887", "surface31887", "candleColor", "**"),
         ),
     )
     LottieAnimation(
@@ -159,7 +159,7 @@ private fun CandleAnimation(start: Boolean, color: Color?, onEnd: () -> Unit, mo
         progress = { compState },
         contentScale = ContentScale.FillWidth,
         dynamicProperties = dynamicProperties,
-        modifier = modifier
+        modifier = modifier,
     )
     if (compState == 1f) {
         LaunchedEffect(key1 = compState) {
@@ -184,7 +184,7 @@ private fun AddEditForm(
     Column(
         modifier = modifier
             .padding(horizontal = 16.dp)
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp),
     ) {
         TextField(
             value = state.name,
@@ -194,7 +194,7 @@ private fun AddEditForm(
             },
             isError = state.nameValidation.isError,
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.size(24.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -202,7 +202,7 @@ private fun AddEditForm(
                 state.participantClass,
                 state.classOptions,
                 updateScoutClass,
-                Modifier.weight(1f)
+                Modifier.weight(1f),
             )
             if (state.canDoInvestiture) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -221,7 +221,7 @@ private fun AddEditForm(
             isError = state.emailValidation.isError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.size(24.dp))
         TextField(
@@ -233,7 +233,7 @@ private fun AddEditForm(
             isError = state.contactValidation.isError,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
         Spacer(modifier = Modifier.size(24.dp))
         DatePickerField(
@@ -246,7 +246,7 @@ private fun AddEditForm(
         Button(
             onClick = addParticipant,
             enabled = state.isValid,
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier.align(Alignment.End),
         ) {
             val stringId = if (isEditing) R.string.edit_participant else R.string.add_participant
             Text(stringResource(id = stringId))
@@ -259,7 +259,7 @@ private fun ScoutClassDropDown(
     currentClass: ParticipantClass?,
     options: List<ParticipantClass>,
     onClassChosen: (ParticipantClass) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var dropdownState by remember { mutableStateOf(false) }
     val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
@@ -269,22 +269,22 @@ private fun ScoutClassDropDown(
             .clip(RoundedCornerShape(topEnd = 4.dp, topStart = 4.dp))
             .fillMaxWidth()
             .background(backgroundColor)
-            .padding(all = 16.dp)
+            .padding(all = 16.dp),
     ) {
         Text(
             text = currentClass?.title ?: stringResource(id = R.string.choose_class),
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = if (currentClass == null) 0.5f else 1f)
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = if (currentClass == null) 0.5f else 1f),
         )
         DropdownMenu(
             expanded = dropdownState,
             onDismissRequest = { dropdownState = !dropdownState },
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface.copy(0.5f))
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface.copy(0.5f)),
         ) {
             options.forEach { scoutClass ->
                 DropdownMenuItem(
                     modifier = Modifier
                         .background(
-                            MaterialTheme.colorScheme.surface.copy(alpha = if (scoutClass == currentClass) .5f else 0f)
+                            MaterialTheme.colorScheme.surface.copy(alpha = if (scoutClass == currentClass) .5f else 0f),
                         ),
                     onClick = {
                         onClassChosen(scoutClass)
@@ -292,7 +292,7 @@ private fun ScoutClassDropDown(
                     },
                     text = {
                         Text(text = scoutClass.title)
-                    }
+                    },
                 )
             }
         }
@@ -304,7 +304,7 @@ private fun AddParticipantResult(
     result: ParticipantResult?,
     navigator: DestinationsNavigator,
     onLoading: (Boolean) -> Unit,
-    showSnackbar: @Composable (String) -> Unit
+    showSnackbar: @Composable (String) -> Unit,
 ) {
     onLoading(result is ParticipantResult.Loading)
     when (result) {
@@ -315,17 +315,13 @@ private fun AddParticipantResult(
 }
 
 @Composable
-private fun DeleteParticipantIcon(
-    isEditing: Boolean,
-    name: String,
-    onDelete: () -> Unit,
-) {
+private fun DeleteParticipantIcon(isEditing: Boolean, name: String, onDelete: () -> Unit) {
     if (isEditing) {
         var deleteDialog by remember { mutableStateOf(false) }
         IconButton(onClick = { deleteDialog = true }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete),
-                contentDescription = stringResource(id = R.string.delete)
+                contentDescription = stringResource(id = R.string.delete),
             )
         }
         if (deleteDialog) {
@@ -333,7 +329,7 @@ private fun DeleteParticipantIcon(
                 onDismiss = { deleteDialog = false },
                 onConfirm = onDelete,
                 title = stringResource(id = R.string.delete),
-                body = stringResource(id = R.string.delete_confirmation, name)
+                body = stringResource(id = R.string.delete_confirmation, name),
             )
         }
     }

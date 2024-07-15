@@ -15,7 +15,8 @@ enum class ParticipantClass {
     Companheiro,
     Embaixador,
     Invalid,
-    Unknown;
+    Unknown,
+    ;
 
     companion object {
         val options = entries - Invalid - Unknown

@@ -65,13 +65,13 @@ class ActivityMapper @Inject constructor(
 
     private fun ParticipantScores.buildWith(
         participants: List<Participant>,
-        criteria: List<ActivityCriteria>
+        criteria: List<ActivityCriteria>,
     ): ParticipantScores {
         return buildMap {
             participants.forEach { participant ->
                 put(
                     participant.id,
-                    buildMap { criteria.forEach { c -> put(c.id, this@buildWith[participant.id]?.get(c.id) ?: 0) } }
+                    buildMap { criteria.forEach { c -> put(c.id, this@buildWith[participant.id]?.get(c.id) ?: 0) } },
                 )
             }
         }

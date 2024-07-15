@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userSession: UserSession,
-    private val dataSource: ParticipantFirebaseDataSource
+    private val dataSource: ParticipantFirebaseDataSource,
 ) : ViewModel() {
     val state = userSession.userState.map { state ->
         when (state) {
@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
             UserState.Loading -> HomeState.Loading
             is User -> HomeState.Loaded(
                 participant = if (state.email != null) dataSource.participantByEmail(null, state.email) else null,
-                user = state
+                user = state,
             )
 
             UserState.Error -> HomeState.Error

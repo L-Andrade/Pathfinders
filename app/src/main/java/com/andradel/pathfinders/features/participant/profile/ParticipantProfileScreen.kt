@@ -36,7 +36,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination(navArgsDelegate = ParticipantArg::class)
 fun ParticipantProfileScreen(
     navigator: DestinationsNavigator,
-    viewModel: ParticipantProfileViewModel = hiltViewModel()
+    viewModel: ParticipantProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
@@ -52,20 +52,17 @@ fun ParticipantProfileScreen(
                 is ParticipantProfileState.Loading -> Box(
                     modifier = Modifier
                         .padding(padding)
-                        .fillMaxSize()
+                        .fillMaxSize(),
                 ) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
-        }
+        },
     )
 }
 
 @Composable
-private fun LoadedProfile(
-    state: ParticipantProfileState.Loaded,
-    modifier: Modifier = Modifier
-) {
+private fun LoadedProfile(state: ParticipantProfileState.Loaded, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier, contentPadding = PaddingValues(all = 20.dp)) {
         item {
             Text(
@@ -81,7 +78,7 @@ private fun LoadedProfile(
             item {
                 Text(
                     stringResource(id = R.string.user_no_activities, state.participant.name),
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
                 )
             }
         }
@@ -89,22 +86,18 @@ private fun LoadedProfile(
 }
 
 @Composable
-private fun ParticipantActivity(
-    participant: Participant,
-    activity: Activity,
-    modifier: Modifier = Modifier
-) {
+private fun ParticipantActivity(participant: Participant, activity: Activity, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 8.dp)) {
             val activityScore = remember { activity.participantPoints(participant.id) }
             Text(
                 text = activity.name,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             Text(
                 text = stringResource(id = R.string.participant_score, activityScore),
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         activity.criteria.fastForEach { criteria ->
@@ -112,7 +105,7 @@ private fun ParticipantActivity(
             Text(
                 text = stringResource(id = R.string.criteria_with_value, criteria.name, criteriaScore),
                 style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp)
+                modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp),
             )
         }
         HorizontalDivider(Modifier.padding(top = 8.dp))

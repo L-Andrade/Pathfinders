@@ -58,9 +58,9 @@ fun ArchiveSelectActivitiesManuallyScreen(
         topBar = {
             TopAppBarTitleWithIcon(
                 title = stringResource(id = R.string.select),
-                onIconClick = navigator::navigateUp
+                onIconClick = navigator::navigateUp,
             )
-        }
+        },
     ) { padding ->
         val state by viewModel.state.collectAsStateWithLifecycle()
         when (val s = state) {
@@ -74,19 +74,21 @@ fun ArchiveSelectActivitiesManuallyScreen(
                         SelectableActivityItem(
                             item = activity,
                             onClick = { viewModel.select(activity.id) },
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                         )
                     }
                 }
                 HorizontalDivider()
                 Button(
                     onClick = viewModel::onSelectActivities,
-                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp).align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .align(Alignment.CenterHorizontally),
                 ) {
                     Text(
                         text = pluralStringResource(
-                            id = R.plurals.select_number_of_activities, count = s.selected, s.selected
-                        )
+                            id = R.plurals.select_number_of_activities, count = s.selected, s.selected,
+                        ),
                     )
                 }
             }
@@ -95,16 +97,12 @@ fun ArchiveSelectActivitiesManuallyScreen(
 }
 
 @Composable
-private fun SelectableActivityItem(
-    item: SelectableActivity,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun SelectableActivityItem(item: SelectableActivity, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         onClick = onClick,
         border = BorderStroke(
             1.dp,
-            color = if (item.selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+            color = if (item.selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
         ),
         modifier = modifier,
     ) {
@@ -116,13 +114,13 @@ private fun SelectableActivityItem(
                         Icons.Default.CheckCircle,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
                 } else {
                     Box(
                         modifier = Modifier
                             .size(16.dp)
-                            .border(1.dp, MaterialTheme.colorScheme.primary, shape = CircleShape)
+                            .border(1.dp, MaterialTheme.colorScheme.primary, shape = CircleShape),
                     )
                 }
             }

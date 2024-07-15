@@ -64,7 +64,9 @@ class ParticipantListViewModel @Inject constructor(
     }
 
     fun collapseSection(participantClass: ParticipantClass) {
-        collapsed.value = collapsed.value.toMutableMap().apply { this[participantClass] = !(this[participantClass] ?: false) }
+        collapsed.value = collapsed.value.toMutableMap().apply {
+            this[participantClass] = !(this[participantClass] ?: false)
+        }
     }
 
     fun sortBy(sorting: ParticipantSort) {

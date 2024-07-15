@@ -90,7 +90,7 @@ fun CreateArchiveScreen(
         topBar = {
             TopAppBarTitleWithIcon(
                 title = stringResource(id = R.string.create_archive),
-                onIconClick = navigator::navigateUp
+                onIconClick = navigator::navigateUp,
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -114,7 +114,7 @@ fun CreateArchiveScreen(
                         name = state.name,
                         validation = state.nameValidation,
                         onUpdateName = viewModel::onUpdateName,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -152,8 +152,8 @@ fun CreateArchiveScreen(
                         onSelectManually = {
                             navigator.navigate(
                                 ArchiveSelectActivitiesManuallyScreenDestination(
-                                    ActivitySelectionArg(ArrayList(viewModel.activities()))
-                                )
+                                    ActivitySelectionArg(ArrayList(viewModel.activities())),
+                                ),
                             )
                         },
                     )
@@ -166,18 +166,14 @@ fun CreateArchiveScreen(
             CreateArchiveButton(
                 onAdd = viewModel::addArchive,
                 canSave = state.canSave,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             )
         }
     }
 }
 
 @Composable
-private fun CreateArchiveButton(
-    onAdd: () -> Unit,
-    canSave: Boolean,
-    modifier: Modifier = Modifier,
-) {
+private fun CreateArchiveButton(onAdd: () -> Unit, canSave: Boolean, modifier: Modifier = Modifier) {
     var showConfirmation by remember { mutableStateOf(false) }
     if (showConfirmation) {
         ConfirmationDialog(
@@ -187,13 +183,13 @@ private fun CreateArchiveButton(
             onConfirm = {
                 onAdd()
                 showConfirmation = false
-            }
+            },
         )
     }
     Button(
         onClick = { showConfirmation = true },
         enabled = canSave,
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Icon(painter = painterResource(id = R.drawable.ic_save), contentDescription = null)
         Spacer(modifier = Modifier.width(8.dp))
@@ -205,13 +201,13 @@ private fun CreateArchiveButton(
 private fun ProgressStateDialog(progress: CreateArchiveProgressState) {
     Dialog(
         onDismissRequest = {},
-        properties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false)
+        properties = DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false),
     ) {
         Surface(shape = MaterialTheme.shapes.medium) {
             Column(modifier = Modifier.padding(all = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = stringResource(id = R.string.archiving),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
                 ProgressIndicator(stringResource(id = R.string.creating_archive), progress.deletedActivities)
                 ProgressIndicator(stringResource(id = R.string.deleting_activities), progress.deletedActivities)
@@ -233,13 +229,13 @@ private fun ProgressIndicator(text: String, state: ArchiveState?, modifier: Modi
                 ArchiveState.Success -> Icon(
                     Icons.Default.Check,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
 
                 ArchiveState.Fail -> Icon(
                     Icons.Default.Warning,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
@@ -271,7 +267,7 @@ private fun AffectedCheckbox(
     @PluralsRes checkboxRes: Int,
     @PluralsRes warningRes: Int,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         LabeledCheckbox(
@@ -285,12 +281,12 @@ private fun AffectedCheckbox(
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .border(1.dp, MaterialTheme.colorScheme.primary, shape = MaterialTheme.shapes.large)
-                    .padding(all = 8.dp)
+                    .padding(all = 8.dp),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_warning),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -300,7 +296,7 @@ private fun AffectedCheckbox(
                         affected.usedInOtherActivities,
                     ),
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -308,23 +304,19 @@ private fun AffectedCheckbox(
 }
 
 @Composable
-private fun ActivityItem(
-    activity: Activity,
-    onUnselect: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun ActivityItem(activity: Activity, onUnselect: () -> Unit, modifier: Modifier = Modifier) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = onUnselect) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete),
-                contentDescription = stringResource(id = R.string.delete)
+                contentDescription = stringResource(id = R.string.delete),
             )
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(text = activity.name, style = MaterialTheme.typography.titleSmall)
             Text(
                 text = activity.classes.map { it.title }.joinToString(", "),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
         if (activity.date != null) {
@@ -343,7 +335,7 @@ private fun SelectActivitiesButtons(
     Column(modifier) {
         Text(
             text = stringResource(id = R.string.activity_list),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -361,10 +353,7 @@ private fun SelectActivitiesButtons(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddByDateRangeButton(
-    onSelect: (Long?, Long?) -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun AddByDateRangeButton(onSelect: (Long?, Long?) -> Unit, modifier: Modifier = Modifier) {
     var showDateRangePicker by remember { mutableStateOf(false) }
     val state = rememberDateRangePickerState()
     Button(onClick = { showDateRangePicker = true }, modifier = modifier) {
@@ -379,7 +368,7 @@ private fun AddByDateRangeButton(
                 modifier = Modifier
                     .fillMaxHeight(0.8f)
                     .padding(horizontal = 8.dp),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.medium,
             ) {
                 Column {
                     DateRangePicker(
@@ -387,15 +376,15 @@ private fun AddByDateRangeButton(
                         title = {
                             DateRangePickerDefaults.DateRangePickerTitle(
                                 displayMode = state.displayMode,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                             )
                         },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     HorizontalDivider()
                     Row(
                         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Button(onClick = { showDateRangePicker = false }, modifier = Modifier.weight(1f)) {
                             Text(text = stringResource(id = R.string.cancel))
@@ -406,7 +395,7 @@ private fun AddByDateRangeButton(
                                 onSelect(state.selectedStartDateMillis, state.selectedEndDateMillis)
                                 state.setSelection(null, null)
                                 showDateRangePicker = false
-                            }
+                            },
                         ) {
                             Text(text = stringResource(id = R.string.select))
                         }
@@ -422,7 +411,7 @@ private fun LabeledCheckbox(
     checked: Boolean,
     text: String,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Checkbox(checked = checked, onCheckedChange = onCheckedChange)

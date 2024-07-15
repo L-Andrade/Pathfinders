@@ -40,7 +40,7 @@ class EditUserRoleViewModel @Inject constructor(
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        EditUserRoleState(user.name, role.value, selectedClasses.value)
+        EditUserRoleState(user.name, role.value, selectedClasses.value),
     )
 
     fun selectRole(role: EditUserRole) {

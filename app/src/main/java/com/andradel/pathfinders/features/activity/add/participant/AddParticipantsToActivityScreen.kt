@@ -51,7 +51,7 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 fun AddParticipantsToActivityScreen(
     navigator: DestinationsNavigator,
     resultNavigator: ResultBackNavigator<ParticipantSelectionArg>,
-    viewModel: AddParticipantsToActivityViewModel = hiltViewModel()
+    viewModel: AddParticipantsToActivityViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -76,9 +76,9 @@ fun AddParticipantsToActivityScreen(
                     TextButton(onClick = onSelectParticipants) {
                         Text(text = stringResource(id = R.string.save))
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         BackHandler(onBack = onBack)
         if (showUnsavedDialog) {
@@ -86,13 +86,13 @@ fun AddParticipantsToActivityScreen(
                 title = stringResource(id = R.string.activity_not_saved_title),
                 body = stringResource(id = R.string.activity_not_saved_description),
                 onDismiss = { showUnsavedDialog = false },
-                navigator::navigateUp
+                navigator::navigateUp,
             )
         }
         Box(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             when (val s = state) {
                 is AddParticipantsToActivityState.Loaded -> ParticipantSelectionList(
@@ -101,7 +101,7 @@ fun AddParticipantsToActivityScreen(
                     onUnselectParticipant = viewModel::unselectParticipant,
                     onAddNewParticipant = { navigator.navigate(AddEditParticipantScreenDestination()) },
                     onSelectParticipants = onSelectParticipants,
-                    onFilteringByClass = viewModel::setFilteringByClass
+                    onFilteringByClass = viewModel::setFilteringByClass,
                 )
                 AddParticipantsToActivityState.Loading ->
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -130,21 +130,22 @@ private fun ParticipantSelectionList(
                     participant = p,
                     selected = true,
                     onClick = { onUnselectParticipant(p) },
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
         }
         item {
-            Column(modifier = Modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp)
+            Column(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .padding(horizontal = 16.dp),
             ) {
                 Header(header = R.string.participant_list) {
                     OutlinedButton(onClick = onAddNewParticipant) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_add),
-                                contentDescription = stringResource(id = R.string.add)
+                                contentDescription = stringResource(id = R.string.add),
                             )
                             Text(text = stringResource(id = R.string.add))
                         }
@@ -163,7 +164,7 @@ private fun ParticipantSelectionList(
                     participant = p,
                     selected = false,
                     onClick = { onSelectParticipant(p) },
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
         }
@@ -181,17 +182,17 @@ private fun ParticipantSelectionList(
 private fun FilterByClassSwitch(
     classes: List<ParticipantClass>,
     filteringByClass: Boolean,
-    onFilteringByClass: (Boolean) -> Unit
+    onFilteringByClass: (Boolean) -> Unit,
 ) {
     if (classes.isNotEmpty()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = stringResource(
                     id = R.string.filtering_by_class,
-                    classes.map { it.title }.joinToString()
+                    classes.map { it.title }.joinToString(),
                 ),
                 style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             Switch(checked = filteringByClass, onCheckedChange = onFilteringByClass)
         }
@@ -203,16 +204,16 @@ private fun Participant(
     participant: Participant,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = participant.name,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Checkbox(
             checked = selected, onCheckedChange = { onClick() },
-            colors = CheckboxDefaults.colors(checkedColor = participant.participantClass.color)
+            colors = CheckboxDefaults.colors(checkedColor = participant.participantClass.color),
         )
     }
 }
@@ -221,21 +222,17 @@ private fun Participant(
 private fun NoMoreParticipants(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(id = R.string.no_more_participants),
-        modifier = modifier.padding(horizontal = 16.dp)
+        modifier = modifier.padding(horizontal = 16.dp),
     )
 }
 
 @Composable
-private fun Header(
-    @StringRes header: Int,
-    modifier: Modifier = Modifier,
-    endContent: @Composable () -> Unit = {}
-) {
+private fun Header(@StringRes header: Int, modifier: Modifier = Modifier, endContent: @Composable () -> Unit = {}) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(id = header),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         endContent()
     }

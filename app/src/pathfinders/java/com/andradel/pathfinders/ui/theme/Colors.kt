@@ -26,7 +26,7 @@ private val lightColorPalette = lightColorScheme(
     primary = red,
     primaryContainer = lightYellow,
     secondary = yellow,
-    onSecondary = Color.Black
+    onSecondary = Color.Black,
 )
 
 @Composable

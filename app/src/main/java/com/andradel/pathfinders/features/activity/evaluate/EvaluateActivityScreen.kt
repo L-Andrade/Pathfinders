@@ -57,10 +57,7 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Destination(navArgsDelegate = ActivityArg::class)
-fun EvaluateActivityScreen(
-    navigator: DestinationsNavigator,
-    viewModel: EvaluateActivityViewModel = hiltViewModel()
-) {
+fun EvaluateActivityScreen(navigator: DestinationsNavigator, viewModel: EvaluateActivityViewModel = hiltViewModel()) {
     var showUnsavedDialog by remember { mutableStateOf(false) }
     BackHandler {
         if (viewModel.isUnsaved) {
@@ -98,16 +95,16 @@ fun EvaluateActivityScreen(
                     TextButton(onClick = viewModel::updateActivityScores, enabled = !loading) {
                         Text(text = stringResource(id = R.string.done))
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         if (showUnsavedDialog) {
             ConfirmationDialog(
                 title = stringResource(id = R.string.activity_not_saved_title),
                 body = stringResource(id = R.string.activity_not_saved_description),
                 onDismiss = { showUnsavedDialog = false },
-                navigator::navigateUp
+                navigator::navigateUp,
             )
         }
         val pagerState = rememberPagerState { viewModel.activity.participants.size }
@@ -122,7 +119,7 @@ fun EvaluateActivityScreen(
                     criteria = activity.criteria,
                     isArchived = activity.archiveName != null,
                     scores = participantCriteriaScores,
-                    onUpdateScore = { criteriaId, score -> viewModel.setScore(participant, criteriaId, score) }
+                    onUpdateScore = { criteriaId, score -> viewModel.setScore(participant, criteriaId, score) },
                 )
             }
         }
@@ -131,23 +128,19 @@ fun EvaluateActivityScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ParticipantTabs(
-    pagerState: PagerState,
-    participants: List<Participant>,
-    modifier: Modifier = Modifier
-) {
+private fun ParticipantTabs(pagerState: PagerState, participants: List<Participant>, modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     ScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
             TabRowDefaults.SecondaryIndicator(
-                modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage])
+                modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
             )
         },
         edgePadding = 8.dp,
         modifier = modifier
             .fillMaxWidth()
-            .shadow(elevation = 4.dp)
+            .shadow(elevation = 4.dp),
     ) {
         participants.forEachIndexed { index, participant ->
             Tab(
@@ -181,7 +174,7 @@ private fun ParticipantTab(
             Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
                 Text(
                     text = stringResource(id = R.string.criteria_with_value, c.name, scores[c.id] ?: 0),
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
                 )
                 Slider(
                     value = value,
@@ -192,7 +185,7 @@ private fun ParticipantTab(
                         onUpdateScore(c.id, value.toInt())
                     },
                     valueRange = 0f..c.maxScore.toFloat(),
-                    steps = c.maxScore - 1
+                    steps = c.maxScore - 1,
                 )
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             }
