@@ -32,6 +32,7 @@ jobs:
         with:
           appId: ${{ secrets.FB_UNIT_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FB_UNIT_CREDENTIALS_APP_DIST }}
+          groups: Testers
           file: ./app/build/outputs/apk/unit/release/app-unit-release.apk
 
   build-pathfinders:
@@ -59,6 +60,7 @@ jobs:
         with:
           appId: ${{ secrets.FB_PATHFINDERS_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FB_PATHFINDERS_CREDENTIALS_APP_DIST }}
+          groups: Testers
           file: ./app/build/outputs/apk/pathfinders/release/app-pathfinders-release.apk
 
   cleanup:
