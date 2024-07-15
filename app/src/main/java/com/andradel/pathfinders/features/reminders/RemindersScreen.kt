@@ -37,13 +37,9 @@ import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-
 @Composable
 @Destination
-fun RemindersScreen(
-    navigator: DestinationsNavigator,
-    viewModel: RemindersViewModel = hiltViewModel()
-) {
+fun RemindersScreen(navigator: DestinationsNavigator, viewModel: RemindersViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.reminders_screen, onIconClick = navigator::navigateUp)
@@ -53,14 +49,14 @@ fun RemindersScreen(
             Box(
                 modifier = Modifier
                     .padding(padding)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 when (val s = state) {
                     is RemindersState.Loaded -> RemindersColumn(s, modifier = Modifier.fillMaxSize())
                     RemindersState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
-        }
+        },
     )
 }
 
@@ -123,7 +119,7 @@ private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modi
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = stringResource(id = R.string.last_seen_days, participant.daysSince.toString()),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
         if (participant.contact != null) {
@@ -132,11 +128,11 @@ private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modi
                 onClick = {
                     val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:${participant.contact}") }
                     context.startActivity(intent)
-                }
+                },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_call),
-                    contentDescription = stringResource(id = R.string.call_to_contact, participant.contact)
+                    contentDescription = stringResource(id = R.string.call_to_contact, participant.contact),
                 )
             }
         }
@@ -149,7 +145,7 @@ private fun ParticipantBirthdayItem(participant: ParticipantBirthday, modifier: 
         Text(text = participant.name, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
         Text(
             text = pluralStringResource(id = R.plurals.age_years_old, participant.age, participant.age),
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
         )
     }
 }
@@ -159,7 +155,7 @@ private fun BirthdaySubSectionHeader(header: String, modifier: Modifier = Modifi
     Text(
         text = header,
         style = MaterialTheme.typography.labelSmall,
-        modifier = modifier.padding(top = 12.dp, bottom = 4.dp)
+        modifier = modifier.padding(top = 12.dp, bottom = 4.dp),
     )
 }
 

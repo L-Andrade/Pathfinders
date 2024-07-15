@@ -47,10 +47,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination(navArgsDelegate = ActivityListArg::class)
-fun ActivityListScreen(
-    navigator: DestinationsNavigator,
-    viewModel: ActivityListViewModel = hiltViewModel()
-) {
+fun ActivityListScreen(navigator: DestinationsNavigator, viewModel: ActivityListViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
@@ -64,14 +61,14 @@ fun ActivityListScreen(
                             Text(text = stringResource(id = R.string.add_activity))
                         }
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         Box(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             when (val s = state) {
                 is ActivityListState.Loaded -> LazyColumn {
@@ -82,7 +79,7 @@ fun ActivityListScreen(
                             onEditClick = { navigator.navigate(AddEditActivityScreenDestination(activity)) },
                             onDeleteClick = { viewModel.deleteActivity(activity) },
                             onEvaluateClick = { navigator.navigate(EvaluateActivityScreenDestination(activity)) },
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
                         )
                     }
                 }
@@ -101,12 +98,12 @@ private fun ActivityCard(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onEvaluateClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(modifier = modifier, shape = RoundedCornerShape(8.dp), onClick = onEditClick) {
         Column(
             modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             var removeDialog by remember { mutableStateOf(false) }
             Row(
@@ -116,14 +113,14 @@ private fun ActivityCard(
                 Text(
                     text = activity.name,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                     if (activity.criteria.isNotEmpty() && activity.participants.isNotEmpty()) {
                         IconButton(onClick = onEvaluateClick) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_evaluate),
-                                contentDescription = stringResource(id = R.string.evaluate_activity)
+                                contentDescription = stringResource(id = R.string.evaluate_activity),
                             )
                         }
                     }
@@ -131,7 +128,7 @@ private fun ActivityCard(
                         IconButton(onClick = { removeDialog = true }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_delete),
-                                contentDescription = stringResource(id = R.string.delete)
+                                contentDescription = stringResource(id = R.string.delete),
                             )
                         }
                     }
@@ -147,13 +144,13 @@ private fun ActivityCard(
                 Text(
                     text = stringResource(id = R.string.participant_number, activity.participants.size),
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 if (activity.date != null) {
                     Text(
                         text = activity.date.toString(),
                         style = MaterialTheme.typography.labelSmall,
-                        modifier = Modifier.align(Alignment.Bottom)
+                        modifier = Modifier.align(Alignment.Bottom),
                     )
                 }
             }
@@ -162,7 +159,7 @@ private fun ActivityCard(
                     onDismiss = { removeDialog = false },
                     onConfirm = onDeleteClick,
                     title = stringResource(id = R.string.delete),
-                    body = stringResource(id = R.string.delete_confirmation, activity.name)
+                    body = stringResource(id = R.string.delete_confirmation, activity.name),
                 )
             }
         }

@@ -29,9 +29,9 @@ android {
     signingConfigs {
         release {
             storeFile rootProject.file('release.jks')
-            storePassword 'release1'
+            storePassword project.hasProperty('storePassword') ? project.getProperty('storePassword') : System.getenv('PATHFINDERS_STORE_PASSWD')
             keyAlias 'key0'
-            keyPassword 'release1'
+            keyPassword project.hasProperty('keyPassword') ? project.getProperty('keyPassword') : System.getenv('PATHFINDERS_KEY_PASSWD')
         }
     }
     buildTypes {

@@ -64,10 +64,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 @Destination(navArgsDelegate = ParticipantListArg::class)
-fun ParticipantListScreen(
-    navigator: DestinationsNavigator,
-    viewModel: ParticipantListViewModel = hiltViewModel()
-) {
+fun ParticipantListScreen(navigator: DestinationsNavigator, viewModel: ParticipantListViewModel = hiltViewModel()) {
     val canModify by viewModel.canModify.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
@@ -80,7 +77,7 @@ fun ParticipantListScreen(
                             Text(text = stringResource(id = R.string.add_participant))
                         }
                     }
-                }
+                },
             )
         },
         content = { padding ->
@@ -88,7 +85,7 @@ fun ParticipantListScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding)
+                    .padding(padding),
             ) {
                 when (val s = state) {
                     is ParticipantListState.Loaded -> ParticipantList(
@@ -110,7 +107,7 @@ fun ParticipantListScreen(
                         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
-        }
+        },
     )
 }
 
@@ -140,24 +137,24 @@ private fun ParticipantList(
             section.forEach { section ->
                 item(key = section.participantClass.name) {
                     Row(
-                        verticalAlignment = CenterVertically, modifier = Modifier
+                        verticalAlignment = CenterVertically,
+                        modifier = Modifier
                             .padding(horizontal = 16.dp)
-                            .padding(top = 12.dp, bottom = 4.dp)
+                            .padding(top = 12.dp, bottom = 4.dp),
                     ) {
                         Text(
                             text = section.participantClass.title,
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
                         )
                         IconButton(onClick = { onCollapseSection(section.participantClass) }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_chevron_down),
                                 contentDescription = null,
-                                modifier = Modifier.rotate(if (section.collapsed) 180f else 0f)
+                                modifier = Modifier.rotate(if (section.collapsed) 180f else 0f),
                             )
                         }
                     }
-
                 }
                 if (!section.collapsed) {
                     items(items = section.participants, key = { it.participant.id }) { participant ->
@@ -167,7 +164,7 @@ private fun ParticipantList(
                             onParticipantClick = onParticipantClick,
                             deleteParticipant = deleteParticipant,
                             editParticipant = onEditParticipant,
-                            modifier = Modifier.animateItemPlacement()
+                            modifier = Modifier.animateItemPlacement(),
                         )
                     }
                 }
@@ -183,11 +180,11 @@ private fun SortingFab(
     selected: ParticipantSort,
     onExpand: () -> Unit,
     onSortClick: (ParticipantSort) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.End
+        horizontalAlignment = Alignment.End,
     ) {
         ParticipantSort.entries.forEach { sort ->
             key(sort.ordinal) {
@@ -200,30 +197,38 @@ private fun SortingFab(
                 AnimatedVisibility(visible = delayedExpanded) {
                     Surface(
                         shape = RoundedCornerShape(50),
-                        onClick = { onSortClick(sort); onExpand() },
+                        onClick = {
+                            onSortClick(sort)
+                            onExpand()
+                        },
                         color = MaterialTheme.colorScheme.secondary,
-                        border = if (sort == selected) BorderStroke(
-                            2.dp,
-                            MaterialTheme.colorScheme.background
-                        ) else null,
-                        modifier = Modifier.padding(4.dp)
+                        border = if (sort == selected) {
+                            BorderStroke(
+                                2.dp,
+                                MaterialTheme.colorScheme.background,
+                            )
+                        } else {
+                            null
+                        },
+                        modifier = Modifier.padding(4.dp),
                     ) {
                         Row(modifier = Modifier.padding(8.dp), verticalAlignment = CenterVertically) {
                             val (label, icon) = when (sort) {
                                 ParticipantSort.PointsAsc -> R.string.participant_sort_points to R.drawable.ic_arrow_up
-                                ParticipantSort.PointsDesc -> R.string.participant_sort_points to R.drawable.ic_arrow_down
+                                ParticipantSort.PointsDesc ->
+                                    R.string.participant_sort_points to R.drawable.ic_arrow_down
                                 ParticipantSort.NameAsc -> R.string.participant_sort_name to R.drawable.ic_arrow_up
                                 ParticipantSort.NameDesc -> R.string.participant_sort_name to R.drawable.ic_arrow_down
                             }
                             Text(
                                 text = stringResource(id = label),
                                 style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSecondary
+                                color = MaterialTheme.colorScheme.onSecondary,
                             )
                             Icon(
                                 painter = painterResource(id = icon),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSecondary
+                                tint = MaterialTheme.colorScheme.onSecondary,
                             )
                         }
                     }
@@ -236,17 +241,17 @@ private fun SortingFab(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_sort),
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSecondary
+                        tint = MaterialTheme.colorScheme.onSecondary,
                     )
                     AnimatedVisibility(isExpanded) {
                         Text(
                             text = stringResource(id = R.string.participant_sort),
-                            color = MaterialTheme.colorScheme.onSecondary
+                            color = MaterialTheme.colorScheme.onSecondary,
                         )
                     }
                 }
             },
-            onClick = onExpand
+            onClick = onExpand,
         )
     }
 }
@@ -267,22 +272,22 @@ private fun ParticipantCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .padding(horizontal = 16.dp),
-        onClick = { onParticipantClick(participant.participant) }
+        onClick = { onParticipantClick(participant.participant) },
     ) {
         Row(
             verticalAlignment = CenterVertically,
-            modifier = Modifier.padding(all = 16.dp)
+            modifier = Modifier.padding(all = 16.dp),
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = participant.participant.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = participant.participant.participantClass.color.onColor
+                    color = participant.participant.participantClass.color.onColor,
                 )
                 Text(
                     text = stringResource(id = R.string.participant_score, participant.score),
                     style = MaterialTheme.typography.titleSmall,
-                    color = participant.participant.participantClass.color.onColor
+                    color = participant.participant.participantClass.color.onColor,
                 )
             }
             if (showButtons) {
@@ -291,14 +296,14 @@ private fun ParticipantCard(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_edit),
                         contentDescription = stringResource(id = R.string.edit),
-                        tint = participant.participant.participantClass.color.onColor
+                        tint = participant.participant.participantClass.color.onColor,
                     )
                 }
                 IconButton(onClick = { deleteDialog = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete),
                         contentDescription = stringResource(id = R.string.delete),
-                        tint = participant.participant.participantClass.color.onColor
+                        tint = participant.participant.participantClass.color.onColor,
                     )
                 }
                 if (deleteDialog) {
@@ -306,7 +311,7 @@ private fun ParticipantCard(
                         onDismiss = { deleteDialog = false },
                         onConfirm = { deleteParticipant(participant.participant) },
                         title = stringResource(id = R.string.delete),
-                        body = stringResource(R.string.delete_confirmation, participant.participant.name)
+                        body = stringResource(R.string.delete_confirmation, participant.participant.name),
                     )
                 }
             }

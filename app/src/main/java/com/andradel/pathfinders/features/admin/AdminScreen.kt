@@ -21,7 +21,6 @@ import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-
 @Composable
 @Destination
 fun AdminScreen(navigator: DestinationsNavigator) {
@@ -33,14 +32,14 @@ fun AdminScreen(navigator: DestinationsNavigator) {
             Column(modifier = Modifier.padding(padding)) {
                 AdminOption(
                     text = stringResource(id = R.string.admin_user_list),
-                    onClick = { navigator.navigate(AdminUserListScreenDestination) }
+                    onClick = { navigator.navigate(AdminUserListScreenDestination) },
                 )
                 AdminOption(
                     text = stringResource(id = R.string.admin_archive),
-                    onClick = { navigator.navigate(ArchiveListScreenDestination) }
+                    onClick = { navigator.navigate(ArchiveListScreenDestination) },
                 )
             }
-        }
+        },
     )
 }
 

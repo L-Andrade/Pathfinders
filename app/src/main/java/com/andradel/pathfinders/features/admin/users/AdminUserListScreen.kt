@@ -38,10 +38,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun AdminUserListScreen(
-    navigator: DestinationsNavigator,
-    viewModel: AdminUserListViewModel = hiltViewModel()
-) {
+fun AdminUserListScreen(navigator: DestinationsNavigator, viewModel: AdminUserListViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_user_list, onIconClick = navigator::navigateUp)
@@ -54,29 +51,31 @@ fun AdminUserListScreen(
             Box(
                 modifier = Modifier
                     .padding(padding)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             ) {
                 when (val s = state) {
                     AdminUserListScreenState.Error -> ErrorScreen(
                         viewModel::loadUsers,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
                     )
 
-                    is AdminUserListScreenState.Loaded -> LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp)) {
-                        items(s.users, key = { it.email.orEmpty() }) { user ->
-                            UserItem(
-                                user = user,
-                                modifier = Modifier
-                                    .padding(vertical = 8.dp)
-                                    .clickable { navigator.navigate(EditUserRoleScreenDestination(user)) }
-                            )
+                    is AdminUserListScreenState.Loaded ->
+                        LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp)) {
+                            items(s.users, key = { it.email.orEmpty() }) { user ->
+                                UserItem(
+                                    user = user,
+                                    modifier = Modifier
+                                        .padding(vertical = 8.dp)
+                                        .clickable { navigator.navigate(EditUserRoleScreenDestination(user)) },
+                                )
+                            }
                         }
-                    }
 
-                    AdminUserListScreenState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    AdminUserListScreenState.Loading ->
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
             }
-        }
+        },
     )
 }
 
@@ -86,7 +85,7 @@ private fun UserItem(user: User, modifier: Modifier = Modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(all = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = user.name, style = MaterialTheme.typography.bodyMedium)
@@ -95,7 +94,7 @@ private fun UserItem(user: User, modifier: Modifier = Modifier) {
             Text(text = stringResource(id = user.role.stringRes), style = MaterialTheme.typography.labelMedium)
             Icon(
                 painter = painterResource(id = R.drawable.ic_chevron_right),
-                contentDescription = null
+                contentDescription = null,
             )
         }
     }
@@ -106,7 +105,7 @@ private fun ErrorScreen(onRetry: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(text = stringResource(R.string.generic_error))
         Button(onClick = onRetry) {

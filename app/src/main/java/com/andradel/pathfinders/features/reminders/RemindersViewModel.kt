@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RemindersViewModel @Inject constructor(
     participantDataSource: ParticipantFirebaseDataSource,
-    activityDataSource: ActivityFirebaseDataSource
+    activityDataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
     private val dayMonthFormatter = DateTimeFormatter.ofPattern("dd MMMM")
 
@@ -42,7 +42,7 @@ class RemindersViewModel @Inject constructor(
     }
 
     private val noShows = combine(
-        activityDataSource.activities(null), participantDataSource.participants(null)
+        activityDataSource.activities(null), participantDataSource.participants(null),
     ) { activities, participants ->
         val today = LocalDate.now()
         val noShows = participants.mapNotNull { participant ->
@@ -53,7 +53,9 @@ class RemindersViewModel @Inject constructor(
             if (lastUserActivity != null && requireNotNull(lastUserActivity.date) < last20Days) {
                 val daysSince = ChronoUnit.DAYS.between(lastUserActivity.date, today)
                 ParticipantNoShow(participant.id, participant.name, participant.contact, daysSince)
-            } else null
+            } else {
+                null
+            }
         }.sortedBy { it.daysSince }
         NoShowsReminders(noShows = noShows).takeIf { noShows.isNotEmpty() }
     }

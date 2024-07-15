@@ -20,5 +20,5 @@ enum class Role {
     ClassAdmin,
 
     @SerialName("user")
-    User
+    User,
 }

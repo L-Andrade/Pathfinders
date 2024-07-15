@@ -23,14 +23,13 @@ class ActivityFirebaseDataSource @Inject constructor(
     private fun participantsRef(archiveName: String?) = db.reference.archiveChild(archiveName, "participants")
     private fun criteriaRef(archiveName: String?) = db.reference.archiveChild(archiveName, "criteria")
 
-    fun activities(archiveName: String?): Flow<List<Activity>> =
-        combine(
-            activitiesRef(archiveName).ref.toMapFlow<FirebaseActivity>(),
-            participantsRef(archiveName).ref.toMapFlow<FirebaseParticipant>(),
-            criteriaRef(archiveName).ref.toMapFlow<FirebaseActivityCriteria>(),
-        ) { activities, participants, criteria ->
-            mapper.toActivities(activities, participants, criteria, archiveName)
-        }
+    fun activities(archiveName: String?): Flow<List<Activity>> = combine(
+        activitiesRef(archiveName).ref.toMapFlow<FirebaseActivity>(),
+        participantsRef(archiveName).ref.toMapFlow<FirebaseParticipant>(),
+        criteriaRef(archiveName).ref.toMapFlow<FirebaseActivityCriteria>(),
+    ) { activities, participants, criteria ->
+        mapper.toActivities(activities, participants, criteria, archiveName)
+    }
 
     fun activitiesForUser(archiveName: String?, userId: String): Flow<List<Activity>> =
         activities(archiveName).map { activities ->

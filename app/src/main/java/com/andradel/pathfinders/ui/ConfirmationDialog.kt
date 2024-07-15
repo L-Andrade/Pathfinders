@@ -21,14 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.andradel.pathfinders.R
 
-
 @Composable
-fun ConfirmationDialog(
-    title: String,
-    body: String,
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-) {
+fun ConfirmationDialog(title: String, body: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
@@ -40,7 +34,7 @@ fun ConfirmationDialog(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 4.dp),
             )
             Text(text = body, color = MaterialTheme.colorScheme.onBackground)
             Spacer(modifier = Modifier.size(16.dp))

@@ -15,9 +15,11 @@ enum class ParticipantClass {
     UA4,
     UA5,
     UA6,
+
     // UA7
     Invalid,
-    Unknown;
+    Unknown,
+    ;
 
     companion object {
         val options = entries - Unknown

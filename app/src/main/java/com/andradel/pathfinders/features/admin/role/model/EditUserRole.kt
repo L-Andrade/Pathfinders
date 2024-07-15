@@ -6,7 +6,7 @@ import com.andradel.pathfinders.R
 enum class EditUserRole {
     Admin,
     ClassAdmin,
-    User
+    User,
 }
 
 val EditUserRole.stringRes: Int

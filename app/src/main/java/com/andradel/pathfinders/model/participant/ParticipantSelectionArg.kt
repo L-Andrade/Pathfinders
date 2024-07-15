@@ -12,7 +12,7 @@ data class ParticipantSelectionArg(
 ) : Parcelable {
     constructor(selection: List<Participant>, classes: List<ParticipantClass>) : this(
         ArrayList(selection),
-        ArrayList(classes.map { it.name })
+        ArrayList(classes.map { it.name }),
     )
 
     @IgnoredOnParcel

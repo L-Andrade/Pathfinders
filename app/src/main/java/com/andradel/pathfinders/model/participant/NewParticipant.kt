@@ -7,5 +7,5 @@ data class NewParticipant(
     val email: String?,
     val contact: String?,
     val participantClass: ParticipantClass,
-    val birthday: String?
+    val birthday: String?,
 )

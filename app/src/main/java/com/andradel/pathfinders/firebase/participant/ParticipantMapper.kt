@@ -25,7 +25,7 @@ class ParticipantMapper @Inject constructor() {
             email = participant.email,
             contact = participant.contact,
             scoutClass = participant.participantClass.name,
-            dateOfBirth = participant.birthday
+            dateOfBirth = participant.birthday,
         )
     }
 
@@ -35,7 +35,7 @@ class ParticipantMapper @Inject constructor() {
             email = participant.email,
             contact = participant.contact,
             scoutClass = participant.participantClass.name,
-            dateOfBirth = participant.dateOfBirth?.toString()
+            dateOfBirth = participant.dateOfBirth?.toString(),
         )
     }
 }

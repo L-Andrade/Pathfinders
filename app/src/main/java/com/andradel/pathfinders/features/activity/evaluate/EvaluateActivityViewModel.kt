@@ -38,7 +38,7 @@ class EvaluateActivityViewModel @Inject constructor(
 
     fun setScore(participant: Participant, criteriaId: String, score: Int) {
         scores.update { scores ->
-            val participantScores =  scores[participant.id].orEmpty().toMutableMap()
+            val participantScores = scores[participant.id].orEmpty().toMutableMap()
             participantScores[criteriaId] = score
             scores.toMutableMap().apply { this[participant.id] = participantScores }
         }

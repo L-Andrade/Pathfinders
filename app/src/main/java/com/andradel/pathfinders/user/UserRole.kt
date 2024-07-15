@@ -7,8 +7,10 @@ import kotlinx.parcelize.Parcelize
 sealed interface UserRole : Parcelable {
     @Parcelize
     data object Admin : UserRole
+
     @Parcelize
     data class ClassAdmin(val classes: Set<ParticipantClass>) : UserRole
+
     @Parcelize
     data object User : UserRole
 }

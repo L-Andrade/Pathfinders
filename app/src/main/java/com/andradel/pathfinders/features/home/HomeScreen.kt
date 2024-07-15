@@ -51,13 +51,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 @Destination
 @RootNavGraph(start = true)
-fun HomeScreen(
-    navigator: DestinationsNavigator,
-    viewModel: HomeViewModel = hiltViewModel()
-) {
+fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
     val resultLauncher = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract(),
-        onResult = viewModel::onSignInResult
+        onResult = viewModel::onSignInResult,
     )
     val state by viewModel.state.collectAsState()
     Scaffold(
@@ -73,7 +70,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .align(CenterHorizontally)
                         .padding(vertical = 20.dp)
-                        .size(150.dp)
+                        .size(150.dp),
                 )
                 when (val s = state) {
                     HomeState.Guest -> GuestScreen(
@@ -84,17 +81,19 @@ fun HomeScreen(
                     is HomeState.Loaded -> LoggedInScreen(
                         state = s,
                         onSignOutClick = viewModel::onSignOutClick,
-                        onParticipantsClick = { navigator.navigate(ParticipantListScreenDestination(ParticipantListArg())) },
+                        onParticipantsClick = {
+                            navigator.navigate(ParticipantListScreenDestination(ParticipantListArg()))
+                        },
                         onAdminClick = { navigator.navigate(AdminScreenDestination) },
                         onActivitiesClick = { navigator.navigate(ActivityListScreenDestination(ActivityListArg())) },
                         onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
-                        onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) }
+                        onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) },
                     )
 
                     HomeState.Error -> ErrorScreen(viewModel::updateUser)
                 }
             }
-        }
+        },
     )
 }
 
@@ -103,7 +102,7 @@ private fun ErrorScreen(retry: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(text = stringResource(id = R.string.generic_error), style = MaterialTheme.typography.titleSmall)
         Button(onClick = retry) {
@@ -126,7 +125,7 @@ private fun PathfindersImage(modifier: Modifier = Modifier) {
         modifier = modifier,
         contentDescription = null,
         contentScale = ContentScale.Fit,
-        alignment = Alignment.TopCenter
+        alignment = Alignment.TopCenter,
     )
 }
 
@@ -135,7 +134,7 @@ private fun PathfindersImage(modifier: Modifier = Modifier) {
 private fun ListButton(onClick: () -> Unit, @StringRes text: Int, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.padding(vertical = 8.dp),
-        onClick = onClick
+        onClick = onClick,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -143,22 +142,19 @@ private fun ListButton(onClick: () -> Unit, @StringRes text: Int, modifier: Modi
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .padding(all = 24.dp)
-                    .weight(1f)
+                    .weight(1f),
             )
             Icon(
                 painter = painterResource(id = R.drawable.ic_chevron_right),
                 modifier = Modifier.padding(horizontal = 12.dp),
-                contentDescription = stringResource(id = text)
+                contentDescription = stringResource(id = text),
             )
         }
     }
 }
 
 @Composable
-private fun GuestScreen(
-    onSignInClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun GuestScreen(onSignInClick: () -> Unit, modifier: Modifier = Modifier) {
     Column(horizontalAlignment = CenterHorizontally, modifier = modifier) {
         ListButton(onClick = onSignInClick, text = R.string.sign_in)
     }
@@ -188,7 +184,7 @@ private fun LoggedInScreen(
             ListButton(
                 onClick = { onProfileClick(state.participant) },
                 text = R.string.user_participant_profile,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
         ListButton(onClick = onSignOutClick, text = R.string.sign_out, modifier = Modifier.fillMaxWidth())

@@ -42,15 +42,15 @@ import com.ramcosta.composedestinations.result.ResultBackNavigator
 fun AddCriteriaToActivityScreen(
     navigator: DestinationsNavigator,
     resultNavigator: ResultBackNavigator<CriteriaSelectionArg>,
-    viewModel: AddCriteriaToActivityViewModel = hiltViewModel()
+    viewModel: AddCriteriaToActivityViewModel = hiltViewModel(),
 ) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = R.string.select_criteria_for_activity,
-                onIconClick = { navigator.navigateUp() }
+                onIconClick = { navigator.navigateUp() },
             )
-        }
+        },
     ) { padding ->
         val state by viewModel.state.collectAsState()
         Box(modifier = Modifier.padding(padding)) {
@@ -63,9 +63,10 @@ fun AddCriteriaToActivityScreen(
                     onButtonClick = {
                         resultNavigator.setResult(CriteriaSelectionArg(ArrayList(s.selection)))
                         resultNavigator.navigateBack()
-                    }
+                    },
                 )
-                is AddCriteriaToActivityState.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                is AddCriteriaToActivityState.Loading ->
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }
@@ -90,7 +91,7 @@ private fun CriteriaSelectionList(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .padding(top = 8.dp)
+                        .padding(top = 8.dp),
                 )
             }
             items(state.selection) { criteria ->
@@ -98,7 +99,7 @@ private fun CriteriaSelectionList(
                     criteria = criteria,
                     selected = true,
                     onClick = { onUnselectCriteria(criteria) },
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    modifier = Modifier.padding(bottom = 4.dp),
                 )
             }
         }
@@ -106,7 +107,7 @@ private fun CriteriaSelectionList(
             Text(
                 text = stringResource(id = R.string.criteria),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
         if (state.criteria.isEmpty()) {
@@ -119,7 +120,7 @@ private fun CriteriaSelectionList(
                     criteria = criteria,
                     selected = false,
                     onClick = { onSelectCriteria(criteria) },
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
                 )
             }
         }
@@ -134,17 +135,14 @@ private fun CriteriaSelectionList(
 }
 
 @Composable
-private fun AddCriteria(
-    onAddCriteria: (String, Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
+private fun AddCriteria(onAddCriteria: (String, Int) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(horizontal = 16.dp)) {
         var criteriaName by remember { mutableStateOf("") }
         var maxScore by remember { mutableStateOf<Int?>(3) }
         Text(
             text = stringResource(id = R.string.add_criteria),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp),
         )
         Row(verticalAlignment = Alignment.CenterVertically) {
             TextField(
@@ -156,7 +154,7 @@ private fun AddCriteria(
                 singleLine = true,
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .weight(1f)
+                    .weight(1f),
             )
             TextField(
                 value = maxScore?.toString().orEmpty(),
@@ -168,7 +166,7 @@ private fun AddCriteria(
                 singleLine = true,
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .weight(1f)
+                    .weight(1f),
             )
             val isValid by remember { derivedStateOf { criteriaName.length > 2 && (maxScore ?: 3) >= 1 } }
             OutlinedButton(
@@ -176,7 +174,7 @@ private fun AddCriteria(
                 onClick = {
                     onAddCriteria(criteriaName, maxScore ?: 3)
                     criteriaName = ""
-                }
+                },
             ) {
                 Text(text = stringResource(id = R.string.add))
             }
@@ -195,7 +193,7 @@ private fun Criteria(
         Text(
             text = criteria.name,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Checkbox(checked = selected, onCheckedChange = { onClick() })
     }
@@ -205,6 +203,6 @@ private fun Criteria(
 private fun NoMoreCriteria(modifier: Modifier) {
     Text(
         text = stringResource(id = R.string.no_more_criteria),
-        modifier = modifier.padding(horizontal = 16.dp)
+        modifier = modifier.padding(horizontal = 16.dp),
     )
 }

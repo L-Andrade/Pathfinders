@@ -48,7 +48,7 @@ fun TopAppBarTitleWithIcon(
             IconButton(onClick = onIconClick) {
                 Icon(
                     painter = painterResource(id = iconRes),
-                    contentDescription = iconContentDescription?.let { stringResource(id = it) }
+                    contentDescription = iconContentDescription?.let { stringResource(id = it) },
                 )
             }
         },

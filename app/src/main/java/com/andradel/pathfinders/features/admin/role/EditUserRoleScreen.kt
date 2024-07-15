@@ -58,10 +58,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination(navArgsDelegate = UserArg::class)
-fun EditUserRoleScreen(
-    navigator: DestinationsNavigator,
-    viewModel: EditUserRoleViewModel = hiltViewModel()
-) {
+fun EditUserRoleScreen(navigator: DestinationsNavigator, viewModel: EditUserRoleViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -92,10 +89,10 @@ fun EditUserRoleScreen(
                     IconButton(enabled = state.enabled, onClick = viewModel::save) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_save),
-                            contentDescription = stringResource(id = R.string.save)
+                            contentDescription = stringResource(id = R.string.save),
                         )
                     }
-                }
+                },
             )
         },
         content = { padding ->
@@ -108,10 +105,10 @@ fun EditUserRoleScreen(
                     onSelectClass = viewModel::selectClass,
                     onSelectRole = viewModel::selectRole,
                     onSave = viewModel::save,
-                    modifier = Modifier.padding(padding)
+                    modifier = Modifier.padding(padding),
                 )
             }
-        }
+        },
     )
 }
 
@@ -121,7 +118,7 @@ private fun EditUserRoleColumn(
     onSelectClass: (ParticipantClass) -> Unit,
     onSelectRole: (EditUserRole) -> Unit,
     onSave: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val roles = remember { EditUserRole.entries }
     val classes = remember { ParticipantClass.options }
@@ -151,7 +148,7 @@ private fun ClassesCheckboxes(
     state: EditUserRoleState,
     availableClasses: List<ParticipantClass>,
     onSelectClass: (ParticipantClass) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.End) {
         availableClasses.forEach { pClass ->
@@ -161,13 +158,13 @@ private fun ClassesCheckboxes(
                         text = pClass.title,
                         style = MaterialTheme.typography.labelSmall,
                         textAlign = TextAlign.End,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     val selected by remember(state.classes) { derivedStateOf { pClass in state.classes.orEmpty() } }
                     Checkbox(
                         checked = selected,
                         onCheckedChange = { onSelectClass(pClass) },
-                        colors = CheckboxDefaults.colors(checkedColor = pClass.color)
+                        colors = CheckboxDefaults.colors(checkedColor = pClass.color),
                     )
                 }
             }
@@ -185,29 +182,29 @@ private fun RoleDropdown(
     var roleExpanded by remember { mutableStateOf(false) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(
             text = stringResource(R.string.role),
             style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         Surface(
             color = MaterialTheme.colorScheme.surfaceVariant,
             shape = RoundedCornerShape(4.dp),
-            modifier = Modifier.clickable { roleExpanded = !roleExpanded }
+            modifier = Modifier.clickable { roleExpanded = !roleExpanded },
         ) {
             Text(
                 text = stringResource(id = selectedRole.stringRes),
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(all = 16.dp)
+                modifier = Modifier.padding(all = 16.dp),
             )
             DropdownMenu(expanded = roleExpanded, onDismissRequest = { roleExpanded = false }) {
                 roles.forEach { role ->
                     key(role) {
                         DropdownMenuItem(
                             modifier = Modifier.background(
-                                MaterialTheme.colorScheme.surface.copy(alpha = if (role == selectedRole) .5f else 0f)
+                                MaterialTheme.colorScheme.surface.copy(alpha = if (role == selectedRole) .5f else 0f),
                             ),
                             onClick = {
                                 onSelectRole(role)
@@ -215,7 +212,7 @@ private fun RoleDropdown(
                             },
                             text = {
                                 Text(text = stringResource(id = role.stringRes))
-                            }
+                            },
                         )
                     }
                 }

@@ -108,7 +108,7 @@ class AddEditActivityViewModel @Inject constructor(
         participants = participants,
         classes = classes,
         criteria = criteria,
-        scores = scores
+        scores = scores,
     )
 
     private fun AddEditActivityState.toNewActivity(classes: List<ParticipantClass> = this.classes): NewActivity =
@@ -118,7 +118,7 @@ class AddEditActivityViewModel @Inject constructor(
             participants = participants,
             classes = classes,
             criteria = criteria,
-            scores = activity?.scores.orEmpty()
+            scores = activity?.scores.orEmpty(),
         )
 
     fun setSelection(participants: List<Participant>) {

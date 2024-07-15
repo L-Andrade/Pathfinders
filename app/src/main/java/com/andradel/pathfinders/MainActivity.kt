@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
             PathfindersTheme {
                 val animationSpec = spring(
                     stiffness = Spring.StiffnessMediumLow,
-                    visibilityThreshold = IntOffset.VisibilityThreshold
+                    visibilityThreshold = IntOffset.VisibilityThreshold,
                 )
                 DestinationsNavHost(
                     navGraph = NavGraphs.root,
@@ -81,8 +81,8 @@ class MainActivity : ComponentActivity() {
                             exitTransition = { slideOutHorizontally(animationSpec) { size -> -size } },
                             popEnterTransition = { slideInHorizontally(animationSpec) { size -> -size } },
                             popExitTransition = { slideOutHorizontally(animationSpec) { size -> size } },
-                        )
-                    )
+                        ),
+                    ),
                 )
             }
         }

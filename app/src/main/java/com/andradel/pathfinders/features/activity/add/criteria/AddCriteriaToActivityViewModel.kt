@@ -19,14 +19,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AddCriteriaToActivityViewModel @Inject constructor(
     handle: SavedStateHandle,
-    private val dataSource: ActivityCriteriaFirebaseDataSource
+    private val dataSource: ActivityCriteriaFirebaseDataSource,
 ) : ViewModel() {
     private val selection = MutableStateFlow(handle.navArgs<CriteriaSelectionArg>().selection.toList())
 
     val state = combine(selection, dataSource.criteria) { selection, criteria ->
         AddCriteriaToActivityState.Loaded(
             selection = selection,
-            criteria = criteria.filter { it !in selection }
+            criteria = criteria.filter { it !in selection },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddCriteriaToActivityState.Loading)
 

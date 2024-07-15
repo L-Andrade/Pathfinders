@@ -64,7 +64,7 @@ class UserFunctions @Inject constructor(
                     Role.Admin -> UserRole.Admin
                     Role.ClassAdmin -> UserRole.ClassAdmin(fbUser.classes.map { it.toClass() }.toSet())
                     Role.User -> UserRole.User
-                }
+                },
             )
         }
     }.throwCancellation()

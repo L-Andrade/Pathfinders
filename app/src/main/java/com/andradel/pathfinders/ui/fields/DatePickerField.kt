@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.andradel.pathfinders.R
 import androidx.compose.material3.DatePicker as MaterialDatePicker
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerField(
@@ -35,7 +34,7 @@ fun DatePickerField(
     updateDate: (Long) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    @StringRes hint: Int = R.string.date
+    @StringRes hint: Int = R.string.date,
 ) {
     var showingDatePicker by remember { mutableStateOf(false) }
     val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
@@ -45,7 +44,7 @@ fun DatePickerField(
             .clip(RoundedCornerShape(topEnd = 4.dp, topStart = 4.dp))
             .fillMaxWidth()
             .background(backgroundColor)
-            .padding(all = 16.dp)
+            .padding(all = 16.dp),
     ) {
         Text(text = dateRepresentation ?: stringResource(id = hint))
     }
@@ -53,7 +52,7 @@ fun DatePickerField(
         DatePicker(
             dateMillis = dateMillis,
             onDateSelected = updateDate,
-            onDismiss = { showingDatePicker = false }
+            onDismiss = { showingDatePicker = false },
         )
     }
 }
@@ -82,7 +81,7 @@ fun DatePicker(
                 Text(stringResource(id = R.string.cancel))
             }
         },
-        modifier = modifier
+        modifier = modifier,
     ) {
         MaterialDatePicker(state = datePickerState)
     }

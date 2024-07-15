@@ -25,7 +25,7 @@ class ArchiveListViewModel @Inject constructor(
                     startDate = dates.minOrNull()?.toString(),
                     endDate = dates.maxOrNull()?.toString(),
                 )
-            }
+            },
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ArchiveListState.Loading)
 

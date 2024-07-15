@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CriteriaSelectionArg(
-    val selection: ArrayList<ActivityCriteria>
+    val selection: ArrayList<ActivityCriteria>,
 ) : Parcelable
