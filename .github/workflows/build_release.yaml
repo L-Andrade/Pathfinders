@@ -25,7 +25,7 @@ jobs:
           EOF
 
       - name: Build Unit release
-        run: ./gradlew assembleUnitRelease
+        run: ./gradlew assembleUnitRelease -PstorePassword=${{ secrets.PATHFINDERS_STORE_PASSWD }} -PkeyPassword=${{ secrets.PATHFINDERS_KEY_PASSWD }}
 
       - name: Upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -52,7 +52,7 @@ jobs:
           EOF
 
       - name: Build Pathfinders release
-        run: ./gradlew assemblePathfindersRelease
+        run: ./gradlew assemblePathfindersRelease -PstorePassword=${{ secrets.PATHFINDERS_STORE_PASSWD }} -PkeyPassword=${{ secrets.PATHFINDERS_KEY_PASSWD }}
 
       - name: Upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
