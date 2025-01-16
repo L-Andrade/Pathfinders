@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.google.hilt) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     id("org.jlleitschuh.gradle.ktlint") version("12.1.1")
+    alias(libs.plugins.compose.compiler) apply false
 }
 subprojects {
     apply plugin: "org.jlleitschuh.gradle.ktlint"

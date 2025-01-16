@@ -2,21 +2,23 @@ package com.andradel.pathfinders.features.participant.list
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -111,7 +113,6 @@ fun ParticipantListScreen(navigator: DestinationsNavigator, viewModel: Participa
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ParticipantList(
     section: List<ParticipantSection>,
@@ -164,10 +165,13 @@ private fun ParticipantList(
                             onParticipantClick = onParticipantClick,
                             deleteParticipant = deleteParticipant,
                             editParticipant = onEditParticipant,
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }
+            }
+            item {
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
         SortingFab(isExpanded, selectedSorting, { isExpanded = !isExpanded }, onSortClick, Modifier.align(BottomEnd))
@@ -256,7 +260,6 @@ private fun SortingFab(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ParticipantCard(
     participant: ParticipantWithTotalScore,

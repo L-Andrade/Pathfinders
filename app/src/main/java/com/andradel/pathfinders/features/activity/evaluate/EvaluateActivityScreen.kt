@@ -1,7 +1,6 @@
 package com.andradel.pathfinders.features.activity.evaluate
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,10 +36,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
 import com.andradel.pathfinders.model.activity.ActivityArg
@@ -54,7 +53,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Destination(navArgsDelegate = ActivityArg::class)
 fun EvaluateActivityScreen(navigator: DestinationsNavigator, viewModel: EvaluateActivityViewModel = hiltViewModel()) {
@@ -126,7 +124,6 @@ fun EvaluateActivityScreen(navigator: DestinationsNavigator, viewModel: Evaluate
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ParticipantTabs(pagerState: PagerState, participants: List<Participant>, modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
