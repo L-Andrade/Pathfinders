@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -78,7 +78,7 @@ private fun RemindersColumn(state: RemindersState.Loaded, modifier: Modifier = M
         state.birthdays.past?.let { birthdaySection(R.string.past_birthdays, it) }
         if (state.divider) {
             item {
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
             }
         }
         state.noShows?.let { noShowsSection(it) }

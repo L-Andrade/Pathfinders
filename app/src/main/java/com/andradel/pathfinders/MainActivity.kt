@@ -4,9 +4,9 @@ import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Spring
@@ -14,8 +14,11 @@ import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.andradel.pathfinders.features.NavGraphs
 import com.andradel.pathfinders.ui.theme.PathfindersTheme
@@ -59,8 +62,9 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        enableEdgeToEdge()
         askNotificationPermission()
 
         lifecycleScope.launch {
@@ -83,6 +87,7 @@ class MainActivity : ComponentActivity() {
                             popExitTransition = { slideOutHorizontally(animationSpec) { size -> size } },
                         ),
                     ),
+                    modifier = Modifier.imePadding(),
                 )
             }
         }

@@ -18,6 +18,8 @@ enum class ParticipantClass {
 
     // UA7
     Invalid,
+
+    UA8,
     Unknown,
     ;
 
@@ -39,6 +41,7 @@ val ParticipantClass.title: String
         ParticipantClass.UA4 -> R.string.unidos_em_cristo
         ParticipantClass.UA5 -> R.string.agape
         ParticipantClass.UA6 -> R.string.trinta_mais
+        ParticipantClass.UA8 -> R.string.a_mais
         // TODO: Next version, we need to properly use invalid, and most likely classes that are not hardcoded
         ParticipantClass.Invalid -> R.string.adolescentes
         ParticipantClass.Unknown -> R.string.class_unknown
