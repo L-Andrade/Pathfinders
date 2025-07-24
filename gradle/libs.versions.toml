@@ -1,7 +1,5 @@
 [versions]
-accompanist-pager = "0.36.0"
 agp = "8.10.0"
-compose-bom = "2025.05.00"
 compose-destinations = "2.2.0"
 hilt-android = "2.56.2"
 kotlin = "2.1.20"
@@ -9,28 +7,17 @@ dagger = "2.56.1"
 lifecycle = "2.9.0"
 
 [libraries]
-# Accompanist
-accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist-pager" }
-accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanist-pager" }
 
 # AndroidX
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.10.1" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version = "1.16.0" }
-androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version = "3.6.1" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
-androidx-junit = { module = "androidx.test.ext:junit", version = "1.2.1" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-androidx-material3 = { module = "androidx.compose.material3:material3", version = "1.3.2" }
 
 # Compose
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-compose-ui = { module = "androidx.compose.ui:ui" }
-compose-ui-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
-compose-ui-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
-compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler" }
 
 # Nav
 compose-destinations-animations = { module = "io.github.raamcosta.compose-destinations:core", version.ref = "compose-destinations" }
@@ -43,7 +30,7 @@ firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlyti
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
 firebase-database = { module = "com.google.firebase:firebase-database-ktx" }
 firebase-functions = { module = "com.google.firebase:firebase-functions" }
-firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version = "8.0.2" }
+firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.0.0" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 
 google-services = { module = "com.google.gms:google-services", version = "4.4.2" }
@@ -52,14 +39,12 @@ google-services = { module = "com.google.gms:google-services", version = "4.4.2"
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-android" }
 
-junit = { module = "junit:junit", version = "4.13.2" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.1" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.6.6" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-mp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 google-ksp = { id = "com.google.devtools.ksp", version = "2.1.20-2.0.1" }
 google-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }

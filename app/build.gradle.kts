@@ -21,7 +21,47 @@ kotlin {
     }
     sourceSets {
         commonMain.dependencies {
-            // implementation(libs.compose.ui)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            // implementation(libs.compose.backhandler)
+            // implementation(libs.androidx.lifecycle.runtime.ktx)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            // implementation(libs.androidx.hilt.navigation.compose)
+
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+        }
+        androidMain.dependencies {
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(libs.compose.backhandler)
+            implementation(libs.androidx.lifecycle.runtime.ktx)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.androidx.hilt.navigation.compose)
+
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+
+            // Android specific?
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.lottie.compose)
+
+            // Firebase
+            implementation(libs.firebase.ui.auth)
+            implementation(libs.firebase.analytics)
+            implementation(libs.firebase.database)
+            implementation(libs.firebase.crashlytics)
+            implementation(libs.firebase.functions)
+            implementation(libs.firebase.messaging)
+
+            // Nav
+            implementation(libs.compose.destinations.animations)
+
+            // Hilt
+            implementation(libs.hilt.android)
         }
     }
 }
@@ -80,7 +120,7 @@ android {
     buildFeatures {
         compose = true
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -88,50 +128,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.material3)
-
-    // Compose
-    implementation(platform(libs.compose.bom))
-    androidTestImplementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.preview)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.compose.ui.manifest)
-
-    implementation(libs.lottie.compose)
-
-    // Accompanist tabs
-    implementation(libs.accompanist.pager)
-    implementation(libs.accompanist.pager.indicators)
-
-    // Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.ui.auth)
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.database)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.functions)
-    implementation(libs.firebase.messaging)
-
-    // Serialization
-    implementation(libs.kotlinx.serialization.json)
-
-    // Nav
-    implementation(libs.compose.destinations.animations)
     ksp(libs.compose.destinations.ksp)
-
-    // Hilt
-    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.compose.ui.test.junit)
 }
