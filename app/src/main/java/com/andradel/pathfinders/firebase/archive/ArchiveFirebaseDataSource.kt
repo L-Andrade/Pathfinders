@@ -14,9 +14,10 @@ import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class ArchiveFirebaseDataSource @Inject constructor(
+@Factory
+class ArchiveFirebaseDataSource(
     db: FirebaseDatabase,
     private val activityMapper: ActivityMapper,
     private val participantMapper: ParticipantMapper,

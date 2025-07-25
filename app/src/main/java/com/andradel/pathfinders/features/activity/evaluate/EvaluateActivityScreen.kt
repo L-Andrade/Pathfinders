@@ -38,7 +38,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
@@ -51,11 +50,12 @@ import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
 @Destination(navArgsDelegate = ActivityArg::class)
-fun EvaluateActivityScreen(navigator: DestinationsNavigator, viewModel: EvaluateActivityViewModel = hiltViewModel()) {
+fun EvaluateActivityScreen(navigator: DestinationsNavigator, viewModel: EvaluateActivityViewModel = koinViewModel()) {
     var showUnsavedDialog by remember { mutableStateOf(false) }
     BackHandler {
         if (viewModel.isUnsaved) {

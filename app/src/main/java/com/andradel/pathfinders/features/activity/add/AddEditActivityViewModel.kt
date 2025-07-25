@@ -5,19 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.extensions.combine
 import com.andradel.pathfinders.extensions.toMillis
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.activity.NewActivity
-import com.andradel.pathfinders.model.activity.OptionalActivityArg
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.isValid
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,19 +22,19 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import org.koin.android.annotation.KoinViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import javax.inject.Inject
 
-@HiltViewModel
-class AddEditActivityViewModel @Inject constructor(
+@KoinViewModel
+class AddEditActivityViewModel(
     handle: SavedStateHandle,
     userSession: UserSession,
     private val dataSource: ActivityFirebaseDataSource,
     private val nameValidation: NameValidation,
 ) : ViewModel() {
-    private val activity = handle.navArgs<OptionalActivityArg>().activity
+    private val activity = handle.get<Activity>("activity")
     private val isArchived = activity?.archiveName != null
 
     private val participants = MutableStateFlow(activity?.participants.orEmpty())

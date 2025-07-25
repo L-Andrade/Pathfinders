@@ -7,9 +7,10 @@ import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class ActivityCriteriaFirebaseDataSource @Inject constructor(
+@Factory
+class ActivityCriteriaFirebaseDataSource(
     db: FirebaseDatabase,
     private val mapper: ActivityCriteriaMapper,
 ) {

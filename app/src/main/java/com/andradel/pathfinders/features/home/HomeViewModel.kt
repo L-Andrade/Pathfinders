@@ -9,15 +9,14 @@ import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.UserState
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+@KoinViewModel
+class HomeViewModel(
     private val userSession: UserSession,
     private val dataSource: ParticipantFirebaseDataSource,
 ) : ViewModel() {

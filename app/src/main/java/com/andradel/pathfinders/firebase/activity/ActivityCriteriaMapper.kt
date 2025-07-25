@@ -1,9 +1,10 @@
 package com.andradel.pathfinders.firebase.activity
 
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class ActivityCriteriaMapper @Inject constructor() {
+@Factory
+class ActivityCriteriaMapper{
     fun toCriteria(key: String, value: FirebaseActivityCriteria): ActivityCriteria {
         return ActivityCriteria(key, value.name, value.maxScore)
     }

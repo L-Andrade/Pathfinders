@@ -16,11 +16,11 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class UserFunctions @Inject constructor(
+@Factory
+class UserFunctions(
     private val auth: FirebaseAuth,
     private val functions: FirebaseFunctions,
     private val json: Json,

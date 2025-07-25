@@ -5,18 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.participant.Participant
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import org.koin.android.annotation.KoinViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import javax.inject.Inject
 
-@HiltViewModel
-class RemindersViewModel @Inject constructor(
+@KoinViewModel
+class RemindersViewModel(
     participantDataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {

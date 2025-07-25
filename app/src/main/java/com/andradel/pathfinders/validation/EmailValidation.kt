@@ -1,9 +1,10 @@
 package com.andradel.pathfinders.validation
 
 import com.andradel.pathfinders.R
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class EmailValidation @Inject constructor() {
+@Factory
+class EmailValidation {
     private val regex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})".toRegex()
 
     fun validate(email: String, optional: Boolean = true): ValidationResult {

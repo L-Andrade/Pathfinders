@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
@@ -43,10 +42,11 @@ import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination
-fun ArchiveListScreen(navigator: DestinationsNavigator, viewModel: ArchiveListViewModel = hiltViewModel()) {
+fun ArchiveListScreen(navigator: DestinationsNavigator, viewModel: ArchiveListViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_archive, onIconClick = navigator::navigateUp)

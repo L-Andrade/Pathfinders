@@ -46,7 +46,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.SimpleColorFilter
 import com.airbnb.lottie.compose.LottieAnimation
@@ -67,13 +66,14 @@ import com.andradel.pathfinders.validation.errorMessage
 import com.andradel.pathfinders.validation.isError
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 @Destination(navArgsDelegate = OptionalParticipantArg::class)
 fun AddEditParticipantScreen(
     navigator: DestinationsNavigator,
-    viewModel: AddEditParticipantViewModel = hiltViewModel(),
+    viewModel: AddEditParticipantViewModel = koinViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()

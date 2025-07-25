@@ -1,18 +1,13 @@
 package com.andradel.pathfinders.scope
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import javax.inject.Singleton
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
 @Module
-@InstallIn(SingletonComponent::class)
-object CoroutinesScopesModule {
-    @Singleton
-    @Provides
+class CoroutinesScopesModule {
+    @Single
     fun providesCoroutineScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 }

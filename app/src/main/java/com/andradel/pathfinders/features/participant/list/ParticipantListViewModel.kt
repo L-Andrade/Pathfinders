@@ -3,27 +3,26 @@ package com.andradel.pathfinders.features.participant.list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.participantPoints
 import com.andradel.pathfinders.model.participant.Participant
-import com.andradel.pathfinders.model.participant.ParticipantListArg
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class ParticipantListViewModel @Inject constructor(
+
+@KoinViewModel
+class ParticipantListViewModel(
     handle: SavedStateHandle,
     private val dataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
@@ -31,8 +30,7 @@ class ParticipantListViewModel @Inject constructor(
 ) : ViewModel() {
     private val collapsed = MutableStateFlow<Map<ParticipantClass, Boolean>>(emptyMap())
     private val sorting = MutableStateFlow(ParticipantSort.NameAsc)
-    private val args = handle.navArgs<ParticipantListArg>()
-    val archiveName = args.archiveName
+    val archiveName = handle.get<String?>("archiveName")
     private val isArchived = archiveName != null
 
     val state: StateFlow<ParticipantListState> =
@@ -64,9 +62,7 @@ class ParticipantListViewModel @Inject constructor(
     }
 
     fun collapseSection(participantClass: ParticipantClass) {
-        collapsed.value = collapsed.value.toMutableMap().apply {
-            this[participantClass] = !(this[participantClass] ?: false)
-        }
+        collapsed.update { current -> current + (participantClass to !(current[participantClass] ?: false)) }
     }
 
     fun sortBy(sorting: ParticipantSort) {

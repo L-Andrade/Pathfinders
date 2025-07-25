@@ -8,10 +8,12 @@ import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.activity.ParticipantScores
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
+import org.koin.core.annotation.Factory
 import java.time.LocalDate
-import javax.inject.Inject
 
-class ActivityMapper @Inject constructor(
+@Factory
+
+class ActivityMapper(
     private val criteriaMapper: ActivityCriteriaMapper,
     private val participantMapper: ParticipantMapper,
 ) {

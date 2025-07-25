@@ -3,10 +3,9 @@ package com.andradel.pathfinders.features.admin.archive.create.select
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
+import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.activity.ActivitySelectionArg
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,14 +15,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class ArchiveSelectActivitiesManuallyViewModel @Inject constructor(
+
+@KoinViewModel
+class ArchiveSelectActivitiesManuallyViewModel(
     handle: SavedStateHandle,
     private val dataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
-    private val initialSelection = handle.navArgs<ActivitySelectionArg>().selection
+    private val initialSelection = handle.get<List<Activity>>("selection").orEmpty()
     private val selection = MutableStateFlow(initialSelection.map { it.id }.toSet())
 
     private val _result = Channel<ActivitySelectionArg>()

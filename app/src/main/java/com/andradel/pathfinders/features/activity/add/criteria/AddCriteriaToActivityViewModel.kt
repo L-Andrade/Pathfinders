@@ -3,25 +3,23 @@ package com.andradel.pathfinders.features.activity.add.criteria
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityCriteriaFirebaseDataSource
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
-import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class AddCriteriaToActivityViewModel @Inject constructor(
+
+@KoinViewModel
+class AddCriteriaToActivityViewModel(
     handle: SavedStateHandle,
     private val dataSource: ActivityCriteriaFirebaseDataSource,
 ) : ViewModel() {
-    private val selection = MutableStateFlow(handle.navArgs<CriteriaSelectionArg>().selection.toList())
+    private val selection = MutableStateFlow(handle.get<List<ActivityCriteria>>("selection").orEmpty().toList())
 
     val state = combine(selection, dataSource.criteria) { selection, criteria ->
         AddCriteriaToActivityState.Loaded(

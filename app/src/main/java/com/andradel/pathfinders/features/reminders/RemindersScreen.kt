@@ -1,7 +1,6 @@
 package com.andradel.pathfinders.features.reminders
 
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,15 +30,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.core.net.toUri
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination
-fun RemindersScreen(navigator: DestinationsNavigator, viewModel: RemindersViewModel = hiltViewModel()) {
+fun RemindersScreen(navigator: DestinationsNavigator, viewModel: RemindersViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.reminders_screen, onIconClick = navigator::navigateUp)
@@ -126,7 +126,7 @@ private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modi
             val context = LocalContext.current
             IconButton(
                 onClick = {
-                    val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:${participant.contact}") }
+                    val intent = Intent(Intent.ACTION_DIAL).apply { data = "tel:${participant.contact}".toUri() }
                     context.startActivity(intent)
                 },
             ) {

@@ -2,19 +2,15 @@ package com.andradel.pathfinders.firebase.messaging
 
 import com.andradel.pathfinders.firebase.functions.UserFunctions
 import com.google.firebase.messaging.FirebaseMessagingService
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.core.component.KoinComponent
 
-@AndroidEntryPoint
-class PathfindersMessagingService : FirebaseMessagingService() {
+class PathfindersMessagingService : FirebaseMessagingService(), KoinComponent {
 
-    @Inject
-    lateinit var coroutineScope: CoroutineScope
-
-    @Inject
-    lateinit var userFunctions: UserFunctions
+    private val coroutineScope: CoroutineScope by inject()
+    private val userFunctions: UserFunctions by inject()
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)

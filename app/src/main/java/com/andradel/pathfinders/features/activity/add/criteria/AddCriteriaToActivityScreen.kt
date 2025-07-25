@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
@@ -36,13 +35,14 @@ import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.ResultBackNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination(navArgsDelegate = CriteriaSelectionArg::class)
 fun AddCriteriaToActivityScreen(
     navigator: DestinationsNavigator,
     resultNavigator: ResultBackNavigator<CriteriaSelectionArg>,
-    viewModel: AddCriteriaToActivityViewModel = hiltViewModel(),
+    viewModel: AddCriteriaToActivityViewModel = koinViewModel(),
 ) {
     Scaffold(
         topBar = {

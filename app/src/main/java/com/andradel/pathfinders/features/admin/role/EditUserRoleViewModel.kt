@@ -4,12 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.features.admin.role.model.EditUserRole
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.functions.UserFunctions
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.user.UserArg
+import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,14 +15,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class EditUserRoleViewModel @Inject constructor(
+
+@KoinViewModel
+class EditUserRoleViewModel(
     handle: SavedStateHandle,
     private val userFunctions: UserFunctions,
 ) : ViewModel() {
-    private val user = handle.navArgs<UserArg>().user
+    private val user = handle.get<User>("user")!!
 
     private val role = MutableStateFlow(user.role.toEditable())
     private val selectedClasses = MutableStateFlow((user.role as? UserRole.ClassAdmin)?.classes)

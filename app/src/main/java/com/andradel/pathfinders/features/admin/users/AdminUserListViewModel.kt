@@ -4,17 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.firebase.functions.UserFunctions
 import com.andradel.pathfinders.user.User
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class AdminUserListViewModel @Inject constructor(
+
+@KoinViewModel
+class AdminUserListViewModel(
     private val userFunctions: UserFunctions,
 ) : ViewModel() {
     private val users = MutableSharedFlow<Result<List<User>>>()

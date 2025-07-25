@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.AddCriteriaToActivityScreenDestination
 import com.andradel.pathfinders.features.destinations.AddParticipantsToActivityScreenDestination
@@ -63,6 +62,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination(navArgsDelegate = OptionalActivityArg::class)
@@ -70,7 +70,7 @@ fun AddEditActivityScreen(
     navigator: DestinationsNavigator,
     resultRecipient: ResultRecipient<AddParticipantsToActivityScreenDestination, ParticipantSelectionArg>,
     criteriaRecipient: ResultRecipient<AddCriteriaToActivityScreenDestination, CriteriaSelectionArg>,
-    viewModel: AddEditActivityViewModel = hiltViewModel(),
+    viewModel: AddEditActivityViewModel = koinViewModel(),
 ) {
     resultRecipient.onNavResult { result ->
         if (result is NavResult.Value) viewModel.setSelection(result.value.selection)

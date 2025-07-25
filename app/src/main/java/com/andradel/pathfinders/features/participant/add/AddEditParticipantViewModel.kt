@@ -6,11 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.combine
 import com.andradel.pathfinders.extensions.toMillis
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.NewParticipant
-import com.andradel.pathfinders.model.participant.OptionalParticipantArg
+import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.role
@@ -18,26 +17,26 @@ import com.andradel.pathfinders.validation.EmailValidation
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.ValidationResult
 import com.andradel.pathfinders.validation.isValid
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
-import javax.inject.Inject
 
-@HiltViewModel
-class AddEditParticipantViewModel @Inject constructor(
+
+@KoinViewModel
+class AddEditParticipantViewModel(
     handle: SavedStateHandle,
     userSession: UserSession,
     private val dataSource: ParticipantFirebaseDataSource,
     private val nameValidation: NameValidation,
     private val emailValidation: EmailValidation,
 ) : ViewModel() {
-    private val participant = handle.navArgs<OptionalParticipantArg>().participant
+    private val participant = handle.get<Participant>("participant")
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
     private val contact = MutableStateFlow(participant?.contact.orEmpty())

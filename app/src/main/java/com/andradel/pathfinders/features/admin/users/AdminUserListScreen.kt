@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.EditUserRoleScreenDestination
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
@@ -35,10 +34,11 @@ import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination
-fun AdminUserListScreen(navigator: DestinationsNavigator, viewModel: AdminUserListViewModel = hiltViewModel()) {
+fun AdminUserListScreen(navigator: DestinationsNavigator, viewModel: AdminUserListViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_user_list, onIconClick = navigator::navigateUp)

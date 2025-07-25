@@ -3,15 +3,15 @@ package com.andradel.pathfinders.features.admin.archive
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andradel.pathfinders.firebase.archive.ArchiveFirebaseDataSource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class ArchiveListViewModel @Inject constructor(
+
+@KoinViewModel
+class ArchiveListViewModel(
     private val dataSource: ArchiveFirebaseDataSource,
 ) : ViewModel() {
     val state = dataSource.archive.map { archives ->

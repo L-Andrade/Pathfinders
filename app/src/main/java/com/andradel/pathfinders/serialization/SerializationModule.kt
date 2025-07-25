@@ -1,19 +1,14 @@
 package com.andradel.pathfinders.serialization
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import javax.inject.Singleton
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
 @Module
-@InstallIn(SingletonComponent::class)
 class SerializationModule {
     @OptIn(ExperimentalSerializationApi::class)
-    @Singleton
-    @Provides
+    @Single
     fun providesJson(): Json = Json {
         explicitNulls = false
         ignoreUnknownKeys = true

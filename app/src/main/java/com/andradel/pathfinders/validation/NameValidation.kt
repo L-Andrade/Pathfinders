@@ -1,9 +1,10 @@
 package com.andradel.pathfinders.validation
 
 import com.andradel.pathfinders.R
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
 
-class NameValidation @Inject constructor() {
+@Factory
+class NameValidation {
     fun validate(name: String): ValidationResult {
         return when {
             name.isEmpty() -> ValidationResult.Invalid(R.string.name_hint)

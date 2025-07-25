@@ -30,7 +30,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
 import com.andradel.pathfinders.features.destinations.AdminScreenDestination
@@ -46,11 +45,12 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination
 @RootNavGraph(start = true)
-fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = koinViewModel()) {
     val resultLauncher = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract(),
         onResult = viewModel::onSignInResult,

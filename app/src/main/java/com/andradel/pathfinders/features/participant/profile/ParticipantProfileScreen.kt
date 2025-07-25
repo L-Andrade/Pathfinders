@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.model.activity.Activity
@@ -31,12 +30,13 @@ import com.andradel.pathfinders.model.participant.ParticipantArg
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination(navArgsDelegate = ParticipantArg::class)
 fun ParticipantProfileScreen(
     navigator: DestinationsNavigator,
-    viewModel: ParticipantProfileViewModel = hiltViewModel(),
+    viewModel: ParticipantProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(

@@ -3,27 +3,25 @@ package com.andradel.pathfinders.features.activity.list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityListArg
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.role
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class ActivityListViewModel @Inject constructor(
+
+@KoinViewModel
+class ActivityListViewModel(
     handle: SavedStateHandle,
     private val dataSource: ActivityFirebaseDataSource,
     userSession: UserSession,
 ) : ViewModel() {
-    private val archiveName = handle.navArgs<ActivityListArg>().archiveName
+    private val archiveName = handle.get<String?>("archiveName")
 
     val state = combine(dataSource.activities(archiveName), userSession.role) { activities, role ->
         ActivityListState.Loaded(

@@ -51,7 +51,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.andradel.pathfinders.R
@@ -69,13 +68,14 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Destination
 fun CreateArchiveScreen(
     navigator: DestinationsNavigator,
     resultRecipient: ResultRecipient<ArchiveSelectActivitiesManuallyScreenDestination, ActivitySelectionArg>,
-    viewModel: CreateArchiveViewModel = hiltViewModel(),
+    viewModel: CreateArchiveViewModel = koinViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     resultRecipient.onNavResult { if (it is NavResult.Value) viewModel.select(it.value.selection.toList()) }

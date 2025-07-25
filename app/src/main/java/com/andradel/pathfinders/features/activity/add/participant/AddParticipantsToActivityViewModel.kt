@@ -3,26 +3,25 @@ package com.andradel.pathfinders.features.activity.add.participant
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.andradel.pathfinders.features.navArgs
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
+import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.Participant
-import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class AddParticipantsToActivityViewModel @Inject constructor(
+
+@KoinViewModel
+class AddParticipantsToActivityViewModel(
     handle: SavedStateHandle,
     dataSource: ParticipantFirebaseDataSource,
 ) : ViewModel() {
-    private val initialSelection = handle.navArgs<ParticipantSelectionArg>().selection
+    private val initialSelection = handle.get<List<Participant>>("selection").orEmpty()
     private val selection = MutableStateFlow(initialSelection)
-    private val selectedClasses = handle.navArgs<ParticipantSelectionArg>().classes
+    private val selectedClasses = handle.get<List<String>>("classes").orEmpty().map { ParticipantClass.valueOf(it) }
     private val filteringByClass = MutableStateFlow(selectedClasses.isNotEmpty())
 
     val state = combine(

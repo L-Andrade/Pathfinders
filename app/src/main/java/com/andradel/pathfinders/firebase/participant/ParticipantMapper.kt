@@ -3,10 +3,12 @@ package com.andradel.pathfinders.firebase.participant
 import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.Participant
+import org.koin.core.annotation.Factory
 import java.time.LocalDate
-import javax.inject.Inject
 
-class ParticipantMapper @Inject constructor() {
+@Factory
+
+class ParticipantMapper() {
     fun toParticipant(id: String, fbParticipant: FirebaseParticipant, archiveName: String?): Participant {
         return Participant(
             id = id,

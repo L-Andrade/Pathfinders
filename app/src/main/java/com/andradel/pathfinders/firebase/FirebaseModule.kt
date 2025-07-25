@@ -6,20 +6,19 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
 @Module
-@InstallIn(SingletonComponent::class)
+@ComponentScan("com.andradel.pathfinders.firebase**")
 class FirebaseModule {
-    @Provides
+    @Single
     fun providesFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
-    @Provides
+    @Single
     fun providesFirebaseDb(): FirebaseDatabase = Firebase.database
 
-    @Provides
+    @Single
     fun providesFirebaseFunctions(): FirebaseFunctions = Firebase.functions
 }

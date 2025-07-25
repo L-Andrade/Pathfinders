@@ -12,7 +12,6 @@ import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.validation.NameValidation
 import com.andradel.pathfinders.validation.isValid
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,10 +22,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class CreateArchiveViewModel @Inject constructor(
+
+@KoinViewModel
+class CreateArchiveViewModel(
     private val dataSource: ArchiveFirebaseDataSource,
     private val activityDataSource: ActivityFirebaseDataSource,
     private val participantDataSource: ParticipantFirebaseDataSource,

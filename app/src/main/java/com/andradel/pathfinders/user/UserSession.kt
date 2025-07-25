@@ -8,11 +8,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
-class UserSession @Inject constructor(
+@Single
+class UserSession(
     private val userFunctions: UserFunctions,
     private val coroutineScope: CoroutineScope,
 ) {
