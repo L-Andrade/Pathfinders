@@ -24,8 +24,8 @@ import com.andradel.pathfinders.features.NavGraphs
 import com.andradel.pathfinders.ui.theme.PathfindersTheme
 import com.andradel.pathfinders.user.UserSession
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine

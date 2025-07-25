@@ -10,11 +10,11 @@ import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Factory
