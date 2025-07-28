@@ -104,10 +104,6 @@ dependencies {
 
     implementation libs.lottie.compose
 
-    // Accompanist tabs
-    implementation libs.accompanist.pager
-    implementation libs.accompanist.pager.indicators
-
     // Firebase
     implementation platform(libs.firebase.bom)
     implementation libs.firebase.ui.auth
