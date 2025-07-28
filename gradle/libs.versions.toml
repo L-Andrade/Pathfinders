@@ -3,8 +3,8 @@ accompanist-pager = "0.36.0"
 agp = "8.11.1"
 compose-bom = "2025.07.00"
 koin = "4.1.0"
-koinAnnotations = "2.1.0"
-kotlin = "2.1.0"
+koin-annotations = "2.1.0"
+kotlin = "2.2.0"
 lifecycle = "2.9.2"
 
 [libraries]
@@ -24,8 +24,8 @@ androidx-material3 = { module = "androidx.compose.material3:material3", version 
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
-koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinAnnotations" }
-koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinAnnotations" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
+koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
 
 # Compose
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -45,8 +45,8 @@ firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlyti
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
 firebase-functions = { module = "com.google.firebase:firebase-functions" }
-firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.0.0" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.0.0" }
 
 google-services = { module = "com.google.gms:google-services", version = "4.4.3" }
 
@@ -59,6 +59,6 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.6.
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-google-ksp = { id = "com.google.devtools.ksp", version = "2.1.0-1.0.29" }
+google-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
