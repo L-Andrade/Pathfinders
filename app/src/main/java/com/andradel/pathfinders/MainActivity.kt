@@ -41,10 +41,9 @@ import com.andradel.pathfinders.nav.customNavType
 import com.andradel.pathfinders.ui.theme.PathfindersTheme
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserSession
-import com.google.firebase.Firebase
-import com.google.firebase.messaging.messaging
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.messaging.messaging
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
 import kotlin.reflect.typeOf
 
@@ -80,8 +79,7 @@ class MainActivity : ComponentActivity() {
         askNotificationPermission()
 
         lifecycleScope.launch {
-            val result = Firebase.messaging.token.await()
-            userSession.setUserToken(result)
+            userSession.setUserToken(Firebase.messaging.getToken())
         }
         setContent {
             PathfindersTheme {

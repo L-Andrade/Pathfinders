@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.andradel.pathfinders.R
 
-@Keep
 enum class ParticipantClass {
     UA1,
     UA2,

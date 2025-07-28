@@ -10,10 +10,9 @@ import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.archive.Archive
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
-import com.google.firebase.database.FirebaseDatabase
+import dev.gitlive.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.tasks.await
 import org.koin.core.annotation.Factory
 
 @Factory
@@ -23,7 +22,7 @@ class ArchiveFirebaseDataSource(
     private val participantMapper: ParticipantMapper,
     private val criteriaMapper: ActivityCriteriaMapper,
 ) {
-    private val archiveRef = db.reference.child("archive")
+    private val archiveRef = db.reference().child("archive")
 
     val archive: Flow<List<Archive>> = archiveRef.toMapFlow<FirebaseArchive>().map { criteriaMap ->
         criteriaMap.map { (key, value) ->
@@ -62,12 +61,10 @@ class ArchiveFirebaseDataSource(
                 criteria = criteria.associate { it.id to criteriaMapper.toFirebaseCriteria(it) },
                 participants = participants.associate { it.id to participantMapper.toFirebaseParticipant(it) },
             ),
-        ).await()
-        Unit
+        )
     }.throwCancellation()
 
     suspend fun deleteArchive(name: String) = runCatching {
-        archiveRef.child(name).removeValue().await()
-        Unit
+        archiveRef.child(name).removeValue()
     }.throwCancellation()
 }

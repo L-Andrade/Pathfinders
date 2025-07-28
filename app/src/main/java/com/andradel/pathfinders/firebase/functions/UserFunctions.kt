@@ -1,21 +1,21 @@
 package com.andradel.pathfinders.firebase.functions
 
 import com.andradel.pathfinders.extensions.throwCancellation
-import com.andradel.pathfinders.firebase.awaitWithTimeout
 import com.andradel.pathfinders.firebase.functions.model.FirebaseRoleRequest
 import com.andradel.pathfinders.firebase.functions.model.FirebaseUser
 import com.andradel.pathfinders.firebase.functions.model.Role
-import com.andradel.pathfinders.firebase.getGenericValue
 import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.crashlytics.crashlytics
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.functions.FirebaseFunctions
-import kotlinx.coroutines.tasks.await
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.auth.FirebaseAuth
+import dev.gitlive.firebase.crashlytics.crashlytics
+import dev.gitlive.firebase.database.FirebaseDatabase
+import dev.gitlive.firebase.functions.FirebaseFunctions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Factory
 
@@ -25,12 +25,13 @@ class UserFunctions(
     private val functions: FirebaseFunctions,
     private val json: Json,
     db: FirebaseDatabase,
+    private val coroutineScope: CoroutineScope,
 ) {
-    private val tokensRef = db.reference.child("tokens")
+    private val tokensRef = db.reference("tokens")
 
     suspend fun getUser(): Result<User?> = runCatching {
         val user = auth.currentUser ?: return Result.success(null)
-        val result = user.getIdToken(true).awaitWithTimeout()
+        val result = user.getIdTokenResult(true)
         val userRole = when (result.claims["role"] as? String ?: "") {
             "admin" -> UserRole.Admin
             "class" -> {
@@ -51,12 +52,13 @@ class UserFunctions(
     }.throwCancellation()
 
     fun signOut() {
-        auth.signOut()
+        coroutineScope.launch {
+            auth.signOut()
+        }
     }
 
     suspend fun getUsers(): Result<List<User>> = runCatching {
-        val result = functions.getHttpsCallable("on_get_users").call().awaitWithTimeout()
-        json.decodeFromString<List<FirebaseUser>>(result.data as String).map { fbUser ->
+        functions.httpsCallable("on_get_users").invoke().data<List<FirebaseUser>>().map { fbUser ->
             User(
                 name = fbUser.name ?: "User",
                 email = fbUser.email,
@@ -76,16 +78,16 @@ class UserFunctions(
             UserRole.User -> Role.User to null
         }
         val data = json.encodeToString(FirebaseRoleRequest(email, role, classes))
-        functions.getHttpsCallable("on_set_user_role").call(data).awaitWithTimeout()
+        functions.httpsCallable("on_set_user_role").invoke(data)
         Unit
     }.throwCancellation()
 
     suspend fun setUserToken(token: String) {
         val uid = auth.currentUser?.uid ?: return
-        val previousTokens = tokensRef.child(uid).ref.getGenericValue<List<String>?>()?.toSet().orEmpty()
+        val previousTokens = (tokensRef.child(uid).valueEvents.first().value as? List<*>?)?.toSet().orEmpty()
         val new = previousTokens + token
         if (new != previousTokens) {
-            tokensRef.child(uid).setValue(new.toList()).await()
+            tokensRef.child(uid).setValue(new.toList())
         }
     }
 }

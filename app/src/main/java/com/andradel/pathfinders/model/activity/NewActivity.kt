@@ -1,11 +1,11 @@
 package com.andradel.pathfinders.model.activity
 
-import androidx.annotation.Keep
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class NewActivity(
     val name: String,
     val date: String?,

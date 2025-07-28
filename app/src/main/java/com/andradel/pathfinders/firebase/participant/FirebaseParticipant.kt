@@ -1,8 +1,8 @@
 package com.andradel.pathfinders.firebase.participant
 
-import androidx.annotation.Keep
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class FirebaseParticipant(
     val name: String = "",
     val email: String? = null,

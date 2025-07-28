@@ -1,13 +1,11 @@
 package com.andradel.pathfinders.model
 
-import androidx.annotation.Keep
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.andradel.pathfinders.R
 
-@Keep
 enum class ParticipantClass {
     Rebento,
     Ticao,

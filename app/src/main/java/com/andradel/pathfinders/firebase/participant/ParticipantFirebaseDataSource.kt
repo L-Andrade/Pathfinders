@@ -2,13 +2,12 @@ package com.andradel.pathfinders.firebase.participant
 
 import com.andradel.pathfinders.extensions.throwCancellation
 import com.andradel.pathfinders.firebase.archiveChild
-import com.andradel.pathfinders.firebase.awaitWithTimeout
 import com.andradel.pathfinders.firebase.getMap
 import com.andradel.pathfinders.firebase.toFlow
 import com.andradel.pathfinders.firebase.toMapFlow
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.Participant
-import com.google.firebase.database.FirebaseDatabase
+import dev.gitlive.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -19,9 +18,9 @@ class ParticipantFirebaseDataSource(
     private val db: FirebaseDatabase,
     private val mapper: ParticipantMapper,
 ) {
-    private fun participantsRef(archiveName: String?) = db.reference.archiveChild(archiveName, "participants")
+    private fun participantsRef(archiveName: String?) = db.reference().archiveChild(archiveName, "participants")
 
-    fun participants(archiveName: String?): Flow<List<Participant>> = participantsRef(archiveName).ref
+    fun participants(archiveName: String?): Flow<List<Participant>> = participantsRef(archiveName)
         .toMapFlow<FirebaseParticipant>().map { participantMap -> participantMap.toParticipants(archiveName) }
 
     fun participant(archiveName: String?, key: String): Flow<Participant?> =
@@ -41,13 +40,11 @@ class ParticipantFirebaseDataSource(
         runCatching {
             val ref = participantsRef(null)
             val key = participantId ?: requireNotNull(ref.push().key)
-            ref.child(key).setValue(mapper.toFirebaseParticipant(participant)).awaitWithTimeout()
-            Unit
+            ref.child(key).setValue(mapper.toFirebaseParticipant(participant))
         }.throwCancellation()
 
     suspend fun deleteParticipant(participantId: String): Result<Unit> = runCatching {
-        participantsRef(null).child(participantId).removeValue().awaitWithTimeout()
-        Unit
+        participantsRef(null).child(participantId).removeValue()
     }.throwCancellation()
 
     suspend fun isParticipantEmailRegistered(email: String, participantId: String?): Boolean {
@@ -57,7 +54,6 @@ class ParticipantFirebaseDataSource(
     }
 
     suspend fun deleteParticipants(participantIds: List<String>): Result<Unit> = runCatching {
-        participantsRef(null).updateChildren(participantIds.associateWith { null }).awaitWithTimeout()
-        Unit
+        participantsRef(null).updateChildren(participantIds.associateWith { null })
     }.throwCancellation()
 }

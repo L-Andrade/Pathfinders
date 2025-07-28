@@ -1,9 +1,9 @@
 package com.andradel.pathfinders.firebase.activity
 
-import androidx.annotation.Keep
 import com.andradel.pathfinders.model.activity.ParticipantScores
+import kotlinx.serialization.Serializable
 
-@Keep
+@Serializable
 data class FirebaseActivity(
     val name: String = "",
     val date: String? = null,

@@ -5,6 +5,7 @@ koin = "4.1.0"
 koin-annotations = "2.1.0"
 kotlin = "2.2.0"
 lifecycle = "2.9.2"
+firebase-kmp = "2.1.0"
 
 [libraries]
 # AndroidX
@@ -34,13 +35,12 @@ compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
 compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta04" }
 
 # Firebase
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "34.0.0" }
-firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "3.0.5" }
-firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
-firebase-database = { module = "com.google.firebase:firebase-database" }
-firebase-functions = { module = "com.google.firebase:firebase-functions" }
-firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+firebase-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "firebase-kmp" }
+firebase-database = { module = "dev.gitlive:firebase-database", version.ref = "firebase-kmp" }
+firebase-functions = { module = "dev.gitlive:firebase-functions", version.ref = "firebase-kmp" }
+firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebase-kmp" }
+firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase-kmp" }
 firebase-ui-auth = { module = "com.firebaseui:firebase-ui-auth", version = "9.0.0" }
 
 google-services = { module = "com.google.gms:google-services", version = "4.4.3" }
