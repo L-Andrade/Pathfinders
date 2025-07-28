@@ -2,9 +2,12 @@ package com.andradel.pathfinders.features.activity.evaluate
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.customNavType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +16,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import kotlin.reflect.typeOf
 
 
 @KoinViewModel
@@ -21,7 +25,9 @@ class EvaluateActivityViewModel(
     private val dataSource: ActivityFirebaseDataSource,
     private val coroutineScope: CoroutineScope,
 ) : ViewModel() {
-    val activity = handle.get<Activity>("activity")!!
+    val activity = handle.toRoute<NavigationRoute.EvaluateActivity>(
+        typeMap = mapOf(typeOf<Activity>() to customNavType<Activity>()),
+    ).activity
 
     private val scores = MutableStateFlow(activity.scores)
     val state = scores.asStateFlow()

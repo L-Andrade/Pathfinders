@@ -1,7 +1,6 @@
 package com.andradel.pathfinders
 
 import android.app.Application
-import com.andradel.pathfinders.di.AppModule
 import com.andradel.pathfinders.firebase.FirebaseModule
 import com.andradel.pathfinders.scope.CoroutinesScopesModule
 import com.andradel.pathfinders.serialization.SerializationModule
@@ -19,7 +18,6 @@ class PathfindersApp : Application() {
             androidContext(this@PathfindersApp)
             modules(
                 defaultModule,
-                AppModule().module,
                 FirebaseModule().module,
                 CoroutinesScopesModule().module,
                 SerializationModule().module,

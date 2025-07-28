@@ -9,30 +9,49 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.daysUntil
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import org.koin.android.annotation.KoinViewModel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @KoinViewModel
 class RemindersViewModel(
     participantDataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
-    private val dayMonthFormatter = DateTimeFormatter.ofPattern("dd MMMM")
+    private val now = Clock.System.now()
+    private val today = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
+    private val birthdayInterval = run {
+        val sevenDaysAgo = now.minus(7.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val fourteenDaysAfter = now.plus(14.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
+        sevenDaysAgo .. fourteenDaysAfter
+    }
+    private val lastActivityInterval = run {
+        val twentyDaysAgo = now.plus(20.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
+        twentyDaysAgo..today
+    }
+
+    private val dayMonthFormatter = LocalDate.Format {
+        day()
+        char(' ')
+        monthName(MonthNames.ENGLISH_FULL)
+    }
 
     private val birthdays = participantDataSource.participants(null).map { participants ->
-        val today = LocalDate.now()
-        val interval = today.minusDays(7) to today.plusDays(14)
         val birthdays = participants.asSequence()
             .filter { participant ->
-                val nextBirthday = participant.dateOfBirth?.nextBirthday(today, interval.first)
-                nextBirthday != null && nextBirthday > interval.first && nextBirthday < interval.second
+                val nextBirthday = participant.dateOfBirth?.birthdayAtStartOrNext()
+                nextBirthday != null && nextBirthday in birthdayInterval
             }
             .sortedBy { it.dateOfBirth }
-            .map {
-                it.toParticipantBirthday(today, requireNotNull(it.dateOfBirth?.nextBirthday(today, interval.first)))
-            }
+            .map { it.toParticipantBirthday(requireNotNull(it.dateOfBirth?.birthdayAtStartOrNext())) }
         BirthdayReminders(
             today = birthdays.filter { it.state == BirthdayState.Today }.toList().takeIf { it.isNotEmpty() },
             upcoming = birthdays.toBirthdaySection(BirthdayState.Upcoming),
@@ -43,14 +62,12 @@ class RemindersViewModel(
     private val noShows = combine(
         activityDataSource.activities(null), participantDataSource.participants(null),
     ) { activities, participants ->
-        val today = LocalDate.now()
         val noShows = participants.mapNotNull { participant ->
             val lastUserActivity = activities.asSequence().filter { activity ->
                 activity.date != null && activity.participants.any { it.id == participant.id }
             }.maxByOrNull { requireNotNull(it.date) }
-            val last20Days = today.minusDays(20)
-            if (lastUserActivity != null && requireNotNull(lastUserActivity.date) < last20Days) {
-                val daysSince = ChronoUnit.DAYS.between(lastUserActivity.date, today)
+            if (lastUserActivity?.date != null && lastUserActivity.date !in lastActivityInterval) {
+                val daysSince = lastUserActivity.date.daysUntil(today)
                 ParticipantNoShow(participant.id, participant.name, participant.contact, daysSince)
             } else {
                 null
@@ -64,16 +81,20 @@ class RemindersViewModel(
         RemindersState.Loaded(birthdays = birthdays, noShows = noShows, divider = hasBirthdays && noShows != null)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), RemindersState.Loading)
 
-    private fun LocalDate.nextBirthday(today: LocalDate, first: LocalDate): LocalDate {
-        val thisYearsBirthday = withYear(today.year)
-        return withYear(if (thisYearsBirthday < today && thisYearsBirthday < first) today.year + 1 else today.year)
+    private fun LocalDate.birthdayAtStartOrNext(): LocalDate {
+        val birthdayThisYear = LocalDate(today.year, month, day)
+        return if (birthdayThisYear < today && birthdayThisYear < birthdayInterval.start) {
+            LocalDate(today.year + 1, month, day)
+        } else {
+            LocalDate(today.year, month, day)
+        }
     }
 
     private fun Sequence<ParticipantBirthday>.toBirthdaySection(state: BirthdayState): BirthdaySection? =
         BirthdaySection(filter { it.state == state }.toList().groupBy { it.date })
             .takeIf { it.birthdays.isNotEmpty() }
 
-    private fun Participant.toParticipantBirthday(today: LocalDate, nextBirthday: LocalDate): ParticipantBirthday {
+    private fun Participant.toParticipantBirthday(nextBirthday: LocalDate): ParticipantBirthday {
         return ParticipantBirthday(
             id = id,
             name = name,

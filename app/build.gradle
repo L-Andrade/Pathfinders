@@ -118,11 +118,12 @@ dependencies {
     implementation libs.firebase.messaging
 
     // Serialization
-    implementation libs.kotlinx.serialization.json
+    implementation(libs.kotlinx.serialization)
+
+    implementation(libs.kotlinx.datetime)
 
     // Nav
-    implementation libs.compose.destinations.animations
-    ksp libs.compose.destinations.ksp
+    implementation libs.compose.navigation
 
     implementation libs.androidx.lifecycle.viewmodel.compose
 

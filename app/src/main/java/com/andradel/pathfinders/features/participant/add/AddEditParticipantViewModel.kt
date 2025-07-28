@@ -3,13 +3,16 @@ package com.andradel.pathfinders.features.participant.add
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.combine
-import com.andradel.pathfinders.extensions.toMillis
+import com.andradel.pathfinders.extensions.toLocalDate
 import com.andradel.pathfinders.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.customNavType
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.role
@@ -22,12 +25,16 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 import org.koin.android.annotation.KoinViewModel
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
+import kotlin.reflect.typeOf
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 
+@OptIn(ExperimentalTime::class)
 @KoinViewModel
 class AddEditParticipantViewModel(
     handle: SavedStateHandle,
@@ -36,13 +43,17 @@ class AddEditParticipantViewModel(
     private val nameValidation: NameValidation,
     private val emailValidation: EmailValidation,
 ) : ViewModel() {
-    private val participant = handle.get<Participant>("participant")
+    private val participant = handle.toRoute<NavigationRoute.AddEditParticipant>(
+        typeMap = mapOf(typeOf<Participant?>() to customNavType<Participant?>(isNullableAllowed = true)),
+    ).participant
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
     private val contact = MutableStateFlow(participant?.contact.orEmpty())
     private val birthday = MutableStateFlow(participant?.dateOfBirth)
     private val participantResult = MutableStateFlow<ParticipantResult?>(null)
     private val participantClass = MutableStateFlow(participant?.participantClass)
+
+    private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     val isEditing = participant != null
 
@@ -56,7 +67,7 @@ class AddEditParticipantViewModel(
             email = email,
             contact = contact,
             birthdayRepresentation = birthday?.toString(),
-            birthday = (birthday ?: LocalDate.now()).atStartOfDay().toMillis(),
+            birthday = (birthday ?: today.date).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             nameValidation = nameResult,
             emailValidation = emailResult,
             // Always valid contact for now. Not sure if we want to validate this field at the moment
@@ -94,7 +105,7 @@ class AddEditParticipantViewModel(
     }
 
     fun updateDate(millis: Long) {
-        birthday.value = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+        birthday.value = millis.toLocalDate()
     }
 
     fun updateEmail(email: String) {

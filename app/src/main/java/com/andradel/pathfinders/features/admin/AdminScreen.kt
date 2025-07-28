@@ -14,16 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.AdminUserListScreenDestination
-import com.andradel.pathfinders.features.destinations.ArchiveListScreenDestination
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
-@Destination
-fun AdminScreen(navigator: DestinationsNavigator) {
+fun AdminScreen(navigator: NavController) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_screen, onIconClick = navigator::navigateUp)
@@ -32,11 +29,11 @@ fun AdminScreen(navigator: DestinationsNavigator) {
             Column(modifier = Modifier.padding(padding)) {
                 AdminOption(
                     text = stringResource(id = R.string.admin_user_list),
-                    onClick = { navigator.navigate(AdminUserListScreenDestination) },
+                    onClick = { navigator.navigate(NavigationRoute.AdminUserList) },
                 )
                 AdminOption(
                     text = stringResource(id = R.string.admin_archive),
-                    onClick = { navigator.navigate(ArchiveListScreenDestination) },
+                    onClick = { navigator.navigate(NavigationRoute.ArchiveList) },
                 )
             }
         },

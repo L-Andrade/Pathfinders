@@ -30,27 +30,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
-import com.andradel.pathfinders.features.destinations.AdminScreenDestination
-import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
-import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
-import com.andradel.pathfinders.features.destinations.RemindersScreenDestination
-import com.andradel.pathfinders.model.activity.ActivityListArg
 import com.andradel.pathfinders.model.participant.Participant
-import com.andradel.pathfinders.model.participant.ParticipantListArg
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.isClassAdmin
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination
-@RootNavGraph(start = true)
-fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(navigator: NavController, viewModel: HomeViewModel = koinViewModel()) {
     val resultLauncher = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract(),
         onResult = viewModel::onSignInResult,
@@ -80,13 +70,11 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = koin
                     is HomeState.Loaded -> LoggedInScreen(
                         state = s,
                         onSignOutClick = viewModel::onSignOutClick,
-                        onParticipantsClick = {
-                            navigator.navigate(ParticipantListScreenDestination(ParticipantListArg()))
-                        },
-                        onAdminClick = { navigator.navigate(AdminScreenDestination) },
-                        onActivitiesClick = { navigator.navigate(ActivityListScreenDestination(ActivityListArg())) },
-                        onRemindersClick = { navigator.navigate(RemindersScreenDestination) },
-                        onProfileClick = { navigator.navigate(ParticipantProfileScreenDestination(it)) },
+                        onParticipantsClick = { navigator.navigate(NavigationRoute.ParticipantList()) },
+                        onAdminClick = { navigator.navigate(NavigationRoute.Admin) },
+                        onActivitiesClick = { navigator.navigate(NavigationRoute.ActivityList()) },
+                        onRemindersClick = { navigator.navigate(NavigationRoute.Reminders) },
+                        onProfileClick = { navigator.navigate(NavigationRoute.ParticipantProfile(it)) },
                     )
 
                     HomeState.Error -> ErrorScreen(viewModel::updateUser)

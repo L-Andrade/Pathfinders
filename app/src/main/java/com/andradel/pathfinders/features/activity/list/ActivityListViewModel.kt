@@ -3,8 +3,10 @@ package com.andradel.pathfinders.features.activity.list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.activity.Activity
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.user.UserRole
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.role
@@ -21,7 +23,7 @@ class ActivityListViewModel(
     private val dataSource: ActivityFirebaseDataSource,
     userSession: UserSession,
 ) : ViewModel() {
-    private val archiveName = handle.get<String?>("archiveName")
+    private val archiveName = handle.toRoute<NavigationRoute.ActivityList>().archiveName
 
     val state = combine(dataSource.activities(archiveName), userSession.role) { activities, role ->
         ActivityListState.Loaded(

@@ -43,41 +43,36 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.AddCriteriaToActivityScreenDestination
-import com.andradel.pathfinders.features.destinations.AddParticipantsToActivityScreenDestination
 import com.andradel.pathfinders.model.ParticipantClass
-import com.andradel.pathfinders.model.activity.OptionalActivityArg
 import com.andradel.pathfinders.model.color
-import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
-import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
+import com.andradel.pathfinders.model.criteria.ActivityCriteria
+import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.collectNavResultAsState
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.ui.fields.DatePickerField
 import com.andradel.pathfinders.validation.ValidationResult
 import com.andradel.pathfinders.validation.errorMessage
 import com.andradel.pathfinders.validation.isError
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.result.NavResult
-import com.ramcosta.composedestinations.result.ResultRecipient
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = OptionalActivityArg::class)
 fun AddEditActivityScreen(
-    navigator: DestinationsNavigator,
-    resultRecipient: ResultRecipient<AddParticipantsToActivityScreenDestination, ParticipantSelectionArg>,
-    criteriaRecipient: ResultRecipient<AddCriteriaToActivityScreenDestination, CriteriaSelectionArg>,
+    navigator: NavController,
     viewModel: AddEditActivityViewModel = koinViewModel(),
 ) {
-    resultRecipient.onNavResult { result ->
-        if (result is NavResult.Value) viewModel.setSelection(result.value.selection)
-    }
-    criteriaRecipient.onNavResult { result ->
-        if (result is NavResult.Value) viewModel.setCriteriaSelection(result.value.selection.toList())
-    }
+    val selectionResult by navigator.collectNavResultAsState<List<Participant>>(
+        NavigationRoute.AddParticipantsToActivity.Result,
+    )
+    LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.setSelection(it) } }
+    val criteriaResult by navigator.collectNavResultAsState<List<ActivityCriteria>>(
+        NavigationRoute.AddCriteriaToActivity.Result,
+    )
+    LaunchedEffect(criteriaResult) { criteriaResult?.let { viewModel.setCriteriaSelection(it) } }
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -143,13 +138,11 @@ fun AddEditActivityScreen(
                 onSetAllSelected = viewModel::setAllSelected,
                 onSetClassSelected = viewModel::setClassSelected,
                 onSelectCriteria = {
-                    navigator.navigate(AddCriteriaToActivityScreenDestination(ArrayList(state.criteria)))
+                    navigator.navigate(NavigationRoute.AddCriteriaToActivity(state.criteria))
                 },
                 onSelectParticipants = {
                     navigator.navigate(
-                        AddParticipantsToActivityScreenDestination(
-                            ParticipantSelectionArg(state.participants, state.classes),
-                        ),
+                        NavigationRoute.AddParticipantsToActivity(state.participants, state.classes),
                     )
                 },
                 modifier = Modifier.weight(1f),

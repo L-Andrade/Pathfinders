@@ -32,25 +32,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.AddEditParticipantScreenDestination
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.Participant
-import com.andradel.pathfinders.model.participant.ParticipantSelectionArg
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.navigateBackWithResult
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = ParticipantSelectionArg::class)
 fun AddParticipantsToActivityScreen(
-    navigator: DestinationsNavigator,
-    resultNavigator: ResultBackNavigator<ParticipantSelectionArg>,
+    navigator: NavController,
     viewModel: AddParticipantsToActivityViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
@@ -64,8 +60,7 @@ fun AddParticipantsToActivityScreen(
     }
     val onSelectParticipants: () -> Unit = {
         val participants = (state as? AddParticipantsToActivityState.Loaded)?.selection.orEmpty()
-        resultNavigator.setResult(ParticipantSelectionArg(ArrayList(participants)))
-        resultNavigator.navigateBack()
+        navigator.navigateBackWithResult(NavigationRoute.AddParticipantsToActivity.Result, participants)
     }
     Scaffold(
         topBar = {
@@ -99,7 +94,7 @@ fun AddParticipantsToActivityScreen(
                     state = s,
                     onSelectParticipant = viewModel::selectParticipant,
                     onUnselectParticipant = viewModel::unselectParticipant,
-                    onAddNewParticipant = { navigator.navigate(AddEditParticipantScreenDestination()) },
+                    onAddNewParticipant = { navigator.navigate(NavigationRoute.AddEditParticipant()) },
                     onSelectParticipants = onSelectParticipants,
                     onFilteringByClass = viewModel::setFilteringByClass,
                 )

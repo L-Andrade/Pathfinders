@@ -8,5 +8,5 @@ data class ParticipantNoShow(
     val id: String,
     val name: String,
     val contact: String?,
-    val daysSince: Long,
+    val daysSince: Int,
 )

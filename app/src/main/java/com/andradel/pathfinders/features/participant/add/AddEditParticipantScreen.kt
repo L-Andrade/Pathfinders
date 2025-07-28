@@ -15,16 +15,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -46,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.SimpleColorFilter
 import com.airbnb.lottie.compose.LottieAnimation
@@ -57,24 +58,17 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
-import com.andradel.pathfinders.model.participant.OptionalParticipantArg
 import com.andradel.pathfinders.model.title
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.ui.fields.DatePickerField
 import com.andradel.pathfinders.validation.errorMessage
 import com.andradel.pathfinders.validation.isError
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-@Destination(navArgsDelegate = OptionalParticipantArg::class)
-fun AddEditParticipantScreen(
-    navigator: DestinationsNavigator,
-    viewModel: AddEditParticipantViewModel = koinViewModel(),
-) {
+fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditParticipantViewModel = koinViewModel(),) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     Scaffold(
@@ -302,7 +296,7 @@ private fun ScoutClassDropDown(
 @Composable
 private fun AddParticipantResult(
     result: ParticipantResult?,
-    navigator: DestinationsNavigator,
+    navigator: NavController,
     onLoading: (Boolean) -> Unit,
     showSnackbar: @Composable (String) -> Unit,
 ) {

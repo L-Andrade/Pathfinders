@@ -34,19 +34,15 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.ActivityListScreenDestination
-import com.andradel.pathfinders.features.destinations.CreateArchiveScreenDestination
-import com.andradel.pathfinders.features.destinations.ParticipantListScreenDestination
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination
-fun ArchiveListScreen(navigator: DestinationsNavigator, viewModel: ArchiveListViewModel = koinViewModel()) {
+fun ArchiveListScreen(navigator: NavController, viewModel: ArchiveListViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_archive, onIconClick = navigator::navigateUp)
@@ -57,14 +53,14 @@ fun ArchiveListScreen(navigator: DestinationsNavigator, viewModel: ArchiveListVi
                 is ArchiveListState.Archives ->
                     LazyColumn(modifier = Modifier.padding(padding)) {
                         item {
-                            CreateArchive(onClick = { navigator.navigate(CreateArchiveScreenDestination) })
+                            CreateArchive(onClick = { navigator.navigate(NavigationRoute.CreateArchive) })
                         }
                         items(s.archives, key = { it.name }) { item ->
                             ArchiveItem(
                                 item = item,
-                                onActivitiesClick = { navigator.navigate(ActivityListScreenDestination(item.name)) },
+                                onActivitiesClick = { navigator.navigate(NavigationRoute.ActivityList(item.name)) },
                                 onParticipantsClick = {
-                                    navigator.navigate(ParticipantListScreenDestination(item.name))
+                                    navigator.navigate(NavigationRoute.ParticipantList(item.name))
                                 },
                                 onDelete = { viewModel.onDeleteArchive(item.name) },
                             )

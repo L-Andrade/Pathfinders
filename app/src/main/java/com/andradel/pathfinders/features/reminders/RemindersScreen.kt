@@ -31,15 +31,13 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination
-fun RemindersScreen(navigator: DestinationsNavigator, viewModel: RemindersViewModel = koinViewModel()) {
+fun RemindersScreen(navigator: NavController, viewModel: RemindersViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.reminders_screen, onIconClick = navigator::navigateUp)

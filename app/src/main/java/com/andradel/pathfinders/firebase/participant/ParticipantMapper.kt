@@ -3,8 +3,8 @@ package com.andradel.pathfinders.firebase.participant
 import com.andradel.pathfinders.firebase.toClass
 import com.andradel.pathfinders.model.participant.NewParticipant
 import com.andradel.pathfinders.model.participant.Participant
+import kotlinx.datetime.LocalDate
 import org.koin.core.annotation.Factory
-import java.time.LocalDate
 
 @Factory
 

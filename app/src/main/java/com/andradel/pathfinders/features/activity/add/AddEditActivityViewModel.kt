@@ -3,14 +3,17 @@ package com.andradel.pathfinders.features.activity.add
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.andradel.pathfinders.extensions.combine
-import com.andradel.pathfinders.extensions.toMillis
+import com.andradel.pathfinders.extensions.toLocalDate
 import com.andradel.pathfinders.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.activity.Activity
 import com.andradel.pathfinders.model.activity.NewActivity
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.customNavType
 import com.andradel.pathfinders.user.UserSession
 import com.andradel.pathfinders.user.isAdmin
 import com.andradel.pathfinders.validation.NameValidation
@@ -22,11 +25,15 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 import org.koin.android.annotation.KoinViewModel
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
+import kotlin.reflect.typeOf
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @KoinViewModel
 class AddEditActivityViewModel(
     handle: SavedStateHandle,
@@ -34,7 +41,9 @@ class AddEditActivityViewModel(
     private val dataSource: ActivityFirebaseDataSource,
     private val nameValidation: NameValidation,
 ) : ViewModel() {
-    private val activity = handle.get<Activity>("activity")
+    private val activity = handle.toRoute<NavigationRoute.AddEditActivity>(
+        typeMap = mapOf(typeOf<Activity?>() to customNavType<Activity?>(isNullableAllowed = true)),
+    ).activity
     private val isArchived = activity?.archiveName != null
 
     private val participants = MutableStateFlow(activity?.participants.orEmpty())
@@ -44,6 +53,8 @@ class AddEditActivityViewModel(
     private val date = MutableStateFlow(activity?.date)
     private val activityResult = MutableStateFlow<ActivityResult?>(null)
     private val createForEach = MutableStateFlow(false)
+
+    private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
     val state = combine(
         name,
@@ -60,7 +71,7 @@ class AddEditActivityViewModel(
             name = name,
             nameValidation = nameValidation,
             dateRepresentation = date?.toString(),
-            date = (date ?: LocalDate.now()).atStartOfDay().toMillis(),
+            date = (date ?: today.date).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             classes = classes,
             participants = participants,
             criteria = criteria,
@@ -139,7 +150,7 @@ class AddEditActivityViewModel(
     }
 
     fun updateDate(millis: Long) {
-        date.value = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+        date.value = millis.toLocalDate()
     }
 
     fun deleteActivity() {

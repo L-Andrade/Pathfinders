@@ -2,7 +2,6 @@
 accompanist-pager = "0.36.0"
 agp = "8.11.1"
 compose-bom = "2025.07.00"
-compose-destinations = "1.9.53"
 koin = "4.1.0"
 koinAnnotations = "2.1.0"
 kotlin = "2.1.0"
@@ -37,8 +36,7 @@ compose-ui-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
 
 # Nav
-compose-destinations-animations = { module = "io.github.raamcosta.compose-destinations:animations-core", version.ref = "compose-destinations" }
-compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta04" }
 
 # Firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version = "34.0.0" }
@@ -53,7 +51,8 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 google-services = { module = "com.google.gms:google-services", version = "4.4.3" }
 
 junit = { module = "junit:junit", version = "4.13.2" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.7.1" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.6.7" }
 
 [plugins]

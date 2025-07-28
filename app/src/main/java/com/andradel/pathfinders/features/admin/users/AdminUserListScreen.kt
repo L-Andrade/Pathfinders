@@ -27,18 +27,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.EditUserRoleScreenDestination
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination
-fun AdminUserListScreen(navigator: DestinationsNavigator, viewModel: AdminUserListViewModel = koinViewModel()) {
+fun AdminUserListScreen(navigator: NavController, viewModel: AdminUserListViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(titleRes = R.string.admin_user_list, onIconClick = navigator::navigateUp)
@@ -66,7 +64,7 @@ fun AdminUserListScreen(navigator: DestinationsNavigator, viewModel: AdminUserLi
                                     user = user,
                                     modifier = Modifier
                                         .padding(vertical = 8.dp)
-                                        .clickable { navigator.navigate(EditUserRoleScreenDestination(user)) },
+                                        .clickable { navigator.navigate(NavigationRoute.EditUserRole(user)) },
                                 )
                             }
                         }

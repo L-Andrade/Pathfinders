@@ -39,23 +39,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
-import com.andradel.pathfinders.model.activity.ActivityArg
 import com.andradel.pathfinders.model.activity.CriteriaScore
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.model.participant.Participant
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
-@Destination(navArgsDelegate = ActivityArg::class)
-fun EvaluateActivityScreen(navigator: DestinationsNavigator, viewModel: EvaluateActivityViewModel = koinViewModel()) {
+fun EvaluateActivityScreen(navigator: NavController, viewModel: EvaluateActivityViewModel = koinViewModel()) {
     var showUnsavedDialog by remember { mutableStateOf(false) }
     BackHandler {
         if (viewModel.isUnsaved) {

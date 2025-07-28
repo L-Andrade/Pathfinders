@@ -1,7 +1,6 @@
 package com.andradel.pathfinders.user
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 sealed interface UserState {
     object Loading : UserState
@@ -9,9 +8,9 @@ sealed interface UserState {
     object Guest : UserState
 }
 
-@Parcelize
+@Serializable
 data class User(
     val name: String,
     val email: String?,
     val role: UserRole,
-) : UserState, Parcelable
+) : UserState

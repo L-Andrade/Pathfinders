@@ -1,17 +1,17 @@
 package com.andradel.pathfinders.user
 
-import android.os.Parcelable
 import com.andradel.pathfinders.model.ParticipantClass
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-sealed interface UserRole : Parcelable {
-    @Parcelize
+@Serializable
+sealed interface UserRole {
+    @Serializable
     data object Admin : UserRole
 
-    @Parcelize
+    @Serializable
     data class ClassAdmin(val classes: Set<ParticipantClass>) : UserRole
 
-    @Parcelize
+    @Serializable
     data object User : UserRole
 }
 

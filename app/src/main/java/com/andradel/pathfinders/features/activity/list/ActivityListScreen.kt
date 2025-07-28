@@ -32,21 +32,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.AddEditActivityScreenDestination
-import com.andradel.pathfinders.features.destinations.EvaluateActivityScreenDestination
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivityListArg
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = ActivityListArg::class)
-fun ActivityListScreen(navigator: DestinationsNavigator, viewModel: ActivityListViewModel = koinViewModel()) {
+fun ActivityListScreen(navigator: NavController, viewModel: ActivityListViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
@@ -56,7 +52,7 @@ fun ActivityListScreen(navigator: DestinationsNavigator, viewModel: ActivityList
                 endContent = {
                     val canAdd by remember { derivedStateOf { (state as? ActivityListState.Loaded)?.canAdd ?: false } }
                     if (canAdd) {
-                        TextButton(onClick = { navigator.navigate(AddEditActivityScreenDestination()) }) {
+                        TextButton(onClick = { navigator.navigate(NavigationRoute.AddEditActivity()) }) {
                             Text(text = stringResource(id = R.string.add_activity))
                         }
                     }
@@ -75,9 +71,9 @@ fun ActivityListScreen(navigator: DestinationsNavigator, viewModel: ActivityList
                         ActivityCard(
                             activity = activity,
                             canDelete = s.canDelete,
-                            onEditClick = { navigator.navigate(AddEditActivityScreenDestination(activity)) },
+                            onEditClick = { navigator.navigate(NavigationRoute.AddEditActivity(activity)) },
                             onDeleteClick = { viewModel.deleteActivity(activity) },
-                            onEvaluateClick = { navigator.navigate(EvaluateActivityScreenDestination(activity)) },
+                            onEvaluateClick = { navigator.navigate(NavigationRoute.EvaluateActivity(activity)) },
                             modifier = Modifier.padding(16.dp),
                         )
                     }

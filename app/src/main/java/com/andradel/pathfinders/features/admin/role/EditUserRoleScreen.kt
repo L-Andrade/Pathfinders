@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
 import com.andradel.pathfinders.features.admin.role.model.EditUserRole
@@ -50,15 +51,11 @@ import com.andradel.pathfinders.features.admin.role.model.stringRes
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.title
-import com.andradel.pathfinders.model.user.UserArg
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = UserArg::class)
-fun EditUserRoleScreen(navigator: DestinationsNavigator, viewModel: EditUserRoleViewModel = koinViewModel()) {
+fun EditUserRoleScreen(navigator: NavController, viewModel: EditUserRoleViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current

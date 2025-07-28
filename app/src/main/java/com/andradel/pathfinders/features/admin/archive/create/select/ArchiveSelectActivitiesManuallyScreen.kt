@@ -31,27 +31,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
-import com.andradel.pathfinders.model.activity.ActivitySelectionArg
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.navigateBackWithResult
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = ActivitySelectionArg::class)
 fun ArchiveSelectActivitiesManuallyScreen(
-    navigator: DestinationsNavigator,
-    resultNavigator: ResultBackNavigator<ActivitySelectionArg>,
+    navigator: NavController,
     viewModel: ArchiveSelectActivitiesManuallyViewModel = koinViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(key1 = Unit) {
         lifecycleOwner.collectChannelFlow(viewModel.result) { result ->
-            resultNavigator.navigateBack(result)
+            navigator.navigateBackWithResult(NavigationRoute.ArchiveSelectActivitiesManually.Result, result)
         }
     }
     Scaffold(

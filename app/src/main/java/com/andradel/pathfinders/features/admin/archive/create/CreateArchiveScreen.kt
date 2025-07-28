@@ -53,32 +53,27 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.extensions.collectChannelFlow
-import com.andradel.pathfinders.features.destinations.ArchiveSelectActivitiesManuallyScreenDestination
 import com.andradel.pathfinders.model.activity.Activity
-import com.andradel.pathfinders.model.activity.ActivitySelectionArg
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.collectNavResultAsState
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.validation.ValidationResult
 import com.andradel.pathfinders.validation.errorMessage
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.result.NavResult
-import com.ramcosta.composedestinations.result.ResultRecipient
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination
-fun CreateArchiveScreen(
-    navigator: DestinationsNavigator,
-    resultRecipient: ResultRecipient<ArchiveSelectActivitiesManuallyScreenDestination, ActivitySelectionArg>,
-    viewModel: CreateArchiveViewModel = koinViewModel(),
-) {
+fun CreateArchiveScreen(navigator: NavController, viewModel: CreateArchiveViewModel = koinViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
-    resultRecipient.onNavResult { if (it is NavResult.Value) viewModel.select(it.value.selection.toList()) }
+    val selectionResult by navigator.collectNavResultAsState<List<Activity>>(
+        NavigationRoute.ArchiveSelectActivitiesManually.Result,
+    )
+    LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.select(it) } }
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     LaunchedEffect(key1 = Unit) {
@@ -151,9 +146,7 @@ fun CreateArchiveScreen(
                         onSelectAll = viewModel::selectAll,
                         onSelectManually = {
                             navigator.navigate(
-                                ArchiveSelectActivitiesManuallyScreenDestination(
-                                    ActivitySelectionArg(ArrayList(viewModel.activities())),
-                                ),
+                                NavigationRoute.ArchiveSelectActivitiesManually(viewModel.activities()),
                             )
                         },
                     )

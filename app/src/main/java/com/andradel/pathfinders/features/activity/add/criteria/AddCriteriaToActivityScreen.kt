@@ -28,20 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
 import com.andradel.pathfinders.model.criteria.ActivityCriteria
-import com.andradel.pathfinders.model.criteria.CriteriaSelectionArg
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.navigateBackWithResult
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.result.ResultBackNavigator
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = CriteriaSelectionArg::class)
 fun AddCriteriaToActivityScreen(
-    navigator: DestinationsNavigator,
-    resultNavigator: ResultBackNavigator<CriteriaSelectionArg>,
+    navigator: NavController,
     viewModel: AddCriteriaToActivityViewModel = koinViewModel(),
 ) {
     Scaffold(
@@ -61,8 +58,7 @@ fun AddCriteriaToActivityScreen(
                     viewModel::unselectCriteria,
                     viewModel::addCriteria,
                     onButtonClick = {
-                        resultNavigator.setResult(CriteriaSelectionArg(ArrayList(s.selection)))
-                        resultNavigator.navigateBack()
+                        navigator.navigateBackWithResult(NavigationRoute.AddCriteriaToActivity.Result, s.selection)
                     },
                 )
                 is AddCriteriaToActivityState.Loading ->

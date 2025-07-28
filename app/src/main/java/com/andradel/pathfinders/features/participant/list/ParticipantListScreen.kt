@@ -48,25 +48,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.andradel.pathfinders.R
-import com.andradel.pathfinders.features.destinations.AddEditParticipantScreenDestination
-import com.andradel.pathfinders.features.destinations.ParticipantProfileScreenDestination
 import com.andradel.pathfinders.model.ParticipantClass
 import com.andradel.pathfinders.model.color
 import com.andradel.pathfinders.model.participant.Participant
-import com.andradel.pathfinders.model.participant.ParticipantListArg
 import com.andradel.pathfinders.model.title
+import com.andradel.pathfinders.nav.NavigationRoute
 import com.andradel.pathfinders.ui.ConfirmationDialog
 import com.andradel.pathfinders.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.ui.onColor
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(navArgsDelegate = ParticipantListArg::class)
-fun ParticipantListScreen(navigator: DestinationsNavigator, viewModel: ParticipantListViewModel = koinViewModel()) {
+fun ParticipantListScreen(navigator: NavController, viewModel: ParticipantListViewModel = koinViewModel()) {
     val canModify by viewModel.canModify.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
@@ -75,7 +71,7 @@ fun ParticipantListScreen(navigator: DestinationsNavigator, viewModel: Participa
                 onIconClick = { navigator.navigateUp() },
                 endContent = {
                     if (canModify) {
-                        TextButton(onClick = { navigator.navigate(AddEditParticipantScreenDestination()) }) {
+                        TextButton(onClick = { navigator.navigate(NavigationRoute.AddEditParticipant()) }) {
                             Text(text = stringResource(id = R.string.add_participant))
                         }
                     }
@@ -95,11 +91,11 @@ fun ParticipantListScreen(navigator: DestinationsNavigator, viewModel: Participa
                         selectedSorting = s.sort,
                         showButtons = canModify,
                         onParticipantClick = {
-                            navigator.navigate(ParticipantProfileScreenDestination(it, viewModel.archiveName))
+                            navigator.navigate(NavigationRoute.ParticipantProfile(it, viewModel.archiveName))
                         },
                         deleteParticipant = viewModel::deleteParticipant,
                         onEditParticipant = {
-                            navigator.navigate(AddEditParticipantScreenDestination(it))
+                            navigator.navigate(NavigationRoute.AddEditParticipant(it))
                         },
                         onCollapseSection = viewModel::collapseSection,
                         onSortClick = viewModel::sortBy,

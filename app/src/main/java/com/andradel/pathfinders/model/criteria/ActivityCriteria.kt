@@ -1,11 +1,10 @@
 package com.andradel.pathfinders.model.criteria
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 data class ActivityCriteria(
     val id: String,
     val name: String,
     val maxScore: Int,
-) : Parcelable
+)

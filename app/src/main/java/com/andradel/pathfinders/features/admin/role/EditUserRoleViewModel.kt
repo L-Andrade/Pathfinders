@@ -3,9 +3,12 @@ package com.andradel.pathfinders.features.admin.role
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.andradel.pathfinders.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.firebase.functions.UserFunctions
 import com.andradel.pathfinders.model.ParticipantClass
+import com.andradel.pathfinders.nav.NavigationRoute
+import com.andradel.pathfinders.nav.customNavType
 import com.andradel.pathfinders.user.User
 import com.andradel.pathfinders.user.UserRole
 import kotlinx.coroutines.channels.Channel
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import kotlin.reflect.typeOf
 
 
 @KoinViewModel
@@ -23,7 +27,9 @@ class EditUserRoleViewModel(
     handle: SavedStateHandle,
     private val userFunctions: UserFunctions,
 ) : ViewModel() {
-    private val user = handle.get<User>("user")!!
+    private val user = handle.toRoute<NavigationRoute.EditUserRole>(
+        typeMap = mapOf(typeOf<User>() to customNavType<User>())
+    ).user
 
     private val role = MutableStateFlow(user.role.toEditable())
     private val selectedClasses = MutableStateFlow((user.role as? UserRole.ClassAdmin)?.classes)
