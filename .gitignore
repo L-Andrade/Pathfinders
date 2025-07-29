@@ -16,3 +16,4 @@
 local.properties
 release.jks
 google-services.json
+.kotlin/

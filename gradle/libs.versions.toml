@@ -6,6 +6,9 @@ koin-annotations = "2.1.0"
 kotlin = "2.2.0"
 lifecycle = "2.9.2"
 firebase-kmp = "2.1.0"
+runner = "1.6.2"
+core = "1.6.1"
+composeMultiplatform = "1.8.2"
 
 [libraries]
 # AndroidX
@@ -49,6 +52,10 @@ junit = { module = "junit:junit", version = "4.13.2" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.7.1" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.6.7" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -57,3 +64,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-ksp = { id = "com.google.devtools.ksp", version = "2.2.0-2.0.2" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

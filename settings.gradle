@@ -13,4 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Pathfinders"
-include ':app'
+include ':androidApp'
+include ':shared'
