@@ -7,4 +7,6 @@
 
 // Configuration settings file format documentation can be found at:
 // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+BUNDLE_ID=com.andradel.pathfinders
+APP_NAME=Pathfinders Debug
 GOOGLE_SERVICE=$(SRCROOT)/Firebase/GoogleService-Info-Production.plist
