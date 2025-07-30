@@ -1,0 +1,17 @@
+//
+//  Debug.xcconfig
+//  iosApp
+//
+//  Created by Luis Miguel Antonio Andrade on 30/07/2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
+// TEAM_ID=
+//
+// PRODUCT_NAME=Pathfinders
+// PRODUCT_BUNDLE_IDENTIFIER=com.andradel.pathfinders.Pathfinders$(TEAM_ID)
+
+CURRENT_PROJECT_VERSION=1
+MARKETING_VERSION=1.0
+GOOGLE_SERVICE=$(SRCROOT)/Firebase/GoogleService-Info-Development.plist

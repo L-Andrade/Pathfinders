@@ -1,12 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id 'com.google.devtools.ksp'
-    id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id("kotlinx-serialization")
-    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -71,18 +70,11 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    // to use KSP generated Code
-    applicationVariants.all { variant ->
-        def variantName = variant.name
-        sourceSets {
-            main {
-                java.srcDir file("build/generated/ksp/$variantName/kotlin")
-            }
-        }
-    }
 }
 
 dependencies {
+    implementation(project(":shared"))
+
     implementation(libs.koin.android)
     implementation(libs.koin.annotations)
     implementation(libs.koin.androidx.compose)
@@ -95,39 +87,13 @@ dependencies {
 
     // Compose
     implementation(platform(libs.compose.bom))
-    androidTestImplementation(platform(libs.compose.bom))
     implementation libs.compose.ui
     implementation libs.compose.ui.preview
-    implementation libs.androidx.lifecycle.runtime.compose
-    debugImplementation libs.compose.ui.tooling
     debugImplementation libs.compose.ui.manifest
 
-    implementation libs.lottie.compose
-
-    // Firebase
+    // Firebase for theming, TODO: clean up
+    implementation(platform(libs.firebase.bom))
     implementation libs.firebase.ui.auth
-    implementation libs.firebase.database
-    implementation libs.firebase.crashlytics
-    implementation libs.firebase.functions
-    implementation libs.firebase.messaging
     implementation libs.firebase.auth
-
-    // Serialization
-    implementation(libs.kotlinx.serialization)
-
-    implementation(libs.kotlinx.datetime)
-
-    // Nav
-    implementation libs.compose.navigation
-
-    implementation libs.androidx.lifecycle.viewmodel.compose
-
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
-    androidTestImplementation libs.compose.ui.test.junit
-}
-
-ksp {
-    arg("KOIN_CONFIG_CHECK","true")
+    implementation libs.firebase.messaging
 }

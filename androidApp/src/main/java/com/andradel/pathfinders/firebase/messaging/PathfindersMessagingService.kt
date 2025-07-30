@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.firebase.messaging
 
-import com.andradel.pathfinders.firebase.functions.UserFunctions
+import com.andradel.pathfinders.shared.firebase.functions.UserFunctions
 import com.google.firebase.messaging.FirebaseMessagingService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
