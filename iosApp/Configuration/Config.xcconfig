@@ -7,4 +7,4 @@ PRODUCT_BUNDLE_IDENTIFIER=com.andradel.Pathfinders.Pathfinders$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1
 MARKETING_VERSION=1.0
-GOOGLE_SERVICE=$(SRCROOT)/Firebase/GoogleService-Info-Production.plist
+GOOGLE_SERVICE=$(SRCROOT)/Firebase/GoogleService-Info-Development.plist

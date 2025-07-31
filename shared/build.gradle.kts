@@ -55,9 +55,26 @@ kotlin {
         ios.deploymentTarget = "16.4"
         framework {
             baseName = "shared"
+            isStatic = true
         }
         pod("FirebaseCore") {
             version = "~> 11.13"
+            linkOnly = true
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+        pod("FirebaseFunctions") {
+            version = "~> 11.13"
+            linkOnly = true
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+        pod("FirebaseCrashlytics") {
+            version = "~> 11.13"
+            linkOnly = true
+            extraOpts += listOf("-compiler-option", "-fmodules")
+        }
+        pod("FirebaseUI") {
+            version = "~> 15.1.0"
+            linkOnly = true
             extraOpts += listOf("-compiler-option", "-fmodules")
         }
         // Maps custom Xcode configuration to NativeBuildType

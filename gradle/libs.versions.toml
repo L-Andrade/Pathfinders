@@ -36,7 +36,7 @@ compose-ui-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4" }
 
 # Nav
-compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta04" }
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version = "2.9.0-beta03" }
 
 # Firebase
 firebase-crashlytics-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "3.0.5" }
