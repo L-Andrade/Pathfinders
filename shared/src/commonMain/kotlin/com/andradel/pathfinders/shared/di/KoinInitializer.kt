@@ -11,9 +11,9 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.ksp.generated.defaultModule
 import org.koin.ksp.generated.module
 
-fun initKoin(appDeclaration: KoinAppDeclaration = {}) {
+fun initKoin(appDeclaration: KoinAppDeclaration? = null) {
     startKoin {
-        appDeclaration()
+        appDeclaration?.invoke(this)
         modules(
             defaultModule,
             FirebaseModule().module,

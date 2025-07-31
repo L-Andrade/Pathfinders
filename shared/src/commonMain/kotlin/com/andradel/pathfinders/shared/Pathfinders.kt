@@ -22,6 +22,7 @@ import com.andradel.pathfinders.shared.features.participant.add.AddEditParticipa
 import com.andradel.pathfinders.shared.features.participant.list.ParticipantListScreen
 import com.andradel.pathfinders.shared.features.participant.profile.ParticipantProfileScreen
 import com.andradel.pathfinders.shared.features.reminders.RemindersScreen
+import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.model.participant.Participant
@@ -74,12 +75,15 @@ fun Pathfinders() {
                 EvaluateActivityScreen(navigator = navController)
             }
             composable<NavigationRoute.AddCriteriaToActivity>(
-                typeMap = mapOf(typeOf<List<ActivityCriteria>>() to customNavType<List<ActivityCriteria>>())
+                typeMap = mapOf(typeOf<List<ActivityCriteria>>() to customNavType<List<ActivityCriteria>>()),
             ) {
                 AddCriteriaToActivityScreen(navigator = navController)
             }
             composable<NavigationRoute.AddParticipantsToActivity>(
-                typeMap = mapOf(typeOf<List<Participant>>() to customNavType<List<Participant>>())
+                typeMap = mapOf(
+                    typeOf<List<Participant>>() to customNavType<List<Participant>>(),
+                    typeOf<List<ParticipantClass>>() to customNavType<List<ParticipantClass>>()
+                ),
             ) {
                 AddParticipantsToActivityScreen(navigator = navController)
             }
