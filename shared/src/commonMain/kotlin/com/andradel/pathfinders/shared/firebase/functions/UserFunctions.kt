@@ -59,7 +59,9 @@ class UserFunctions(
     }
 
     suspend fun getUsers(): Result<List<User>> = runCatching {
-        functions.httpsCallable("on_get_users").invoke().data<List<FirebaseUser>>().map { fbUser ->
+        // This could be improved with the Kotlin SDK, but needs new Firebase functions
+        val data = functions.httpsCallable("on_get_users").invoke().data<String>()
+        json.decodeFromString<List<FirebaseUser>>(data).map { fbUser ->
             User(
                 name = fbUser.name ?: "User",
                 email = fbUser.email,

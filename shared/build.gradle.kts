@@ -170,11 +170,6 @@ kotlin {
 
 dependencies {
     add("kspCommonMainMetadata", libs.koin.ksp)
-    // add("kspAndroid", libs.koin.ksp)
-    // add("kspIosX64", libs.koin.ksp)
-    // add("kspIosArm64", libs.koin.ksp)
-    // add("kspIosSimulatorArm64", libs.koin.ksp)
-
     androidMainImplementation(platform(libs.firebase.bom))
 }
 
