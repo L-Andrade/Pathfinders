@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.andradel.pathfinders.shared.intents.rememberCallIntents
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -117,6 +118,7 @@ private fun LazyListScope.noShowsSection(noShowsReminders: NoShowsReminders) {
 
 @Composable
 private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modifier = Modifier) {
+    val callIntents = rememberCallIntents()
     Row(modifier = modifier.padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = participant.name, style = MaterialTheme.typography.labelMedium)
@@ -127,13 +129,7 @@ private fun ParticipantNoShowItem(participant: ParticipantNoShow, modifier: Modi
             )
         }
         if (participant.contact != null) {
-            IconButton(
-                onClick = {
-                    // TODO
-                    // val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:${participant.contact}") }
-                    // context.startActivity(intent)
-                },
-            ) {
+            IconButton(onClick = { callIntents.onCall(participant.contact) }) {
                 Icon(
                     painter = painterResource(Res.drawable.ic_call),
                     contentDescription = stringResource(Res.string.call_to_contact, participant.contact),
