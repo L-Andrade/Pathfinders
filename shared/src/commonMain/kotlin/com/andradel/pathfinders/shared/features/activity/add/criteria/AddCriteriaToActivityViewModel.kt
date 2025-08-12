@@ -25,8 +25,8 @@ class AddCriteriaToActivityViewModel(
 ) : ViewModel() {
     private val selection = MutableStateFlow(
         handle.toRoute<NavigationRoute.AddCriteriaToActivity>(
-            typeMap = mapOf(typeOf<List<ActivityCriteria>>() to customNavType<List<ActivityCriteria>>()),
-        ).criteria,
+            typeMap = mapOf(typeOf<SelectedCriteria>() to customNavType<SelectedCriteria>()),
+        ).selected.selection,
     )
 
     val state = combine(selection, dataSource.criteria) { selection, criteria ->

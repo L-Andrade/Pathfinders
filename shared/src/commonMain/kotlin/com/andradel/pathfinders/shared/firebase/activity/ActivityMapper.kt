@@ -12,7 +12,6 @@ import kotlinx.datetime.LocalDate
 import org.koin.core.annotation.Factory
 
 @Factory
-
 class ActivityMapper(
     private val criteriaMapper: ActivityCriteriaMapper,
     private val participantMapper: ParticipantMapper,

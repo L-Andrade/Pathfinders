@@ -1,8 +1,9 @@
 package com.andradel.pathfinders.shared.nav
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
+import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
+import com.andradel.pathfinders.shared.features.admin.archive.create.select.SelectedActivities
 import com.andradel.pathfinders.shared.model.activity.Activity
-import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.user.User
 import kotlinx.serialization.Serializable
@@ -34,17 +35,14 @@ sealed interface NavigationRoute {
     data class EvaluateActivity(val activity: Activity) : NavigationRoute
 
     @Serializable
-    data class AddCriteriaToActivity(val criteria: List<ActivityCriteria>) : NavigationRoute {
+    data class AddCriteriaToActivity(val selected: SelectedCriteria) : NavigationRoute {
         companion object {
             const val Result = "AddCriteriaToActivityResult"
         }
     }
 
     @Serializable
-    data class AddParticipantsToActivity(
-        val participants: List<Participant>,
-        val classes: List<ParticipantClass>,
-    ) : NavigationRoute {
+    data class AddParticipantsToActivity(val selected: SelectedParticipants) : NavigationRoute {
         companion object {
             const val Result = "AddParticipantsToActivityResult"
         }
@@ -66,7 +64,7 @@ sealed interface NavigationRoute {
     data object CreateArchive : NavigationRoute
 
     @Serializable
-    data class ArchiveSelectActivitiesManually(val activities: List<Activity>) : NavigationRoute {
+    data class ArchiveSelectActivitiesManually(val activities: SelectedActivities) : NavigationRoute {
         companion object {
             const val Result = "ArchiveSelectActivitiesManuallyResult"
         }

@@ -26,8 +26,8 @@ class ArchiveSelectActivitiesManuallyViewModel(
     private val dataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
     private val initialSelection = handle.toRoute<NavigationRoute.ArchiveSelectActivitiesManually>(
-        typeMap = mapOf(typeOf<List<Activity>>() to customNavType<List<Activity>>()),
-    ).activities
+        typeMap = mapOf(typeOf<SelectedActivities>() to customNavType<SelectedActivities>()),
+    ).activities.selected
     private val selection = MutableStateFlow(initialSelection.map { it.id }.toSet())
 
     private val _result = Channel<List<Activity>>()

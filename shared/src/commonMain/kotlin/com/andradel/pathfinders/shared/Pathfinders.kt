@@ -8,12 +8,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.andradel.pathfinders.shared.features.activity.add.AddEditActivityScreen
 import com.andradel.pathfinders.shared.features.activity.add.criteria.AddCriteriaToActivityScreen
+import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
 import com.andradel.pathfinders.shared.features.activity.add.participant.AddParticipantsToActivityScreen
+import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
 import com.andradel.pathfinders.shared.features.activity.evaluate.EvaluateActivityScreen
 import com.andradel.pathfinders.shared.features.activity.list.ActivityListScreen
 import com.andradel.pathfinders.shared.features.admin.AdminScreen
 import com.andradel.pathfinders.shared.features.admin.archive.ArchiveListScreen
 import com.andradel.pathfinders.shared.features.admin.archive.create.CreateArchiveScreen
+import com.andradel.pathfinders.shared.features.admin.archive.create.select.ArchiveSelectActivitiesManuallyScreen
+import com.andradel.pathfinders.shared.features.admin.archive.create.select.SelectedActivities
 import com.andradel.pathfinders.shared.features.admin.role.EditUserRoleScreen
 import com.andradel.pathfinders.shared.features.admin.users.AdminUserListScreen
 import com.andradel.pathfinders.shared.features.home.HomeScreen
@@ -21,9 +25,7 @@ import com.andradel.pathfinders.shared.features.participant.add.AddEditParticipa
 import com.andradel.pathfinders.shared.features.participant.list.ParticipantListScreen
 import com.andradel.pathfinders.shared.features.participant.profile.ParticipantProfileScreen
 import com.andradel.pathfinders.shared.features.reminders.RemindersScreen
-import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.activity.Activity
-import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.nav.customNavType
@@ -65,6 +67,7 @@ fun Pathfinders(
             composable<NavigationRoute.Reminders> {
                 RemindersScreen(navigator = navController)
             }
+            // TODO: When argument data gets too big, it crashes on iOS, probably need to pass IDs instead
             composable<NavigationRoute.AddEditActivity>(
                 typeMap = mapOf(typeOf<Activity?>() to customNavType<Activity?>(isNullableAllowed = true)),
             ) {
@@ -76,15 +79,12 @@ fun Pathfinders(
                 EvaluateActivityScreen(navigator = navController)
             }
             composable<NavigationRoute.AddCriteriaToActivity>(
-                typeMap = mapOf(typeOf<List<ActivityCriteria>>() to customNavType<List<ActivityCriteria>>()),
+                typeMap = mapOf(typeOf<SelectedCriteria>() to customNavType<SelectedCriteria>()),
             ) {
                 AddCriteriaToActivityScreen(navigator = navController)
             }
             composable<NavigationRoute.AddParticipantsToActivity>(
-                typeMap = mapOf(
-                    typeOf<List<Participant>>() to customNavType<List<Participant>>(),
-                    typeOf<List<ParticipantClass>>() to customNavType<List<ParticipantClass>>()
-                ),
+                typeMap = mapOf(typeOf<SelectedParticipants>() to customNavType<SelectedParticipants>()),
             ) {
                 AddParticipantsToActivityScreen(navigator = navController)
             }
@@ -105,11 +105,11 @@ fun Pathfinders(
             composable<NavigationRoute.CreateArchive> {
                 CreateArchiveScreen(navigator = navController)
             }
-            // composable<NavigationRoute.ArchiveSelectActivitiesManually>(
-            //     typeMap = mapOf(typeOf<List<Activity>>() to customNavType<List<Activity>>()),
-            // ) {
-            //     ArchiveSelectActivitiesManuallyScreen(navigator = navController)
-            // }
+            composable<NavigationRoute.ArchiveSelectActivitiesManually>(
+                typeMap = mapOf(typeOf<SelectedActivities>() to customNavType<SelectedActivities>()),
+            ) {
+                ArchiveSelectActivitiesManuallyScreen(navigator = navController)
+            }
         }
     }
 }

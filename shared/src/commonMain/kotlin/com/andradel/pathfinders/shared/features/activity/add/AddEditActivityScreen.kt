@@ -41,6 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
+import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
 import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.color
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
@@ -162,11 +164,13 @@ fun AddEditActivityScreen(
                 onSetAllSelected = viewModel::setAllSelected,
                 onSetClassSelected = viewModel::setClassSelected,
                 onSelectCriteria = {
-                    navigator.navigate(NavigationRoute.AddCriteriaToActivity(state.criteria))
+                    navigator.navigate(NavigationRoute.AddCriteriaToActivity(SelectedCriteria(state.criteria)))
                 },
                 onSelectParticipants = {
                     navigator.navigate(
-                        NavigationRoute.AddParticipantsToActivity(state.participants, state.classes),
+                        NavigationRoute.AddParticipantsToActivity(
+                            SelectedParticipants(state.participants, state.classes)
+                        ),
                     )
                 },
                 modifier = Modifier.weight(1f),

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.participant.ParticipantFirebaseDataSource
-import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.nav.customNavType
@@ -24,11 +23,8 @@ class AddParticipantsToActivityViewModel(
     dataSource: ParticipantFirebaseDataSource,
 ) : ViewModel() {
     private val route = handle.toRoute<NavigationRoute.AddParticipantsToActivity>(
-        typeMap = mapOf(
-            typeOf<List<Participant>>() to customNavType<List<Participant>>(),
-            typeOf<List<ParticipantClass>>() to customNavType<List<ParticipantClass>>(),
-        ),
-    )
+        typeMap = mapOf(typeOf<SelectedParticipants>() to customNavType<SelectedParticipants>()),
+    ).selected
     private val initialSelection = route.participants
     private val selection = MutableStateFlow(initialSelection)
     private val selectedClasses = route.classes
