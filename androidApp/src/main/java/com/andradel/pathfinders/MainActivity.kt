@@ -8,12 +8,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.andradel.pathfinders.shared.Pathfinders
 import com.andradel.pathfinders.shared.user.UserSession
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.messaging.messaging
 import kotlinx.coroutines.launch
@@ -21,6 +22,10 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
     private val userSession: UserSession by inject()
+
+    private val signInResultLauncher = registerForActivityResult(FirebaseAuthUIActivityResultContract()) {
+        userSession.updateUser()
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(RequestPermission()) { _ ->
         // If not granted, we can show something informing that notifications won't be received
@@ -43,7 +48,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
@@ -54,7 +58,17 @@ class MainActivity : ComponentActivity() {
             userSession.setUserToken(Firebase.messaging.getToken())
         }
         setContent {
-            Pathfinders()
+            Pathfinders(onSignInClick = { signInResultLauncher.launch(signInIntent) })
         }
+    }
+
+    companion object {
+        private val signInIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(
+                listOf(AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build()),
+            )
+            .setTheme(R.style.Theme_Pathfinders)
+            .build()
     }
 }

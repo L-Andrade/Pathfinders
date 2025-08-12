@@ -14,7 +14,6 @@ import com.andradel.pathfinders.shared.features.activity.list.ActivityListScreen
 import com.andradel.pathfinders.shared.features.admin.AdminScreen
 import com.andradel.pathfinders.shared.features.admin.archive.ArchiveListScreen
 import com.andradel.pathfinders.shared.features.admin.archive.create.CreateArchiveScreen
-import com.andradel.pathfinders.shared.features.admin.archive.create.select.ArchiveSelectActivitiesManuallyScreen
 import com.andradel.pathfinders.shared.features.admin.role.EditUserRoleScreen
 import com.andradel.pathfinders.shared.features.admin.users.AdminUserListScreen
 import com.andradel.pathfinders.shared.features.home.HomeScreen
@@ -33,7 +32,9 @@ import com.andradel.pathfinders.shared.user.User
 import kotlin.reflect.typeOf
 
 @Composable
-fun Pathfinders() {
+fun Pathfinders(
+    onSignInClick: () -> Unit,
+) {
     PathfindersTheme {
         val navController = rememberNavController()
         NavHost(
@@ -45,7 +46,7 @@ fun Pathfinders() {
             popExitTransition = { slideOutHorizontally { size -> size } },
         ) {
             composable<NavigationRoute.Home> {
-                HomeScreen(navigator = navController)
+                HomeScreen(onSignInClick = onSignInClick, navigator = navController)
             }
             composable<NavigationRoute.ActivityList> {
                 ActivityListScreen(navigator = navController)
@@ -104,11 +105,11 @@ fun Pathfinders() {
             composable<NavigationRoute.CreateArchive> {
                 CreateArchiveScreen(navigator = navController)
             }
-            composable<NavigationRoute.ArchiveSelectActivitiesManually>(
-                typeMap = mapOf(typeOf<List<Activity>>() to customNavType<List<Activity>>()),
-            ) {
-                ArchiveSelectActivitiesManuallyScreen(navigator = navController)
-            }
+            // composable<NavigationRoute.ArchiveSelectActivitiesManually>(
+            //     typeMap = mapOf(typeOf<List<Activity>>() to customNavType<List<Activity>>()),
+            // ) {
+            //     ArchiveSelectActivitiesManuallyScreen(navigator = navController)
+            // }
         }
     }
 }

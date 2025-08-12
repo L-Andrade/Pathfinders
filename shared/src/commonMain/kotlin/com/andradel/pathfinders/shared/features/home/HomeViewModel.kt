@@ -9,7 +9,6 @@ import com.andradel.pathfinders.shared.user.UserState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
@@ -30,14 +29,8 @@ class HomeViewModel(
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeState.Loading)
 
-    fun onSignInResult() {
-        updateUser()
-    }
-
     fun updateUser() {
-        viewModelScope.launch {
-            userSession.updateUser()
-        }
+        userSession.updateUser()
     }
 
     fun onSignOutClick() {

@@ -19,21 +19,21 @@ class UserSession(
     val userState = _userState.asStateFlow()
 
     init {
-        coroutineScope.launch {
-            updateUser()
-        }
+        updateUser()
     }
 
-    suspend fun updateUser() {
-        _userState.value = UserState.Loading
-        userFunctions.getUser().onSuccess { user ->
-            if (user != null) {
-                _userState.value = user
-            } else {
-                _userState.value = UserState.Guest
+    fun updateUser() {
+        coroutineScope.launch {
+            _userState.value = UserState.Loading
+            userFunctions.getUser().onSuccess { user ->
+                if (user != null) {
+                    _userState.value = user
+                } else {
+                    _userState.value = UserState.Guest
+                }
+            }.onFailure {
+                _userState.value = UserState.Error
             }
-        }.onFailure {
-            _userState.value = UserState.Error
         }
     }
 
