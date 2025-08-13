@@ -2,7 +2,6 @@ package com.andradel.pathfinders.shared.nav
 
 import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
 import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
-import com.andradel.pathfinders.shared.features.admin.archive.create.select.SelectedActivities
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.user.User
@@ -29,7 +28,7 @@ sealed interface NavigationRoute {
     data object Reminders : NavigationRoute
 
     @Serializable
-    data class AddEditActivity(val activity: Activity? = null) : NavigationRoute
+    data class AddEditActivity(val activityId: String? = null, val archiveName: String? = null) : NavigationRoute
 
     @Serializable
     data class EvaluateActivity(val activity: Activity) : NavigationRoute
@@ -64,7 +63,7 @@ sealed interface NavigationRoute {
     data object CreateArchive : NavigationRoute
 
     @Serializable
-    data class ArchiveSelectActivitiesManually(val activities: SelectedActivities) : NavigationRoute {
+    data class ArchiveSelectActivitiesManually(val activityIds: List<String>) : NavigationRoute {
         companion object {
             const val Result = "ArchiveSelectActivitiesManuallyResult"
         }

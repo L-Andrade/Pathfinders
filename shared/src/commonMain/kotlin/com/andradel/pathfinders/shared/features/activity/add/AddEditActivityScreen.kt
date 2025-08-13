@@ -22,8 +22,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -40,7 +42,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
 import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
 import com.andradel.pathfinders.shared.model.ParticipantClass
@@ -84,6 +88,7 @@ import pathfinders.shared.generated.resources.participant_list
 import pathfinders.shared.generated.resources.save
 import pathfinders.shared.generated.resources.select
 import pathfinders.shared.generated.resources.select_all
+import pathfinders.shared.generated.resources.try_again
 import pathfinders.shared.generated.resources.unselect_all
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -92,22 +97,35 @@ fun AddEditActivityScreen(
     navigator: NavController,
     viewModel: AddEditActivityViewModel = koinViewModel(),
 ) {
-    val selectionResult by navigator.collectNavResultAsState<List<Participant>>(
-        NavigationRoute.AddParticipantsToActivity.Result,
-    )
-    LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.setSelection(it) } }
-    val criteriaResult by navigator.collectNavResultAsState<List<ActivityCriteria>>(
-        NavigationRoute.AddCriteriaToActivity.Result,
-    )
-    LaunchedEffect(criteriaResult) { criteriaResult?.let { viewModel.setCriteriaSelection(it) } }
+    val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
+    val selectionResult by navigator.collectNavResultAsState<List<Participant>>(
+        NavigationRoute.AddParticipantsToActivity.Result,
+    )
+    val criteriaResult by navigator.collectNavResultAsState<List<ActivityCriteria>>(
+        NavigationRoute.AddCriteriaToActivity.Result,
+    )
     BackHandler {
         if (viewModel.isUnsaved) {
             showUnsavedDialog = true
         } else {
             navigator.navigateUp()
+        }
+    }
+    LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.setSelection(it) } }
+    LaunchedEffect(criteriaResult) { criteriaResult?.let { viewModel.setCriteriaSelection(it) } }
+    LaunchedEffect(key1 = Unit) {
+        lifecycleOwner.collectChannelFlow(viewModel.error) { result ->
+            val result = snackbarHostState.showSnackbar(
+                message = getString(Res.string.generic_error),
+                actionLabel = getString(Res.string.try_again),
+                duration = SnackbarDuration.Indefinite,
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                viewModel.loadActivity()
+            }
         }
     }
     Scaffold(
@@ -169,7 +187,7 @@ fun AddEditActivityScreen(
                 onSelectParticipants = {
                     navigator.navigate(
                         NavigationRoute.AddParticipantsToActivity(
-                            SelectedParticipants(state.participants, state.classes)
+                            SelectedParticipants(state.participants, state.classes),
                         ),
                     )
                 },

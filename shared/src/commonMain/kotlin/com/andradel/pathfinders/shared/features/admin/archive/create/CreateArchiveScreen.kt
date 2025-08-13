@@ -50,7 +50,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
-import com.andradel.pathfinders.shared.features.admin.archive.create.select.SelectedActivities
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.title
 import com.andradel.pathfinders.shared.nav.NavigationRoute
@@ -170,11 +169,7 @@ fun CreateArchiveScreen(navigator: NavController, viewModel: CreateArchiveViewMo
                         onSelectByDateRange = viewModel::selectByDateRange,
                         onSelectAll = viewModel::selectAll,
                         onSelectManually = {
-                            navigator.navigate(
-                                NavigationRoute.ArchiveSelectActivitiesManually(
-                                    SelectedActivities(viewModel.activities()),
-                                ),
-                            )
+                            navigator.navigate(NavigationRoute.ArchiveSelectActivitiesManually(viewModel.activities()))
                         },
                     )
                 }

@@ -163,7 +163,7 @@ class CreateArchiveViewModel(
         }
     }
 
-    fun activities(): List<Activity> = activities.value
+    fun activities(): List<String> = activities.value.map { it.id }
 
     private val List<Activity>.affectedParticipants: List<Participant>
         get() = flatMap { it.participants }.distinctBy { it.id }

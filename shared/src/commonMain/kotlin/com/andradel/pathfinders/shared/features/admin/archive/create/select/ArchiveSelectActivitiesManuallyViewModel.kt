@@ -7,7 +7,6 @@ import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,17 +17,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import kotlin.reflect.typeOf
 
 @KoinViewModel
 class ArchiveSelectActivitiesManuallyViewModel(
     handle: SavedStateHandle,
     private val dataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
-    private val initialSelection = handle.toRoute<NavigationRoute.ArchiveSelectActivitiesManually>(
-        typeMap = mapOf(typeOf<SelectedActivities>() to customNavType<SelectedActivities>()),
-    ).activities.selected
-    private val selection = MutableStateFlow(initialSelection.map { it.id }.toSet())
+    private val initialSelection = handle.toRoute<NavigationRoute.ArchiveSelectActivitiesManually>().activityIds
+    private val selection = MutableStateFlow(initialSelection.toSet())
 
     private val _result = Channel<List<Activity>>()
     val result = _result.receiveAsFlow()

@@ -20,11 +20,14 @@ import com.andradel.pathfinders.shared.validation.NameValidation
 import com.andradel.pathfinders.shared.validation.isValid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
@@ -41,18 +44,22 @@ class AddEditActivityViewModel(
     private val dataSource: ActivityFirebaseDataSource,
     private val nameValidation: NameValidation,
 ) : ViewModel() {
-    private val activity = handle.toRoute<NavigationRoute.AddEditActivity>(
+    private val route = handle.toRoute<NavigationRoute.AddEditActivity>(
         typeMap = mapOf(typeOf<Activity?>() to customNavType<Activity?>(isNullableAllowed = true)),
-    ).activity
-    private val isArchived = activity?.archiveName != null
+    )
+    private var activity: Activity? = null
+    private val isArchived = route.archiveName != null
 
-    private val participants = MutableStateFlow(activity?.participants.orEmpty())
-    private val criteria = MutableStateFlow(activity?.criteria.orEmpty())
-    private val classes = MutableStateFlow(activity?.classes.orEmpty())
-    private val name = MutableStateFlow(activity?.name.orEmpty())
-    private val date = MutableStateFlow(activity?.date)
+    private val participants = MutableStateFlow(emptyList<Participant>())
+    private val criteria = MutableStateFlow(emptyList<ActivityCriteria>())
+    private val classes = MutableStateFlow(emptyList<ParticipantClass>())
+    private val name = MutableStateFlow("")
+    private val date = MutableStateFlow<LocalDate?>(null)
     private val activityResult = MutableStateFlow<ActivityResult?>(null)
     private val createForEach = MutableStateFlow(false)
+
+    private val _error = Channel<Unit>()
+    val error = _error.receiveAsFlow()
 
     private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
@@ -83,9 +90,30 @@ class AddEditActivityViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())
 
-    val isEditing = activity != null && !isArchived
+    val isEditing = route.activityId != null && !isArchived
     val isUnsaved: Boolean
-        get() = activity == null || activity.toNewActivity() != state.value.toNewActivity()
+        get() = activity?.toNewActivity() != state.value.toNewActivity()
+
+    init {
+        loadActivity()
+    }
+
+    fun loadActivity() {
+        if (route.activityId != null) {
+            viewModelScope.launch {
+                dataSource.getActivity(route.activityId, route.archiveName).onSuccess { activity ->
+                    this@AddEditActivityViewModel.activity = activity
+                    participants.value = activity?.participants.orEmpty()
+                    criteria.value = activity?.criteria.orEmpty()
+                    classes.value = activity?.classes.orEmpty()
+                    name.value = activity?.name.orEmpty()
+                    date.value = activity?.date
+                }.onFailure {
+                    _error.send(Unit)
+                }
+            }
+        }
+    }
 
     fun addActivity() {
         activityResult.value = ActivityResult.Loading
@@ -101,7 +129,7 @@ class AddEditActivityViewModel(
                     activityResult.value = ActivityResult.Success
                 }
             } else {
-                dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = activity?.id).onSuccess {
+                dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = route.activityId).onSuccess {
                     activityResult.value = ActivityResult.Success
                 }.onFailure {
                     activityResult.value = ActivityResult.Failure
@@ -154,10 +182,10 @@ class AddEditActivityViewModel(
     }
 
     fun deleteActivity() {
-        if (activity != null) {
+        if (route.activityId != null) {
             activityResult.value = ActivityResult.Loading
             viewModelScope.launch {
-                dataSource.deleteActivity(activity.id).onSuccess {
+                dataSource.deleteActivity(route.activityId).onSuccess {
                     activityResult.value = ActivityResult.Success
                 }.onFailure {
                     activityResult.value = ActivityResult.Failure

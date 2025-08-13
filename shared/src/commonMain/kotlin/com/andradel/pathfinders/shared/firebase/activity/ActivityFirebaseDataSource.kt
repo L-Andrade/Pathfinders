@@ -37,6 +37,14 @@ class ActivityFirebaseDataSource(
             activities.filter { activity -> activity.participants.any { it.id == userId } }
         }
 
+    suspend fun getActivity(activityId: String, archiveName: String?): Result<Activity?> = runCatching {
+        val ref = activitiesRef(archiveName).child(activityId)
+        val firebaseActivity = ref.getValue<FirebaseActivity>()
+        val participants = participantsRef(archiveName).getValue<Map<String, FirebaseParticipant>>()
+        val criteria = criteriaRef(archiveName).getValue<Map<String, FirebaseActivityCriteria>>()
+        mapper.toActivities(mapOf(activityId to firebaseActivity), participants, criteria, archiveName).firstOrNull()
+    }.throwCancellation()
+
     suspend fun addOrUpdateActivity(activity: NewActivity, activityId: String?): Result<Unit> = runCatching {
         val ref = activitiesRef(null)
         val key = activityId ?: requireNotNull(ref.push().key)

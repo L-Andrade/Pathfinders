@@ -79,7 +79,9 @@ fun ActivityListScreen(navigator: NavController, viewModel: ActivityListViewMode
                         ActivityCard(
                             activity = activity,
                             canDelete = s.canDelete,
-                            onEditClick = { navigator.navigate(NavigationRoute.AddEditActivity(activity)) },
+                            onEditClick = {
+                                navigator.navigate(NavigationRoute.AddEditActivity(activity.id, activity.archiveName))
+                            },
                             onDeleteClick = { viewModel.deleteActivity(activity) },
                             onEvaluateClick = { navigator.navigate(NavigationRoute.EvaluateActivity(activity)) },
                             modifier = Modifier.padding(16.dp),

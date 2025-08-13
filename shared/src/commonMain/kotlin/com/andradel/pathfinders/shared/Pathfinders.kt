@@ -17,7 +17,6 @@ import com.andradel.pathfinders.shared.features.admin.AdminScreen
 import com.andradel.pathfinders.shared.features.admin.archive.ArchiveListScreen
 import com.andradel.pathfinders.shared.features.admin.archive.create.CreateArchiveScreen
 import com.andradel.pathfinders.shared.features.admin.archive.create.select.ArchiveSelectActivitiesManuallyScreen
-import com.andradel.pathfinders.shared.features.admin.archive.create.select.SelectedActivities
 import com.andradel.pathfinders.shared.features.admin.role.EditUserRoleScreen
 import com.andradel.pathfinders.shared.features.admin.users.AdminUserListScreen
 import com.andradel.pathfinders.shared.features.home.HomeScreen
@@ -67,10 +66,7 @@ fun Pathfinders(
             composable<NavigationRoute.Reminders> {
                 RemindersScreen(navigator = navController)
             }
-            // TODO: When argument data gets too big, it crashes on iOS, probably need to pass IDs instead
-            composable<NavigationRoute.AddEditActivity>(
-                typeMap = mapOf(typeOf<Activity?>() to customNavType<Activity?>(isNullableAllowed = true)),
-            ) {
+            composable<NavigationRoute.AddEditActivity> {
                 AddEditActivityScreen(navigator = navController)
             }
             composable<NavigationRoute.EvaluateActivity>(
@@ -105,9 +101,7 @@ fun Pathfinders(
             composable<NavigationRoute.CreateArchive> {
                 CreateArchiveScreen(navigator = navController)
             }
-            composable<NavigationRoute.ArchiveSelectActivitiesManually>(
-                typeMap = mapOf(typeOf<SelectedActivities>() to customNavType<SelectedActivities>()),
-            ) {
+            composable<NavigationRoute.ArchiveSelectActivitiesManually> {
                 ArchiveSelectActivitiesManuallyScreen(navigator = navController)
             }
         }
