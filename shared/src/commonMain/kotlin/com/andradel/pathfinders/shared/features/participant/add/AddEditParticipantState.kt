@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.features.participant.add
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.validation.ValidationResult
 
 data class AddEditParticipantState(

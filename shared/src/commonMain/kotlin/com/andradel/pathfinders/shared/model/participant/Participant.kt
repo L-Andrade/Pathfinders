@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.model.participant
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 

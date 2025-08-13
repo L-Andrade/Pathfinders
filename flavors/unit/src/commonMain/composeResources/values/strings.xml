@@ -8,4 +8,5 @@
     <string name="trinta_mais">UA6 - 30+</string>
     <string name="adolescentes">UA7 - Adolescentes</string>
     <string name="a_mais">UA8 - A+</string>
+    <string name="class_unknown">Unknown</string>
 </resources>

@@ -30,7 +30,6 @@
     <string name="no_participants_selected">No participants selected yet</string>
     <string name="no_criteria_selected">No criteria selected</string>
     <string name="choose_class">Choose a class</string>
-    <string name="invalid_class">Invalid class</string>
     <string name="classes">Classes</string>
     <string name="participant_number">%1$s participants</string>
     <string name="select_all">Select all</string>
@@ -124,7 +123,6 @@
     <string name="role">Role</string>
     <string name="call_to_contact">Call %1$s</string>
     <string name="create_activity_for_each_class">Create one activity for each selected class</string>
-    <string name="class_unknown">Unknown</string>
     <string name="archive_confirmation_title">You are creating an archive</string>
     <string name="archive_confirmation_description">The selected activities will be removed from the current timeline and will only be visible in this archive.\n\nAre you sure?</string>
     <string name="ticao">Tição</string>

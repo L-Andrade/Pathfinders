@@ -49,9 +49,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.model.activity.Activity
-import com.andradel.pathfinders.shared.model.title
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.nav.collectNavResultAsState
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog

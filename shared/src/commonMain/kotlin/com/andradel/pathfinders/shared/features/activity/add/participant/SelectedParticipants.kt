@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.features.activity.add.participant
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.participant.Participant
 import kotlinx.serialization.Serializable
 

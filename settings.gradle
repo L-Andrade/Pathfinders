@@ -28,3 +28,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Pathfinders"
 include ':androidApp'
 include ':shared'
+include ':flavors:pathfinders'
+include ':flavors:unit'

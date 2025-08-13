@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.shared.firebase.participant.ParticipantFirebaseDataSource
-import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.activity.participantPoints
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.nav.NavigationRoute

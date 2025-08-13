@@ -45,9 +45,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.andradel.pathfinders.shared.model.ParticipantClass
-import com.andradel.pathfinders.shared.model.color
-import com.andradel.pathfinders.shared.model.title
+import com.andradel.pathfinders.flavors.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.color
+import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.ui.fields.DatePickerField

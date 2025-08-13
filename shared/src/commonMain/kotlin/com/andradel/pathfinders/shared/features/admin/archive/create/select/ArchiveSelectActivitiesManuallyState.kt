@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.features.admin.archive.create.select
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 
 sealed interface ArchiveSelectActivitiesManuallyState {
     data object Loading : ArchiveSelectActivitiesManuallyState

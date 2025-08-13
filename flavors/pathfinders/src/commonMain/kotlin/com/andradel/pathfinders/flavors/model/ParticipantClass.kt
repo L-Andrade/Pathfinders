@@ -1,19 +1,18 @@
-package com.andradel.pathfinders.shared.model
+package com.andradel.pathfinders.flavors.model
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import org.jetbrains.compose.resources.stringResource
-import pathfinders.shared.generated.resources.Res
-import pathfinders.shared.generated.resources.class_unknown
-import pathfinders.shared.generated.resources.companheiro
-import pathfinders.shared.generated.resources.embaixador
-import pathfinders.shared.generated.resources.explorador
-import pathfinders.shared.generated.resources.invalid_class
-import pathfinders.shared.generated.resources.rebento
-import pathfinders.shared.generated.resources.ticao
+import pathfinders.flavors.pathfinders.generated.resources.Res
+import pathfinders.flavors.pathfinders.generated.resources.class_unknown
+import pathfinders.flavors.pathfinders.generated.resources.companheiro
+import pathfinders.flavors.pathfinders.generated.resources.embaixador
+import pathfinders.flavors.pathfinders.generated.resources.explorador
+import pathfinders.flavors.pathfinders.generated.resources.invalid_class
+import pathfinders.flavors.pathfinders.generated.resources.rebento
+import pathfinders.flavors.pathfinders.generated.resources.ticao
 
-// TODO: Flavours
 enum class ParticipantClass {
     Rebento,
     Ticao,

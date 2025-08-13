@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.user
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import kotlinx.serialization.Serializable
 
 @Serializable

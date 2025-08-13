@@ -41,12 +41,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import com.andradel.pathfinders.flavors.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.color
+import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.shared.features.admin.role.model.stringRes
-import com.andradel.pathfinders.shared.model.ParticipantClass
-import com.andradel.pathfinders.shared.model.color
-import com.andradel.pathfinders.shared.model.title
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource

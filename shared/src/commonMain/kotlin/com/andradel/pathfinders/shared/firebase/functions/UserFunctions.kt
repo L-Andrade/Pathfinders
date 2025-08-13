@@ -1,11 +1,11 @@
 package com.andradel.pathfinders.shared.firebase.functions
 
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.extensions.throwCancellation
 import com.andradel.pathfinders.shared.firebase.functions.model.FirebaseRoleRequest
 import com.andradel.pathfinders.shared.firebase.functions.model.FirebaseUser
 import com.andradel.pathfinders.shared.firebase.functions.model.Role
 import com.andradel.pathfinders.shared.firebase.toClass
-import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.user.User
 import com.andradel.pathfinders.shared.user.UserRole
 import dev.gitlive.firebase.Firebase

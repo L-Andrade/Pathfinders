@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.features.activity.add
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.validation.ValidationResult

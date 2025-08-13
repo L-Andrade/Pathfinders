@@ -31,7 +31,6 @@
     <string name="no_participants_selected">Não há participantes selecionados</string>
     <string name="no_criteria_selected">Não há critérios selecionados</string>
     <string name="choose_class">Escolha uma classe</string>
-    <string name="invalid_class">Classe inválida</string>
     <string name="classes">Classes</string>
     <string name="participant_number">%1$s participantes</string>
     <string name="select_all">Marcar todas</string>
@@ -133,12 +132,6 @@
     <string name="role">Permissões</string>
     <string name="call_to_contact">Ligar a %1$s</string>
     <string name="create_activity_for_each_class">Criar uma atividade para cada classe selecionada</string>
-    <string name="class_unknown">N/A</string>
     <string name="archive_confirmation_title">Está a criar um arquivo</string>
     <string name="archive_confirmation_description">As atividades selecionadas vão ser removidas da vista geral e só serão visíveis neste arquivo.\n\nTem a certeza?</string>
-    <string name="ticao">Tição</string>
-    <string name="rebento">Rebento</string>
-    <string name="explorador">Explorador</string>
-    <string name="companheiro">Companheiro</string>
-    <string name="embaixador">Embaixador</string>
 </resources>

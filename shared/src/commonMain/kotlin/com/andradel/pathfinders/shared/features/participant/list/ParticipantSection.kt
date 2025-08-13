@@ -1,6 +1,6 @@
 package com.andradel.pathfinders.shared.features.participant.list
 
-import com.andradel.pathfinders.shared.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 
 data class ParticipantSection(
     val participantClass: ParticipantClass,

@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.shared.firebase.functions.UserFunctions
-import com.andradel.pathfinders.shared.model.ParticipantClass
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.nav.customNavType
 import com.andradel.pathfinders.shared.user.User

@@ -47,10 +47,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.andradel.pathfinders.shared.model.ParticipantClass
-import com.andradel.pathfinders.shared.model.color
+import com.andradel.pathfinders.flavors.model.ParticipantClass
+import com.andradel.pathfinders.flavors.model.color
+import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.model.title
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon

@@ -13,6 +13,8 @@ plugins {
     alias(libs.plugins.kotlin.cocoapods)
 }
 
+val flavor: String by project
+
 kotlin {
     // Target declarations - add or remove as needed below. These define
     // which platforms this KMP module supports.
@@ -105,6 +107,8 @@ kotlin {
                 implementation(libs.compose.navigation)
 
                 implementation(libs.lottie.kmp)
+
+                implementation(project(":flavors:$flavor"))
 
                 // Compose
                 implementation(compose.runtime)

@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
-import com.andradel.pathfinders.shared.model.title
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.nav.navigateBackWithResult
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
