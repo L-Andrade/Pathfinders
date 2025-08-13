@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
             .setAvailableProviders(
                 listOf(AuthUI.IdpConfig.EmailBuilder().build(), AuthUI.IdpConfig.GoogleBuilder().build()),
             )
-            .setTheme(R.style.Theme_Pathfinders)
+            .setTheme(R.style.Theme_Pathfinders_Firebase)
             .build()
     }
 }
