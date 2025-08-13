@@ -91,7 +91,6 @@ dependencies {
     implementation libs.compose.ui.preview
     debugImplementation libs.compose.ui.manifest
 
-    // Firebase for theming, TODO: clean up
     implementation(platform(libs.firebase.bom))
     implementation libs.firebase.ui.auth
     implementation libs.firebase.auth
