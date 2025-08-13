@@ -52,7 +52,7 @@ google-services = { module = "com.google.gms:google-services", version = "4.4.3"
 junit = { module = "junit:junit", version = "4.13.2" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.7.1-0.6.x-compat" }
-lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.6.7" }
+lottie-kmp = { module = "io.github.alexzhirkevich:compottie", version = "2.0.0-rc04" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }

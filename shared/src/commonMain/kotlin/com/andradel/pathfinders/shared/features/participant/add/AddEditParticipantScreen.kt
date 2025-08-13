@@ -3,6 +3,7 @@ package com.andradel.pathfinders.shared.features.participant.add
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -51,6 +53,12 @@ import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.ui.fields.DatePickerField
 import com.andradel.pathfinders.shared.validation.errorMessage
 import com.andradel.pathfinders.shared.validation.isError
+import io.github.alexzhirkevich.compottie.ExperimentalCompottieApi
+import io.github.alexzhirkevich.compottie.LottieCompositionSpec
+import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
+import io.github.alexzhirkevich.compottie.dynamic.rememberLottieDynamicProperties
+import io.github.alexzhirkevich.compottie.rememberLottieComposition
+import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -71,7 +79,7 @@ import pathfinders.shared.generated.resources.save
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditParticipantViewModel = koinViewModel(),) {
+fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditParticipantViewModel = koinViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     Scaffold(
@@ -125,6 +133,7 @@ fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditPartici
                         start = !transition.isRunning,
                         color = state.participantClass?.color,
                         onEnd = viewModel::addParticipant,
+                        modifier = Modifier.size(60.dp),
                     )
                 }
                 if (loading) {
@@ -136,33 +145,33 @@ fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditPartici
 }
 
 @Composable
+@OptIn(ExperimentalCompottieApi::class)
 private fun CandleAnimation(start: Boolean, color: Color?, onEnd: () -> Unit, modifier: Modifier = Modifier) {
-    // val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim_candle))
-    // val compState by animateLottieCompositionAsState(composition, isPlaying = start)
-    // val dynamicProperties = rememberLottieDynamicProperties(
-    //     rememberLottieDynamicProperty(
-    //         property = LottieProperty.COLOR_FILTER,
-    //         value = SimpleColorFilter((color ?: MaterialTheme.colorScheme.primary).toArgb()),
-    //         keyPath = arrayOf("surface31887", "surface31887", "meltedCandleColor", "**"),
-    //     ),
-    //     rememberLottieDynamicProperty(
-    //         property = LottieProperty.COLOR_FILTER,
-    //         value = SimpleColorFilter((color ?: MaterialTheme.colorScheme.primary).toArgb()),
-    //         keyPath = arrayOf("surface31887", "surface31887", "candleColor", "**"),
-    //     ),
-    // )
-    // LottieAnimation(
-    //     composition,
-    //     progress = { compState },
-    //     contentScale = ContentScale.FillWidth,
-    //     dynamicProperties = dynamicProperties,
-    //     modifier = modifier,
-    // )
-    // if (compState == 1f) {
-    //     LaunchedEffect(key1 = compState) {
-    //         onEnd()
-    //     }
-    // }
+    val color = color ?: MaterialTheme.colorScheme.primary
+    val composition by rememberLottieComposition {
+        LottieCompositionSpec.JsonString(Res.readBytes("files/anim_candle.json").decodeToString())
+    }
+    val compState by animateLottieCompositionAsState(composition, isPlaying = start)
+    // Dynamic properties are not changing colors correctly for some reason
+    val dynamicProperties = rememberLottieDynamicProperties {
+        layer("surface31887") {
+            shapeLayer("surface31887") {
+                fill("meltedCandleColor", "**") { color { color } }
+                fill("candleColor", "**") { color { color } }
+            }
+        }
+    }
+    Image(
+        painter = rememberLottiePainter(composition, progress = { compState }, dynamicProperties = dynamicProperties),
+        contentDescription = null,
+        modifier = modifier,
+        contentScale = ContentScale.FillWidth,
+    )
+    if (compState == 1f) {
+        LaunchedEffect(key1 = compState) {
+            onEnd()
+        }
+    }
 }
 
 @Composable

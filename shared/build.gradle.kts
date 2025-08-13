@@ -102,8 +102,7 @@ kotlin {
                 // Nav
                 implementation(libs.compose.navigation)
 
-                // TODO?
-                // implementation(libs.lottie.compose)
+                implementation(libs.lottie.kmp)
 
                 // Compose
                 implementation(compose.runtime)
