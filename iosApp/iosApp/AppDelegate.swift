@@ -21,7 +21,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, FUIAuthDelegate {
         let actionCodeSettings = ActionCodeSettings()
         actionCodeSettings.handleCodeInApp = true
         let authUI = FUIAuth.defaultAuthUI()!
-        let provider = FUIEmailAuth(authAuthUI: authUI,signInMethod: EmailLinkAuthSignInMethod,forceSameDevice: false,allowNewEmailAccounts: true,actionCodeSetting: actionCodeSettings)
+        let provider = FUIEmailAuth(authAuthUI: authUI,signInMethod: EmailPasswordAuthSignInMethod,forceSameDevice: false,allowNewEmailAccounts: true,actionCodeSetting: actionCodeSettings)
         authUI.providers = [provider, FUIGoogleAuth.init(authUI: authUI)]
         authUI.delegate = self
         return true
