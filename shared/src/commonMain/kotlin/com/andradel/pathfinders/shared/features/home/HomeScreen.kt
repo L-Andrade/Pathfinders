@@ -35,18 +35,19 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import pathfinders.flavors.unit.generated.resources.ic_app_logo
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.activity_list
 import pathfinders.shared.generated.resources.admin_screen
 import pathfinders.shared.generated.resources.generic_error
 import pathfinders.shared.generated.resources.ic_chevron_right
-import pathfinders.shared.generated.resources.ic_warning
 import pathfinders.shared.generated.resources.participant_list
 import pathfinders.shared.generated.resources.reminders_screen
 import pathfinders.shared.generated.resources.sign_in
 import pathfinders.shared.generated.resources.sign_out
 import pathfinders.shared.generated.resources.try_again
 import pathfinders.shared.generated.resources.user_participant_profile
+import pathfinders.flavors.unit.generated.resources.Res as FlavorRes
 
 @Composable
 fun HomeScreen(onSignInClick: () -> Unit, navigator: NavController, viewModel: HomeViewModel = koinViewModel()) {
@@ -110,8 +111,7 @@ private fun Loading() {
 @Composable
 private fun PathfindersImage(modifier: Modifier = Modifier) {
     Image(
-        // TODO: Get logo
-        painter = painterResource(Res.drawable.ic_warning),
+        painter = painterResource(FlavorRes.drawable.ic_app_logo),
         modifier = modifier,
         contentDescription = null,
         contentScale = ContentScale.Fit,
