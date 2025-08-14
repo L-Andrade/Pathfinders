@@ -6,6 +6,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import com.andradel.pathfinders.flavors.colors.darkColorPalette
+import com.andradel.pathfinders.flavors.colors.lightColorPalette
 
 @Composable
 actual fun colorScheme(darkTheme: Boolean): ColorScheme {

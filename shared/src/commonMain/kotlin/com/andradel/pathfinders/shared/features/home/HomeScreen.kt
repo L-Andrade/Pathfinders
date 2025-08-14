@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.andradel.pathfinders.flavors.drawables.Drawables
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.user.UserRole
@@ -35,7 +36,6 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import pathfinders.flavors.unit.generated.resources.ic_app_logo
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.activity_list
 import pathfinders.shared.generated.resources.admin_screen
@@ -47,7 +47,6 @@ import pathfinders.shared.generated.resources.sign_in
 import pathfinders.shared.generated.resources.sign_out
 import pathfinders.shared.generated.resources.try_again
 import pathfinders.shared.generated.resources.user_participant_profile
-import pathfinders.flavors.unit.generated.resources.Res as FlavorRes
 
 @Composable
 fun HomeScreen(onSignInClick: () -> Unit, navigator: NavController, viewModel: HomeViewModel = koinViewModel()) {
@@ -111,7 +110,7 @@ private fun Loading() {
 @Composable
 private fun PathfindersImage(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(FlavorRes.drawable.ic_app_logo),
+        painter = painterResource(Drawables.appLogo),
         modifier = modifier,
         contentDescription = null,
         contentScale = ContentScale.Fit,
