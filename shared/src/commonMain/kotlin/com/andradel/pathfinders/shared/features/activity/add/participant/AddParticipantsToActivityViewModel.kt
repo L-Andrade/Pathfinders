@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.update
 import org.koin.android.annotation.KoinViewModel
 import kotlin.reflect.typeOf
 
-
 @KoinViewModel
 class AddParticipantsToActivityViewModel(
     handle: SavedStateHandle,

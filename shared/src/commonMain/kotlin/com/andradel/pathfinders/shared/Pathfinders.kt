@@ -33,9 +33,7 @@ import com.andradel.pathfinders.shared.user.User
 import kotlin.reflect.typeOf
 
 @Composable
-fun Pathfinders(
-    onSignInClick: () -> Unit,
-) {
+fun Pathfinders(onSignInClick: () -> Unit) {
     PathfindersTheme {
         val navController = rememberNavController()
         NavHost(

@@ -9,11 +9,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
-class ArchiveListViewModel(
-    private val dataSource: ArchiveFirebaseDataSource,
-) : ViewModel() {
+class ArchiveListViewModel(private val dataSource: ArchiveFirebaseDataSource) : ViewModel() {
     val state = dataSource.archive.map { archives ->
         ArchiveListState.Archives(
             archives.map { archive ->

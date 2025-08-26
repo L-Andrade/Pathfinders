@@ -21,14 +21,13 @@ import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import kotlin.reflect.typeOf
 
-
 @KoinViewModel
 class EditUserRoleViewModel(
     handle: SavedStateHandle,
     private val userFunctions: UserFunctions,
 ) : ViewModel() {
     private val user = handle.toRoute<NavigationRoute.EditUserRole>(
-        typeMap = mapOf(typeOf<User>() to customNavType<User>())
+        typeMap = mapOf(typeOf<User>() to customNavType<User>()),
     ).user
 
     private val role = MutableStateFlow(user.role.toEditable())

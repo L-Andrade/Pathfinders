@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 class ActivityListViewModel(
     handle: SavedStateHandle,

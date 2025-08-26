@@ -15,7 +15,7 @@ actual fun rememberCallIntents(): CallIntents {
 
 actual class CallIntents(private val context: Context) {
     actual fun onCall(phoneNumber: String) {
-        val intent = Intent(Intent.ACTION_DIAL).apply { data = "tel:${phoneNumber}".toUri() }
+        val intent = Intent(Intent.ACTION_DIAL).apply { data = "tel:$phoneNumber".toUri() }
         context.startActivity(intent)
     }
 }

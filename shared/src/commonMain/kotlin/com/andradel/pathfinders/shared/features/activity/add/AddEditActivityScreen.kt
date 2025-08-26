@@ -93,10 +93,7 @@ import pathfinders.shared.generated.resources.unselect_all
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddEditActivityScreen(
-    navigator: NavController,
-    viewModel: AddEditActivityViewModel = koinViewModel(),
-) {
+fun AddEditActivityScreen(navigator: NavController, viewModel: AddEditActivityViewModel = koinViewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()

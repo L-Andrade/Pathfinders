@@ -31,7 +31,7 @@ class RemindersViewModel(
     private val birthdayInterval = run {
         val sevenDaysAgo = now.minus(7.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
         val fourteenDaysAfter = now.plus(14.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
-        sevenDaysAgo .. fourteenDaysAfter
+        sevenDaysAgo..fourteenDaysAfter
     }
     private val lastActivityInterval = run {
         val twentyDaysAgo = now.plus(20.days).toLocalDateTime(TimeZone.currentSystemDefault()).date

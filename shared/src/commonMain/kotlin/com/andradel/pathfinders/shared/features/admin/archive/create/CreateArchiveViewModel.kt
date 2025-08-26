@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
 class CreateArchiveViewModel(
     private val dataSource: ArchiveFirebaseDataSource,

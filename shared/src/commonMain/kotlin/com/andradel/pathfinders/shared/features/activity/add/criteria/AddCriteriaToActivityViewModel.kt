@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import kotlin.reflect.typeOf
 
-
 @KoinViewModel
 class AddCriteriaToActivityViewModel(
     handle: SavedStateHandle,

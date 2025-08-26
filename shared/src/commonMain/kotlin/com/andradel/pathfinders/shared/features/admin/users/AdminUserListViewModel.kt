@@ -12,11 +12,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
-
 @KoinViewModel
-class AdminUserListViewModel(
-    private val userFunctions: UserFunctions,
-) : ViewModel() {
+class AdminUserListViewModel(private val userFunctions: UserFunctions) : ViewModel() {
     private val users = MutableSharedFlow<Result<List<User>>>()
     private val loading = MutableStateFlow(false)
     val state = combine(users, loading) { result, loading ->

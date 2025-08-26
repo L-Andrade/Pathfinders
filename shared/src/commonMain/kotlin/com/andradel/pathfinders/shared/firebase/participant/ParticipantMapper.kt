@@ -7,7 +7,6 @@ import kotlinx.datetime.LocalDate
 import org.koin.core.annotation.Factory
 
 @Factory
-
 class ParticipantMapper() {
     fun toParticipant(id: String, fbParticipant: FirebaseParticipant, archiveName: String?): Participant {
         return Participant(

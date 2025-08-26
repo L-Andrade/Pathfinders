@@ -35,10 +35,7 @@ import pathfinders.shared.generated.resources.participant_score
 import pathfinders.shared.generated.resources.user_no_activities
 
 @Composable
-fun ParticipantProfileScreen(
-    navigator: NavController,
-    viewModel: ParticipantProfileViewModel = koinViewModel(),
-) {
+fun ParticipantProfileScreen(navigator: NavController, viewModel: ParticipantProfileViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {

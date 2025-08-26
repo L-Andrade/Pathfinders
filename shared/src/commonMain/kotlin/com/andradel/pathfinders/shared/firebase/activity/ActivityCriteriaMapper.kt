@@ -4,7 +4,7 @@ import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import org.koin.core.annotation.Factory
 
 @Factory
-class ActivityCriteriaMapper{
+class ActivityCriteriaMapper {
     fun toCriteria(key: String, value: FirebaseActivityCriteria): ActivityCriteria {
         return ActivityCriteria(key, value.name, value.maxScore)
     }

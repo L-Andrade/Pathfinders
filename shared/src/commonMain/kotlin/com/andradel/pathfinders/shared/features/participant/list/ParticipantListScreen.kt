@@ -229,11 +229,15 @@ private fun SortingFab(
                     ) {
                         Row(modifier = Modifier.padding(8.dp), verticalAlignment = CenterVertically) {
                             val (label, icon) = when (sort) {
-                                ParticipantSort.PointsAsc -> Res.string.participant_sort_points to Res.drawable.ic_arrow_up
+                                ParticipantSort.PointsAsc ->
+                                    Res.string.participant_sort_points to Res.drawable.ic_arrow_up
+
                                 ParticipantSort.PointsDesc ->
                                     Res.string.participant_sort_points to Res.drawable.ic_arrow_down
+
                                 ParticipantSort.NameAsc -> Res.string.participant_sort_name to Res.drawable.ic_arrow_up
-                                ParticipantSort.NameDesc -> Res.string.participant_sort_name to Res.drawable.ic_arrow_down
+                                ParticipantSort.NameDesc ->
+                                    Res.string.participant_sort_name to Res.drawable.ic_arrow_down
                             }
                             Text(
                                 text = stringResource(label),

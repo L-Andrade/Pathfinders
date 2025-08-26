@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.stateIn
 import org.koin.android.annotation.KoinViewModel
 import kotlin.reflect.typeOf
 
-
 @KoinViewModel
 class ParticipantProfileViewModel(
     handle: SavedStateHandle,
