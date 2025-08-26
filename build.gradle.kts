@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.kotlin.android).apply(false)
     alias(libs.plugins.google.ksp).apply(false)
     alias(libs.plugins.kotlin.serialization).apply(false)
-    id("org.jlleitschuh.gradle.ktlint").version("12.1.1")
+    id("org.jlleitschuh.gradle.ktlint").version("13.1.0")
     alias(libs.plugins.compose.compiler).apply(false)
     alias(libs.plugins.kotlin.multiplatform).apply(false)
     alias(libs.plugins.android.kotlin.multiplatform.library).apply(false)
@@ -27,11 +27,5 @@ subprojects {
         verbose = true
         outputToConsole = true
         outputColorName = "RED"
-        filter {
-            exclude { element ->
-                val path = element.file.path
-                path.contains("\\generated\\") || path.contains("/generated/")
-            }
-        }
     }
 }

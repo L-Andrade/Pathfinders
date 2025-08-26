@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.1"
+agp = "8.12.1"
 compose-bom = "2025.07.00"
 firebase-bom = "33.8.0"
 koin = "4.1.0"

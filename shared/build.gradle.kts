@@ -179,10 +179,11 @@ dependencies {
 }
 
 project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if(name != "kspCommonMainKotlinMetadata") {
+    if (name != "kspCommonMainKotlinMetadata") {
         dependsOn("kspCommonMainKotlinMetadata")
     }
 }
+project.tasks.findByName("runKtlintCheckOverCommonMainSourceSet")?.dependsOn("kspCommonMainKotlinMetadata")
 
 compose.resources {
     publicResClass = true
