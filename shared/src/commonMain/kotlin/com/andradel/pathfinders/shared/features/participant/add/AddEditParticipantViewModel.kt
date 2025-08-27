@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 import org.koin.android.annotation.KoinViewModel
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.email_already_exists
@@ -54,7 +54,7 @@ class AddEditParticipantViewModel(
     private val participantResult = MutableStateFlow<ParticipantResult?>(null)
     private val participantClass = MutableStateFlow(participant?.participantClass)
 
-    private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    private val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     val isEditing = participant != null
 
@@ -68,7 +68,7 @@ class AddEditParticipantViewModel(
             email = email,
             contact = contact,
             birthdayRepresentation = birthday?.toString(),
-            birthday = (birthday ?: today.date).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
+            birthday = (birthday ?: today).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             nameValidation = nameResult,
             emailValidation = emailResult,
             // Always valid contact for now. Not sure if we want to validate this field at the moment

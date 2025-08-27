@@ -39,9 +39,9 @@ class ActivityFirebaseDataSource(
 
     suspend fun getActivity(activityId: String, archiveName: String?): Result<Activity?> = runCatching {
         val ref = activitiesRef(archiveName).child(activityId)
-        val firebaseActivity = ref.getValue<FirebaseActivity>()
-        val participants = participantsRef(archiveName).getValue<Map<String, FirebaseParticipant>>()
-        val criteria = criteriaRef(archiveName).getValue<Map<String, FirebaseActivityCriteria>>()
+        val firebaseActivity = ref.getValue<FirebaseActivity>() ?: return@runCatching null
+        val participants = participantsRef(archiveName).getValue<Map<String, FirebaseParticipant>>().orEmpty()
+        val criteria = criteriaRef(archiveName).getValue<Map<String, FirebaseActivityCriteria>>().orEmpty()
         mapper.toActivities(mapOf(activityId to firebaseActivity), participants, criteria, archiveName).firstOrNull()
     }.throwCancellation()
 
@@ -55,7 +55,7 @@ class ActivityFirebaseDataSource(
     suspend fun updateScores(activityId: String, scores: ParticipantScores): Result<Unit> = runCatching {
         val ref = activitiesRef(null)
         val activity = ref.child(activityId).getValue<FirebaseActivity>()
-        ref.child(activityId).setValue(activity.copy(scores = scores))
+        ref.child(activityId).setValue(activity?.copy(scores = scores))
     }.throwCancellation()
 
     suspend fun deleteActivity(activityId: String): Result<Unit> = runCatching {

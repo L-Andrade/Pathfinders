@@ -4,6 +4,7 @@ import dev.gitlive.firebase.database.DataSnapshot
 import dev.gitlive.firebase.database.DatabaseReference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
 
@@ -25,7 +26,8 @@ suspend inline fun <reified T> DatabaseReference.getMap(): Map<String, T> = valu
 
 suspend fun DatabaseReference.exists(): Boolean = valueEvents.first().exists
 
-suspend inline fun <reified T> DatabaseReference.getValue(): T = withTimeout(5_000L) { valueEvents.first().value() }
+suspend inline fun <reified T> DatabaseReference.getValue(timeoutMillis: Long = 5_000L): T? =
+    withTimeout(timeoutMillis) { valueEvents.firstOrNull()?.value() }
 
 fun DatabaseReference.archiveChild(archiveName: String?, child: String): DatabaseReference =
     if (archiveName != null) child("archive/$archiveName/$child") else child(child)

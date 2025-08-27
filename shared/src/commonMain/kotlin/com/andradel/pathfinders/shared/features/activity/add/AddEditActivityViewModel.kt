@@ -30,7 +30,7 @@ import kotlinx.coroutines.supervisorScope
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 import org.koin.android.annotation.KoinViewModel
 import kotlin.reflect.typeOf
 import kotlin.time.Clock
@@ -61,7 +61,7 @@ class AddEditActivityViewModel(
     private val _error = Channel<Unit>()
     val error = _error.receiveAsFlow()
 
-    private val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    private val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
     val state = combine(
         name,
@@ -78,7 +78,7 @@ class AddEditActivityViewModel(
             name = name,
             nameValidation = nameValidation,
             dateRepresentation = date?.toString(),
-            date = (date ?: today.date).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
+            date = (date ?: today).atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
             classes = classes,
             participants = participants,
             criteria = criteria,

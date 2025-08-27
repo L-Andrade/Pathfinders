@@ -9,15 +9,17 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
 import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
 import org.koin.android.annotation.KoinViewModel
 import kotlin.time.Clock
-import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -26,17 +28,9 @@ class RemindersViewModel(
     participantDataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
-    private val now = Clock.System.now()
-    private val today = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
-    private val birthdayInterval = run {
-        val sevenDaysAgo = now.minus(7.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
-        val fourteenDaysAfter = now.plus(14.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
-        sevenDaysAgo..fourteenDaysAfter
-    }
-    private val lastActivityInterval = run {
-        val twentyDaysAgo = now.plus(20.days).toLocalDateTime(TimeZone.currentSystemDefault()).date
-        twentyDaysAgo..today
-    }
+    private val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    private val birthdayInterval = today.minus(7, DateTimeUnit.DAY)..today.plus(14, DateTimeUnit.DAY)
+    private val lastActivityInterval = today.minus(20, DateTimeUnit.DAY)..today
 
     private val dayMonthFormatter = LocalDate.Format {
         day()
