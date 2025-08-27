@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="remanescente">UA1 - Remanescente</string>
+    <string name="mensageiros">UA2 - Mensageiros</string>
+    <string name="discipulos">UA3 - Discípulos</string>
+    <string name="unidos_em_cristo">UA4 - Unidos em Cristo</string>
+    <string name="agape">UA5 - Agape</string>
+    <string name="trinta_mais">UA6 - 30+</string>
+    <string name="adolescentes">UA7 - Adolescentes</string>
+    <string name="a_mais">UA8 - A+</string>
+    <string name="class_unknown">N/A</string>
+</resources>

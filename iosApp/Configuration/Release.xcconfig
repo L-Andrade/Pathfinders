@@ -1,0 +1,10 @@
+#include "Version.xcconfig"
+
+TEAM_ID=
+
+BUNDLE_ID=com.andradel.pathfinders
+APP_NAME=Pathfinders
+PRODUCT_NAME=Pathfinders
+PRODUCT_BUNDLE_IDENTIFIER=com.andradel.pathfinders$(TEAM_ID)
+
+GOOGLE_SERVICE=$(SRCROOT)/Firebase/GoogleService-Info-Production.plist

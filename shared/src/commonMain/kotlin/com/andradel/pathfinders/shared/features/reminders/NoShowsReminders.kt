@@ -1,0 +1,12 @@
+package com.andradel.pathfinders.shared.features.reminders
+
+data class NoShowsReminders(
+    val noShows: List<ParticipantNoShow>,
+)
+
+data class ParticipantNoShow(
+    val id: String,
+    val name: String,
+    val contact: String?,
+    val daysSince: Int,
+)

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   version = "1.7">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <PreActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "exec &gt; &quot;${PROJECT_DIR}/prebuild.log&quot; 2&gt;&amp;1&#10;set -o pipefail&#10;set -e&#10;&#10;PROJECT_DIR=$(dirname -- &quot;$PROJECT_FILE_PATH&quot;)&#10;PROJECT_NAME=$(basename &quot;$PROJECT_FILE_PATH&quot; .xcodeproj)&#10;cd $PROJECT_DIR&#10;cd ..&#10;VERSION_PROPS_FILE=&quot;gradle.properties&quot;&#10;&#10;echo $VERSION_PROPS_FILE &#10;&#10;VERSION_CODE=$(grep projectVersionCode $VERSION_PROPS_FILE | cut -d&apos;=&apos; -f2)&#10;VERSION_NAME=$(grep projectVersionName $VERSION_PROPS_FILE | cut -d&apos;=&apos; -f2)&#10;&#10;echo &quot;Variables: $VERSION_NAME &amp; $VERSION_CODE&quot;&#10;&#10;cat &gt; &quot;${PROJECT_DIR}/Configuration/Version.xcconfig&quot;&lt;&lt; EOF&#10;CURRENT_PROJECT_VERSION=$VERSION_CODE&#10;MARKETING_VERSION=$VERSION_NAME&#10;EOF&#10;&#10;echo &quot;Updated version name and code to $VERSION_NAME &amp; $VERSION_CODE at ${PROJECT_DIR}/${PROJECT_NAME}/Configuration/Version.xcconfig&quot;&#10;">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "B9DA97B02DC1472C00A4DA20"
+                     BuildableName = "Pathfinders Debug.app"
+                     BlueprintName = "iosApp"
+                     ReferencedContainer = "container:iosApp.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B9DA97B02DC1472C00A4DA20"
+               BuildableName = "Pathfinders Debug.app"
+               BlueprintName = "iosApp"
+               ReferencedContainer = "container:iosApp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "UnitRelease"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "B9DA97B02DC1472C00A4DA20"
+            BuildableName = "Pathfinders Debug.app"
+            BlueprintName = "iosApp"
+            ReferencedContainer = "container:iosApp.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
