@@ -15,7 +15,7 @@ class ResultStore {
 
     val resultStateMap: MutableMap<String, MutableState<Any?>> = mutableStateMapOf()
 
-    inline fun <reified T: Any> getResultState(resultKey: String = T::class.toString()): T? =
+    inline fun <reified T : Any> getResultState(resultKey: String = T::class.toString()): T? =
         resultStateMap[resultKey]?.value as? T
 
     inline fun <reified T> setResult(resultKey: String = T::class.toString(), result: T) {
@@ -26,7 +26,7 @@ class ResultStore {
         resultStateMap.remove(resultKey)
     }
 
-    inline fun <reified T: Any> getResultStateAndRemove(resultKey: String = T::class.toString()): T? {
+    inline fun <reified T : Any> getResultStateAndRemove(resultKey: String = T::class.toString()): T? {
         return (resultStateMap[resultKey]?.value as? T).also { removeResult<T>(resultKey) }
     }
 }
