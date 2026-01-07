@@ -1,12 +1,9 @@
 package com.andradel.pathfinders.shared.features.activity.list
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.shared.model.activity.Activity
-import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.user.UserRole
 import com.andradel.pathfinders.shared.user.UserSession
 import com.andradel.pathfinders.shared.user.role
@@ -15,14 +12,14 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class ActivityListViewModel(
-    handle: SavedStateHandle,
+    @InjectedParam private val archiveName: String?,
     private val dataSource: ActivityFirebaseDataSource,
     userSession: UserSession,
 ) : ViewModel() {
-    private val archiveName = handle.toRoute<NavigationRoute.ActivityList>().archiveName
 
     val state = combine(dataSource.activities(archiveName), userSession.role) { activities, role ->
         ActivityListState.Loaded(

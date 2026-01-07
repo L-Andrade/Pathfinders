@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
@@ -30,33 +35,40 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.activity_list
 import pathfinders.shared.generated.resources.add_activity
 import pathfinders.shared.generated.resources.delete
 import pathfinders.shared.generated.resources.delete_confirmation
 import pathfinders.shared.generated.resources.evaluate_activity
+import pathfinders.shared.generated.resources.evaluate_activity_by_team
+import pathfinders.shared.generated.resources.evaluate_activity_individually
 import pathfinders.shared.generated.resources.ic_delete
 import pathfinders.shared.generated.resources.ic_evaluate
 import pathfinders.shared.generated.resources.participant_number
 
 @Composable
-fun ActivityListScreen(navigator: NavController, viewModel: ActivityListViewModel = koinViewModel()) {
+fun ActivityListScreen(
+    archiveName: String?,
+    navigator: Navigator,
+    viewModel: ActivityListViewModel = koinViewModel { parametersOf(archiveName) },
+) {
     val state by viewModel.state.collectAsState()
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = Res.string.activity_list,
-                onIconClick = { navigator.navigateUp() },
+                onIconClick = { navigator.goBack() },
                 endContent = {
                     val canAdd by remember { derivedStateOf { (state as? ActivityListState.Loaded)?.canAdd ?: false } }
                     if (canAdd) {
@@ -79,11 +91,12 @@ fun ActivityListScreen(navigator: NavController, viewModel: ActivityListViewMode
                         ActivityCard(
                             activity = activity,
                             canDelete = s.canDelete,
-                            onEditClick = {
-                                navigator.navigate(NavigationRoute.AddEditActivity(activity.id, activity.archiveName))
-                            },
+                            onEditClick = { navigator.navigate(NavigationRoute.AddEditActivity(activity)) },
                             onDeleteClick = { viewModel.deleteActivity(activity) },
                             onEvaluateClick = { navigator.navigate(NavigationRoute.EvaluateActivity(activity)) },
+                            onEvaluateByTeamClick = {
+                                navigator.navigate(NavigationRoute.EvaluateTeamActivity(activity))
+                            },
                             modifier = Modifier.padding(16.dp),
                         )
                     }
@@ -102,6 +115,7 @@ private fun ActivityCard(
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onEvaluateClick: () -> Unit,
+    onEvaluateByTeamClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(modifier = modifier, shape = RoundedCornerShape(8.dp), onClick = onEditClick) {
@@ -121,12 +135,7 @@ private fun ActivityCard(
                 )
                 CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                     if (activity.criteria.isNotEmpty() && activity.participants.isNotEmpty()) {
-                        IconButton(onClick = onEvaluateClick) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_evaluate),
-                                contentDescription = stringResource(Res.string.evaluate_activity),
-                            )
-                        }
+                        EvaluateIcon(onEvaluateClick, onEvaluateByTeamClick)
                     }
                     if (canDelete) {
                         IconButton(onClick = { removeDialog = true }) {
@@ -164,6 +173,43 @@ private fun ActivityCard(
                     onConfirm = onDeleteClick,
                     title = stringResource(Res.string.delete),
                     body = stringResource(Res.string.delete_confirmation, activity.name),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EvaluateIcon(
+    onEvaluateClick: () -> Unit,
+    onEvaluateByTeamClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var showEvaluateMenu by remember { mutableStateOf(false) }
+    Box(modifier = modifier) {
+        IconButton(onClick = { showEvaluateMenu = true }) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_evaluate),
+                contentDescription = stringResource(Res.string.evaluate_activity),
+            )
+        }
+        if (showEvaluateMenu) {
+            DropdownMenu(expanded = showEvaluateMenu, onDismissRequest = { showEvaluateMenu = false }) {
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(Res.string.evaluate_activity_individually)) },
+                    onClick = {
+                        showEvaluateMenu = false
+                        onEvaluateClick()
+                    },
+                    leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null) },
+                )
+                DropdownMenuItem(
+                    text = { Text(text = stringResource(Res.string.evaluate_activity_by_team)) },
+                    onClick = {
+                        showEvaluateMenu = false
+                        onEvaluateByTeamClick()
+                    },
+                    leadingIcon = { Icon(Icons.Filled.Groups, contentDescription = null) },
                 )
             }
         }

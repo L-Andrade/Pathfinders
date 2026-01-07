@@ -52,7 +52,7 @@
     <string name="criteria_with_value">%1$s: %2$s</string>
     <string name="done">Feito</string>
     <string name="participant_score">Pontos: %1$s</string>
-    <string name="total">Total: %1$s</string>
+    <string name="total_points">Total: %1$s</string>
     <string name="criteria_max_score">Máx. pontos</string>
     <string name="user_no_activities">%1$s ainda não participou em nenhuma atividade.</string>
     <string name="user_participant_profile">Meu perfil</string>
@@ -134,4 +134,14 @@
     <string name="create_activity_for_each_class">Criar uma atividade para cada classe selecionada</string>
     <string name="archive_confirmation_title">Está a criar um arquivo</string>
     <string name="archive_confirmation_description">As atividades selecionadas vão ser removidas da vista geral e só serão visíveis neste arquivo.\n\nTem a certeza?</string>
+    <string name="add_team">Adicionar patrulha</string>
+    <string name="team_list">Patrulhas</string>
+    <string name="edit_team">Editar patrulha</string>
+    <string name="evaluate_activity_individually">Avaliar individualmente</string>
+    <string name="evaluate_activity_by_team">Avaliar por patrulha</string>
+    <string name="evaluate_activity_empty">Não há patrulhas para os participantes desta atividade</string>
+    <string name="teams_empty">Ainda não há patrulhas</string>
+    <string name="activity_number">%1$s atividades</string>
+    <string name="unknown_participant">Desconhecido</string>
+    <string name="total">Total</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.andradel.pathfinders.shared.features.activity.add
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.extensions.combine
 import com.andradel.pathfinders.shared.extensions.toLocalDate
@@ -12,54 +10,41 @@ import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.activity.NewActivity
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
 import com.andradel.pathfinders.shared.user.UserSession
 import com.andradel.pathfinders.shared.user.isAdmin
 import com.andradel.pathfinders.shared.validation.NameValidation
 import com.andradel.pathfinders.shared.validation.isValid
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.todayIn
 import org.koin.android.annotation.KoinViewModel
-import kotlin.reflect.typeOf
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @KoinViewModel
 class AddEditActivityViewModel(
-    handle: SavedStateHandle,
+    private val activity: Activity?,
     userSession: UserSession,
     private val dataSource: ActivityFirebaseDataSource,
     private val nameValidation: NameValidation,
 ) : ViewModel() {
-    private val route = handle.toRoute<NavigationRoute.AddEditActivity>(
-        typeMap = mapOf(typeOf<Activity?>() to customNavType<Activity?>(isNullableAllowed = true)),
-    )
-    private var activity: Activity? = null
-    private val isArchived = route.archiveName != null
+    private val isArchived = activity?.archiveName != null
 
-    private val participants = MutableStateFlow(emptyList<Participant>())
-    private val criteria = MutableStateFlow(emptyList<ActivityCriteria>())
-    private val classes = MutableStateFlow(emptyList<ParticipantClass>())
-    private val name = MutableStateFlow("")
-    private val date = MutableStateFlow<LocalDate?>(null)
+    private val participants = MutableStateFlow(activity?.participants.orEmpty())
+    private val criteria = MutableStateFlow(activity?.criteria.orEmpty())
+    private val classes = MutableStateFlow(activity?.classes.orEmpty())
+    private val name = MutableStateFlow(activity?.name.orEmpty())
+    private val date = MutableStateFlow(activity?.date)
     private val activityResult = MutableStateFlow<ActivityResult?>(null)
     private val createForEach = MutableStateFlow(false)
-
-    private val _error = Channel<Unit>()
-    val error = _error.receiveAsFlow()
 
     private val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
 
@@ -90,30 +75,9 @@ class AddEditActivityViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AddEditActivityState())
 
-    val isEditing = route.activityId != null && !isArchived
+    val isEditing = activity?.id != null && !isArchived
     val isUnsaved: Boolean
         get() = activity?.toNewActivity() != state.value.toNewActivity()
-
-    init {
-        loadActivity()
-    }
-
-    fun loadActivity() {
-        if (route.activityId != null) {
-            viewModelScope.launch {
-                dataSource.getActivity(route.activityId, route.archiveName).onSuccess { activity ->
-                    this@AddEditActivityViewModel.activity = activity
-                    participants.value = activity?.participants.orEmpty()
-                    criteria.value = activity?.criteria.orEmpty()
-                    classes.value = activity?.classes.orEmpty()
-                    name.value = activity?.name.orEmpty()
-                    date.value = activity?.date
-                }.onFailure {
-                    _error.send(Unit)
-                }
-            }
-        }
-    }
 
     fun addActivity() {
         activityResult.value = ActivityResult.Loading
@@ -129,7 +93,7 @@ class AddEditActivityViewModel(
                     activityResult.value = ActivityResult.Success
                 }
             } else {
-                dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = route.activityId).onSuccess {
+                dataSource.addOrUpdateActivity(state.value.toNewActivity(), activityId = activity?.id).onSuccess {
                     activityResult.value = ActivityResult.Success
                 }.onFailure {
                     activityResult.value = ActivityResult.Failure
@@ -182,10 +146,10 @@ class AddEditActivityViewModel(
     }
 
     fun deleteActivity() {
-        if (route.activityId != null) {
+        if (activity?.id != null) {
             activityResult.value = ActivityResult.Loading
             viewModelScope.launch {
-                dataSource.deleteActivity(route.activityId).onSuccess {
+                dataSource.deleteActivity(activity.id).onSuccess {
                     activityResult.value = ActivityResult.Success
                 }.onFailure {
                     activityResult.value = ActivityResult.Failure

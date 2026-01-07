@@ -1,33 +1,24 @@
 package com.andradel.pathfinders.shared.features.participant.profile
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.shared.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import org.koin.android.annotation.KoinViewModel
-import kotlin.reflect.typeOf
+import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class ParticipantProfileViewModel(
-    handle: SavedStateHandle,
+    @InjectedParam private val participant: Participant,
+    @InjectedParam archiveName: String?,
     dataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
 ) : ViewModel() {
-    private val route = handle.toRoute<NavigationRoute.ParticipantProfile>(
-        typeMap = mapOf(typeOf<Participant>() to customNavType<Participant>()),
-    )
-
-    private val participant = route.participant
-    private val archiveName = route.archiveName
 
     val state: StateFlow<ParticipantProfileState> =
         combine(

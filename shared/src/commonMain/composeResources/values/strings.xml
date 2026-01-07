@@ -51,7 +51,7 @@
     <string name="criteria_with_value">%1$s: %2$s</string>
     <string name="done">Done</string>
     <string name="participant_score">Score: %1$s</string>
-    <string name="total">Total: %1$s</string>
+    <string name="total_points">Total: %1$s</string>
     <string name="criteria_max_score">Max. score</string>
     <string name="user_no_activities">%1$s has not participated in any activity yet.</string>
     <string name="user_participant_profile">My profile</string>
@@ -130,4 +130,14 @@
     <string name="explorador">Explorador</string>
     <string name="companheiro">Companheiro</string>
     <string name="embaixador">Embaixador</string>
+    <string name="add_team">Add team</string>
+    <string name="team_list">Teams</string>
+    <string name="edit_team">Edit team</string>
+    <string name="evaluate_activity_individually">Evaluate individually</string>
+    <string name="evaluate_activity_by_team">Evaluate by team</string>
+    <string name="evaluate_activity_empty">There are no teams for the participants in this activity</string>
+    <string name="teams_empty">There are no teams yet</string>
+    <string name="activity_number">%1$s activities</string>
+    <string name="unknown_participant">Unknown</string>
+    <string name="total">Total</string>
 </resources>

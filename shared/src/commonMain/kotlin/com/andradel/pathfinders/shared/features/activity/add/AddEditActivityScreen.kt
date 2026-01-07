@@ -20,12 +20,9 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -42,29 +39,29 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.flavors.model.color
 import com.andradel.pathfinders.flavors.model.title
-import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
-import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
+import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.model.participant.Participant
+import com.andradel.pathfinders.shared.model.participant.SelectedParticipants
 import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.collectNavResultAsState
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.ui.fields.DatePickerField
+import com.andradel.pathfinders.shared.ui.header.Header
+import com.andradel.pathfinders.shared.ui.header.HeaderWithAddButton
 import com.andradel.pathfinders.shared.validation.ValidationResult
 import com.andradel.pathfinders.shared.validation.errorMessage
 import com.andradel.pathfinders.shared.validation.isError
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.activity_not_saved_description
 import pathfinders.shared.generated.resources.activity_not_saved_title
@@ -77,7 +74,6 @@ import pathfinders.shared.generated.resources.delete
 import pathfinders.shared.generated.resources.delete_confirmation
 import pathfinders.shared.generated.resources.edit_activity
 import pathfinders.shared.generated.resources.generic_error
-import pathfinders.shared.generated.resources.ic_add
 import pathfinders.shared.generated.resources.ic_delete
 import pathfinders.shared.generated.resources.ic_lock
 import pathfinders.shared.generated.resources.ic_save
@@ -86,45 +82,34 @@ import pathfinders.shared.generated.resources.no_criteria_selected
 import pathfinders.shared.generated.resources.no_participants_selected
 import pathfinders.shared.generated.resources.participant_list
 import pathfinders.shared.generated.resources.save
-import pathfinders.shared.generated.resources.select
 import pathfinders.shared.generated.resources.select_all
-import pathfinders.shared.generated.resources.try_again
 import pathfinders.shared.generated.resources.unselect_all
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AddEditActivityScreen(navigator: NavController, viewModel: AddEditActivityViewModel = koinViewModel()) {
-    val lifecycleOwner = LocalLifecycleOwner.current
+fun AddEditActivityScreen(
+    activity: Activity?,
+    navigator: Navigator,
+    viewModel: AddEditActivityViewModel = koinViewModel { parametersOf(activity) },
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
-    val selectionResult by navigator.collectNavResultAsState<List<Participant>>(
+    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Participant>?>(
         NavigationRoute.AddParticipantsToActivity.Result,
     )
-    val criteriaResult by navigator.collectNavResultAsState<List<ActivityCriteria>>(
+    val criteriaResult = navigator.resultStore.getResultStateAndRemove<List<ActivityCriteria>?>(
         NavigationRoute.AddCriteriaToActivity.Result,
     )
     BackHandler {
         if (viewModel.isUnsaved) {
             showUnsavedDialog = true
         } else {
-            navigator.navigateUp()
+            navigator.goBack()
         }
     }
     LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.setSelection(it) } }
     LaunchedEffect(criteriaResult) { criteriaResult?.let { viewModel.setCriteriaSelection(it) } }
-    LaunchedEffect(key1 = Unit) {
-        lifecycleOwner.collectChannelFlow(viewModel.error) { result ->
-            val result = snackbarHostState.showSnackbar(
-                message = getString(Res.string.generic_error),
-                actionLabel = getString(Res.string.try_again),
-                duration = SnackbarDuration.Indefinite,
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                viewModel.loadActivity()
-            }
-        }
-    }
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
@@ -134,7 +119,7 @@ fun AddEditActivityScreen(navigator: NavController, viewModel: AddEditActivityVi
                     if (viewModel.isUnsaved) {
                         showUnsavedDialog = true
                     } else {
-                        navigator.navigateUp()
+                        navigator.goBack()
                     }
                 },
                 endContent = {
@@ -146,7 +131,7 @@ fun AddEditActivityScreen(navigator: NavController, viewModel: AddEditActivityVi
                     }
                     DeleteActivityIcon(canDelete = viewModel.isEditing && state.isAdmin, name = state.name) {
                         viewModel.deleteActivity()
-                        navigator.navigateUp()
+                        navigator.goBack()
                     }
                 },
             )
@@ -157,7 +142,7 @@ fun AddEditActivityScreen(navigator: NavController, viewModel: AddEditActivityVi
             loading = state.activityResult is ActivityResult.Loading
             when (state.activityResult) {
                 ActivityResult.Failure -> snackbarHostState.showSnackbar(getString(Res.string.generic_error))
-                ActivityResult.Success -> navigator.navigateUp()
+                ActivityResult.Success -> navigator.goBack()
                 ActivityResult.Loading, null -> Unit
             }
         }
@@ -166,7 +151,7 @@ fun AddEditActivityScreen(navigator: NavController, viewModel: AddEditActivityVi
                 title = stringResource(Res.string.activity_not_saved_title),
                 body = stringResource(Res.string.activity_not_saved_description),
                 onDismiss = { showUnsavedDialog = false },
-                navigator::navigateUp,
+                navigator::goBack,
             )
         }
         Column(modifier = Modifier.padding(padding)) {
@@ -252,7 +237,7 @@ private fun AddEditColumn(
         }
         item {
             Spacer(modifier = Modifier.size(16.dp))
-            Header(header = Res.string.classes, modifier = Modifier.padding(horizontal = 16.dp)) {
+            Header(header = stringResource(Res.string.classes), modifier = Modifier.padding(horizontal = 16.dp)) {
                 val isSelected by remember(state) {
                     derivedStateOf { state.classes.size == ParticipantClass.options.size }
                 }
@@ -290,7 +275,7 @@ private fun AddEditColumn(
         item {
             Spacer(modifier = Modifier.size(16.dp))
             HeaderWithAddButton(
-                header = Res.string.criteria,
+                header = stringResource(Res.string.criteria),
                 onClick = onSelectCriteria,
                 showButton = !state.isArchived,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -312,7 +297,7 @@ private fun AddEditColumn(
         item {
             Spacer(modifier = Modifier.size(8.dp))
             HeaderWithAddButton(
-                header = Res.string.participant_list,
+                header = stringResource(Res.string.participant_list),
                 onClick = onSelectParticipants,
                 showButton = !state.isArchived,
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -410,38 +395,4 @@ private fun NameField(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
     )
-}
-
-@Composable
-private fun HeaderWithAddButton(
-    header: StringResource,
-    onClick: () -> Unit,
-    showButton: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    Header(header = header, modifier = modifier) {
-        if (showButton) {
-            OutlinedButton(onClick = onClick) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(Res.drawable.ic_add),
-                        contentDescription = stringResource(Res.string.select),
-                    )
-                    Text(text = stringResource(Res.string.select))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun Header(header: StringResource, modifier: Modifier = Modifier, endContent: @Composable () -> Unit = {}) {
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            text = stringResource(header),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f),
-        )
-        endContent()
-    }
 }

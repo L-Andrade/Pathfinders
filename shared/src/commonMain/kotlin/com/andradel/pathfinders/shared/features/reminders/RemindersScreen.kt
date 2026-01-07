@@ -24,8 +24,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.shared.intents.rememberCallIntents
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
@@ -44,11 +44,9 @@ import pathfinders.shared.generated.resources.todays_birthdays
 import pathfinders.shared.generated.resources.upcoming_birthdays
 
 @Composable
-fun RemindersScreen(navigator: NavController, viewModel: RemindersViewModel = koinViewModel()) {
+fun RemindersScreen(navigator: Navigator, viewModel: RemindersViewModel = koinViewModel()) {
     Scaffold(
-        topBar = {
-            TopAppBarTitleWithIcon(titleRes = Res.string.reminders_screen, onIconClick = navigator::navigateUp)
-        },
+        topBar = { TopAppBarTitleWithIcon(titleRes = Res.string.reminders_screen, onIconClick = navigator::goBack) },
         content = { padding ->
             val state by viewModel.state.collectAsState()
             Box(

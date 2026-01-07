@@ -30,12 +30,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.flavors.model.color
 import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.model.participant.Participant
+import com.andradel.pathfinders.shared.model.participant.SelectedParticipants
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.nav.navigateBackWithResult
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
@@ -43,6 +44,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.activity_not_saved_description
 import pathfinders.shared.generated.resources.activity_not_saved_title
@@ -59,8 +61,9 @@ import pathfinders.shared.generated.resources.select_participants_for_activity
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddParticipantsToActivityScreen(
-    navigator: NavController,
-    viewModel: AddParticipantsToActivityViewModel = koinViewModel(),
+    selectedParticipants: SelectedParticipants,
+    navigator: Navigator,
+    viewModel: AddParticipantsToActivityViewModel = koinViewModel { parametersOf(selectedParticipants) },
 ) {
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
@@ -68,7 +71,7 @@ fun AddParticipantsToActivityScreen(
         if (viewModel.isUnsaved) {
             showUnsavedDialog = true
         } else {
-            navigator.navigateUp()
+            navigator.goBack()
         }
     }
     val onSelectParticipants: () -> Unit = {
@@ -94,7 +97,7 @@ fun AddParticipantsToActivityScreen(
                 title = stringResource(Res.string.activity_not_saved_title),
                 body = stringResource(Res.string.activity_not_saved_description),
                 onDismiss = { showUnsavedDialog = false },
-                navigator::navigateUp,
+                navigator::goBack,
             )
         }
         Box(

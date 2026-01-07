@@ -1,13 +1,9 @@
-package com.andradel.pathfinders.shared.features.activity.evaluate
+package com.andradel.pathfinders.shared.features.activity.evaluate.individual
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,17 +12,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import kotlin.reflect.typeOf
+import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class EvaluateActivityViewModel(
-    handle: SavedStateHandle,
+    @InjectedParam private val activity: Activity,
     private val dataSource: ActivityFirebaseDataSource,
     private val coroutineScope: CoroutineScope,
 ) : ViewModel() {
-    val activity = handle.toRoute<NavigationRoute.EvaluateActivity>(
-        typeMap = mapOf(typeOf<Activity>() to customNavType<Activity>()),
-    ).activity
 
     private val scores = MutableStateFlow(activity.scores)
     val state = scores.asStateFlow()
@@ -46,7 +39,7 @@ class EvaluateActivityViewModel(
         }
     }
 
-    fun updateActivityScores() {
+    fun onSave() {
         _loading.value = true
         coroutineScope.launch {
             _result.send(dataSource.updateScores(activityId = activity.id, scores = scores.value))

@@ -105,6 +105,7 @@ kotlin {
 
                 // Nav
                 implementation(libs.compose.navigation)
+                implementation(libs.compose.navigation.viewmodel)
 
                 implementation(libs.lottie.kmp)
 

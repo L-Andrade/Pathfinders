@@ -31,8 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.painterResource
@@ -51,11 +51,9 @@ import pathfinders.shared.generated.resources.ic_chevron_right
 import pathfinders.shared.generated.resources.ic_delete
 
 @Composable
-fun ArchiveListScreen(navigator: NavController, viewModel: ArchiveListViewModel = koinViewModel()) {
+fun ArchiveListScreen(navigator: Navigator, viewModel: ArchiveListViewModel = koinViewModel()) {
     Scaffold(
-        topBar = {
-            TopAppBarTitleWithIcon(titleRes = Res.string.admin_archive, onIconClick = navigator::navigateUp)
-        },
+        topBar = { TopAppBarTitleWithIcon(titleRes = Res.string.admin_archive, onIconClick = navigator::goBack) },
         content = { padding ->
             val state by viewModel.state.collectAsStateWithLifecycle()
             when (val s = state) {

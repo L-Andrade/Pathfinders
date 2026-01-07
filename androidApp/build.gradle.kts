@@ -13,12 +13,12 @@ val projectVersionName: String by project
 
 android {
     namespace = "com.andradel.pathfinders"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.andradel.pathfinders"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = projectVersionCode.toIntOrNull()
         versionName = projectVersionName
 
