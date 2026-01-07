@@ -20,9 +20,9 @@ class TeamFirebaseDataSource(private val mapper: TeamMapper) {
     private fun participantsRef(archiveName: String?) = db.reference().archiveChild(archiveName, "participants")
 
     fun team(teamId: String, archiveName: String?): Flow<Team?> = combine(
-        teamsRef(archiveName).child(teamId).toFlow<FirebaseTeam>(),
+        teamsRef(archiveName).child(teamId).toFlow<FirebaseTeam?>(),
         participantsRef(archiveName).toMapFlow<FirebaseParticipant>(),
-    ) { value, participants -> mapper.toTeam(value.first, value.second, participants, archiveName) }
+    ) { value, participants -> value.second?.let { mapper.toTeam(value.first, it, participants, archiveName) } }
 
     fun teams(archiveName: String?): Flow<List<Team>> = combine(
         teamsRef(archiveName).toMapFlow<FirebaseTeam>(),
