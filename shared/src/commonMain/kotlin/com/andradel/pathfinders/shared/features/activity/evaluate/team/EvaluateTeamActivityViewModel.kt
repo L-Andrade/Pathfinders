@@ -31,7 +31,9 @@ class EvaluateTeamActivityViewModel(
 
     private val teams = teamDataSource.teams(activity.archiveName).map { teams ->
         val participantIds = activity.participants.map { it.id }
-        teams.filter { team -> team.participants.any { it.id in participantIds } }
+        teams.map { team ->
+            team.copy(participants = team.participants.filter { it.id in participantIds })
+        }.filter { it.participants.isNotEmpty() }
     }
 
     val state = combine(scores, loading, teams) { scores, loading, teams ->
