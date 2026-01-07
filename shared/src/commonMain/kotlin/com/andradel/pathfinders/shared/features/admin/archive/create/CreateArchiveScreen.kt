@@ -94,7 +94,7 @@ import pathfinders.shared.generated.resources.select
 @Composable
 fun CreateArchiveScreen(navigator: Navigator, viewModel: CreateArchiveViewModel = koinViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Activity>?>(
+    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Activity>>(
         NavigationRoute.ArchiveSelectActivitiesManually.Result,
     )
     LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.select(it) } }

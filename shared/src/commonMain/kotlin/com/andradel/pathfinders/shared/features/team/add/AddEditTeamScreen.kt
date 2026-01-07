@@ -64,7 +64,7 @@ fun AddEditTeamScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
-    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Participant>?>(
+    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Participant>>(
         NavigationRoute.AddParticipantsToActivity.Result,
     )
     LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.setSelection(it) } }

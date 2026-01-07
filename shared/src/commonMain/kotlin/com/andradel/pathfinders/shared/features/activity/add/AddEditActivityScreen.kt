@@ -95,10 +95,10 @@ fun AddEditActivityScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     var showUnsavedDialog by remember { mutableStateOf(false) }
-    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Participant>?>(
+    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Participant>>(
         NavigationRoute.AddParticipantsToActivity.Result,
     )
-    val criteriaResult = navigator.resultStore.getResultStateAndRemove<List<ActivityCriteria>?>(
+    val criteriaResult = navigator.resultStore.getResultStateAndRemove<List<ActivityCriteria>>(
         NavigationRoute.AddCriteriaToActivity.Result,
     )
     BackHandler {
