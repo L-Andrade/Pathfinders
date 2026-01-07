@@ -231,7 +231,7 @@ private fun TeamTab(
                 )
                 team.participants.fastForEach { participant ->
                     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        var participantValue by remember(value) {
+                        var participantValue by remember(total) {
                             mutableFloatStateOf(
                                 scores()[participant.id]?.get(c.id)?.toFloat()
                                     ?: activity.scores[participant.id]?.get(c.id)?.toFloat() ?: 0f,
