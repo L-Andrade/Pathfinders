@@ -65,7 +65,15 @@ class ActivityFirebaseDataSource(
         val ref = activitiesRef(null)
         val activity = ref.child(activityId).getValue<FirebaseActivity>()
         val participantScores = activity?.scores.orEmpty() + scores.values.fold(emptyMap()) { acc, map ->
-            map + acc.mapValues { (k, v) -> map[k].orEmpty() + v }
+            val allKeys = (acc.keys + map.keys).toSet()
+            allKeys.associateWith { participantId ->
+                val accCriteria = acc[participantId].orEmpty()
+                val mapCriteria = map[participantId].orEmpty()
+                val allCriteriaKeys = (accCriteria.keys + mapCriteria.keys).toSet()
+                allCriteriaKeys.associateWith { criteriaId ->
+                    accCriteria.getOrDefault(criteriaId, 0) + mapCriteria.getOrDefault(criteriaId, 0)
+                }
+            }
         }
         ref.child(activityId).setValue(activity?.copy(teamScores = scores, scores = participantScores))
     }.throwCancellation()
