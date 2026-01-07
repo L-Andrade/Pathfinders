@@ -64,7 +64,7 @@ class ActivityFirebaseDataSource(
     suspend fun updateTeamScores(activityId: String, scores: TeamScores): Result<Unit> = runCatching {
         val ref = activitiesRef(null)
         val activity = ref.child(activityId).getValue<FirebaseActivity>()
-        val participantScores = activity?.scores.orEmpty() + scores.values.reduce { acc, map ->
+        val participantScores = activity?.scores.orEmpty() + scores.values.fold(emptyMap()) { acc, map ->
             map + acc.mapValues { (k, v) -> map[k].orEmpty() + v }
         }
         ref.child(activityId).setValue(activity?.copy(teamScores = scores, scores = participantScores))
