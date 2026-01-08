@@ -24,6 +24,11 @@ jobs:
           ${{ secrets.FB_UNIT_CREDENTIALS }}
           EOF
 
+      - name: Setup release keystore
+        run: |
+          echo "${{ secrets.RELEASE_JKS }}" >> ./release.jks.base64
+          base64 --decode ./release.jks.base64 > ./release.jks
+
       - name: Build Unit release
         run: ./gradlew assembleUnitRelease -PstorePassword=${{ secrets.PATHFINDERS_STORE_PASSWD }} -PkeyPassword=${{ secrets.PATHFINDERS_KEY_PASSWD }}
 
@@ -52,6 +57,12 @@ jobs:
           ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
           EOF
 
+      - name: Setup release key
+        run: |
+          cat << 'EOF' > ./release.jks
+          ${{ secrets.RELEASE_JKS }}
+          EOF
+
       - name: Build Pathfinders release
         run: ./gradlew assemblePathfindersRelease -PstorePassword=${{ secrets.PATHFINDERS_STORE_PASSWD }} -PkeyPassword=${{ secrets.PATHFINDERS_KEY_PASSWD }}
 
@@ -62,14 +73,3 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.FB_PATHFINDERS_CREDENTIALS_APP_DIST }}
           groups: Testers
           file: ./androidApp/build/outputs/apk/pathfinders/release/app-pathfinders-release.apk
-
-  cleanup:
-    runs-on: ubuntu-latest
-    needs: [build-unit, build-pathfinders]
-    if: always()
-    steps:
-      - name: Delete Unit temporary file
-        run: rm -rf app/src/unitRelease/google-services.json
-
-      - name: Delete Pathfinders temporary file
-        run: rm -rf app/src/pathfindersRelease/google-services.json
