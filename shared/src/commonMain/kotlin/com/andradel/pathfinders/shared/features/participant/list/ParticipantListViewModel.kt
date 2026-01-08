@@ -1,15 +1,12 @@
 package com.andradel.pathfinders.shared.features.participant.list
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.firebase.activity.ActivityFirebaseDataSource
 import com.andradel.pathfinders.shared.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.shared.model.activity.participantPoints
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.nav.NavigationRoute
 import com.andradel.pathfinders.shared.user.UserSession
 import com.andradel.pathfinders.shared.user.isAdmin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,14 +21,13 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class ParticipantListViewModel(
-    handle: SavedStateHandle,
+    archiveName: String?,
     private val dataSource: ParticipantFirebaseDataSource,
     activityDataSource: ActivityFirebaseDataSource,
     userSession: UserSession,
 ) : ViewModel() {
     private val collapsed = MutableStateFlow<Map<ParticipantClass, Boolean>>(emptyMap())
     private val sorting = MutableStateFlow(ParticipantSort.NameAsc)
-    val archiveName = handle.toRoute<NavigationRoute.ParticipantList>().archiveName
     private val isArchived = archiveName != null
 
     val state: StateFlow<ParticipantListState> =

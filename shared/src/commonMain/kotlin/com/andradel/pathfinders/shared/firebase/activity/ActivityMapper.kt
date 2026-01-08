@@ -33,6 +33,7 @@ class ActivityMapper(
                 value.classes.map { it.toClass() },
                 value.criteriaIds.mapNotNull { id -> criteria[id]?.let { criteriaMapper.toCriteria(id, it) } },
                 value.scores,
+                value.teamScores,
                 archiveName,
             )
         }

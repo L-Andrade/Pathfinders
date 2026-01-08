@@ -1,32 +1,26 @@
 package com.andradel.pathfinders.shared.features.activity.add.participant
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
+import com.andradel.pathfinders.shared.model.participant.SelectedParticipants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import org.koin.android.annotation.KoinViewModel
-import kotlin.reflect.typeOf
+import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class AddParticipantsToActivityViewModel(
-    handle: SavedStateHandle,
+    @InjectedParam selected: SelectedParticipants,
     dataSource: ParticipantFirebaseDataSource,
 ) : ViewModel() {
-    private val route = handle.toRoute<NavigationRoute.AddParticipantsToActivity>(
-        typeMap = mapOf(typeOf<SelectedParticipants>() to customNavType<SelectedParticipants>()),
-    ).selected
-    private val initialSelection = route.participants
+    private val initialSelection = selected.participants
     private val selection = MutableStateFlow(initialSelection)
-    private val selectedClasses = route.classes
+    private val selectedClasses = selected.classes
     private val filteringByClass = MutableStateFlow(selectedClasses.isNotEmpty())
 
     val state = combine(

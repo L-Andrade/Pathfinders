@@ -21,13 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.activity.participantPoints
 import com.andradel.pathfinders.shared.model.participant.Participant
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.activity_list
 import pathfinders.shared.generated.resources.criteria_with_value
@@ -35,13 +36,18 @@ import pathfinders.shared.generated.resources.participant_score
 import pathfinders.shared.generated.resources.user_no_activities
 
 @Composable
-fun ParticipantProfileScreen(navigator: NavController, viewModel: ParticipantProfileViewModel = koinViewModel()) {
+fun ParticipantProfileScreen(
+    participant: Participant,
+    archiveName: String?,
+    navigator: Navigator,
+    viewModel: ParticipantProfileViewModel = koinViewModel { parametersOf(participant, archiveName) },
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 title = state.participant.name,
-                onIconClick = { navigator.navigateUp() },
+                onIconClick = { navigator.goBack() },
             )
         },
         content = { padding ->

@@ -44,10 +44,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.flavors.model.color
 import com.andradel.pathfinders.flavors.model.title
+import com.andradel.pathfinders.shared.model.participant.Participant
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.ui.fields.DatePickerField
@@ -62,6 +63,7 @@ import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.add_participant
 import pathfinders.shared.generated.resources.birthday_date
@@ -79,7 +81,11 @@ import pathfinders.shared.generated.resources.save
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditParticipantViewModel = koinViewModel()) {
+fun AddEditParticipantScreen(
+    participant: Participant?,
+    navigator: Navigator,
+    viewModel: AddEditParticipantViewModel = koinViewModel { parametersOf(participant) },
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     val state by viewModel.state.collectAsState()
     Scaffold(
@@ -87,7 +93,7 @@ fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditPartici
         topBar = {
             TopAppBarTitleWithIcon(
                 title = if (viewModel.isEditing) state.name else stringResource(Res.string.add_participant),
-                onIconClick = { navigator.navigateUp() },
+                onIconClick = { navigator.goBack() },
                 endContent = {
                     IconButton(enabled = state.isValid, onClick = viewModel::addParticipant) {
                         Icon(
@@ -97,7 +103,7 @@ fun AddEditParticipantScreen(navigator: NavController, viewModel: AddEditPartici
                     }
                     DeleteParticipantIcon(viewModel.isEditing, state.name) {
                         viewModel.deleteParticipant()
-                        navigator.navigateUp()
+                        navigator.goBack()
                     }
                 },
             )
@@ -308,14 +314,14 @@ private fun ScoutClassDropDown(
 @Composable
 private fun AddParticipantResult(
     result: ParticipantResult?,
-    navigator: NavController,
+    navigator: Navigator,
     onLoading: (Boolean) -> Unit,
     showSnackbar: @Composable (String) -> Unit,
 ) {
     onLoading(result is ParticipantResult.Loading)
     when (result) {
         is ParticipantResult.Failure -> showSnackbar(stringResource(result.message))
-        ParticipantResult.Success -> navigator.navigateUp()
+        ParticipantResult.Success -> navigator.goBack()
         ParticipantResult.Loading, null -> Unit
     }
 }

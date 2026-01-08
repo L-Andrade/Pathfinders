@@ -24,8 +24,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.user.User
 import com.andradel.pathfinders.shared.user.UserRole
@@ -43,10 +43,10 @@ import pathfinders.shared.generated.resources.try_again
 import pathfinders.shared.generated.resources.user_role
 
 @Composable
-fun AdminUserListScreen(navigator: NavController, viewModel: AdminUserListViewModel = koinViewModel()) {
+fun AdminUserListScreen(navigator: Navigator, viewModel: AdminUserListViewModel = koinViewModel()) {
     Scaffold(
         topBar = {
-            TopAppBarTitleWithIcon(titleRes = Res.string.admin_user_list, onIconClick = navigator::navigateUp)
+            TopAppBarTitleWithIcon(titleRes = Res.string.admin_user_list, onIconClick = navigator::goBack)
         },
         content = { padding ->
             val state by viewModel.state.collectAsState()

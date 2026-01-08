@@ -1,17 +1,13 @@
 package com.andradel.pathfinders.shared.features.participant.add
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.shared.extensions.combine
 import com.andradel.pathfinders.shared.extensions.toLocalDate
 import com.andradel.pathfinders.shared.firebase.participant.ParticipantFirebaseDataSource
 import com.andradel.pathfinders.shared.model.participant.NewParticipant
 import com.andradel.pathfinders.shared.model.participant.Participant
-import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
 import com.andradel.pathfinders.shared.user.UserRole
 import com.andradel.pathfinders.shared.user.UserSession
 import com.andradel.pathfinders.shared.user.role
@@ -31,22 +27,18 @@ import org.koin.android.annotation.KoinViewModel
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.email_already_exists
 import pathfinders.shared.generated.resources.generic_error
-import kotlin.reflect.typeOf
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @KoinViewModel
 class AddEditParticipantViewModel(
-    handle: SavedStateHandle,
+    private val participant: Participant?,
     userSession: UserSession,
     private val dataSource: ParticipantFirebaseDataSource,
     private val nameValidation: NameValidation,
     private val emailValidation: EmailValidation,
 ) : ViewModel() {
-    private val participant = handle.toRoute<NavigationRoute.AddEditParticipant>(
-        typeMap = mapOf(typeOf<Participant?>() to customNavType<Participant?>(isNullableAllowed = true)),
-    ).participant
     private val name = MutableStateFlow(participant?.name.orEmpty())
     private val email = MutableStateFlow(participant?.email.orEmpty())
     private val contact = MutableStateFlow(participant?.contact.orEmpty())

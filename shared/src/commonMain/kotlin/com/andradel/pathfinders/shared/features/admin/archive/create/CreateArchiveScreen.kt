@@ -48,12 +48,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.collectNavResultAsState
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.validation.ValidationResult
@@ -93,9 +92,9 @@ import pathfinders.shared.generated.resources.name_hint
 import pathfinders.shared.generated.resources.select
 
 @Composable
-fun CreateArchiveScreen(navigator: NavController, viewModel: CreateArchiveViewModel = koinViewModel()) {
+fun CreateArchiveScreen(navigator: Navigator, viewModel: CreateArchiveViewModel = koinViewModel()) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val selectionResult by navigator.collectNavResultAsState<List<Activity>>(
+    val selectionResult = navigator.resultStore.getResultStateAndRemove<List<Activity>>(
         NavigationRoute.ArchiveSelectActivitiesManually.Result,
     )
     LaunchedEffect(selectionResult) { selectionResult?.let { viewModel.select(it) } }
@@ -109,7 +108,7 @@ fun CreateArchiveScreen(navigator: NavController, viewModel: CreateArchiveViewMo
         topBar = {
             TopAppBarTitleWithIcon(
                 title = stringResource(Res.string.create_archive),
-                onIconClick = navigator::navigateUp,
+                onIconClick = navigator::goBack,
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -120,7 +119,7 @@ fun CreateArchiveScreen(navigator: NavController, viewModel: CreateArchiveViewMo
             if (progress.finished) {
                 LaunchedEffect(Unit) {
                     delay(500)
-                    navigator.navigateUp()
+                    navigator.goBack()
                 }
             }
             ProgressStateDialog(progress)

@@ -46,12 +46,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.flavors.model.color
 import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.ConfirmationDialog
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import com.andradel.pathfinders.shared.ui.onColor
@@ -59,6 +59,7 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.add_participant
 import pathfinders.shared.generated.resources.delete
@@ -77,13 +78,17 @@ import pathfinders.shared.generated.resources.participant_sort_name
 import pathfinders.shared.generated.resources.participant_sort_points
 
 @Composable
-fun ParticipantListScreen(navigator: NavController, viewModel: ParticipantListViewModel = koinViewModel()) {
+fun ParticipantListScreen(
+    archiveName: String?,
+    navigator: Navigator,
+    viewModel: ParticipantListViewModel = koinViewModel { parametersOf(archiveName) },
+) {
     val canModify by viewModel.canModify.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = Res.string.participant_list,
-                onIconClick = { navigator.navigateUp() },
+                onIconClick = { navigator.goBack() },
                 endContent = {
                     if (canModify) {
                         TextButton(onClick = { navigator.navigate(NavigationRoute.AddEditParticipant()) }) {
@@ -106,7 +111,7 @@ fun ParticipantListScreen(navigator: NavController, viewModel: ParticipantListVi
                         selectedSorting = s.sort,
                         showButtons = canModify,
                         onParticipantClick = {
-                            navigator.navigate(NavigationRoute.ParticipantProfile(it, viewModel.archiveName))
+                            navigator.navigate(NavigationRoute.ParticipantProfile(it, archiveName))
                         },
                         deleteParticipant = viewModel::deleteParticipant,
                         onEditParticipant = {

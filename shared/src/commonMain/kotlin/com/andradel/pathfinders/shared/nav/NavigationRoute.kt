@@ -1,13 +1,15 @@
 package com.andradel.pathfinders.shared.nav
 
+import androidx.navigation3.runtime.NavKey
 import com.andradel.pathfinders.shared.features.activity.add.criteria.SelectedCriteria
-import com.andradel.pathfinders.shared.features.activity.add.participant.SelectedParticipants
 import com.andradel.pathfinders.shared.model.activity.Activity
 import com.andradel.pathfinders.shared.model.participant.Participant
+import com.andradel.pathfinders.shared.model.participant.SelectedParticipants
+import com.andradel.pathfinders.shared.model.team.Team
 import com.andradel.pathfinders.shared.user.User
 import kotlinx.serialization.Serializable
 
-sealed interface NavigationRoute {
+sealed interface NavigationRoute : NavKey {
 
     @Serializable
     data object Home : NavigationRoute
@@ -28,7 +30,7 @@ sealed interface NavigationRoute {
     data object Reminders : NavigationRoute
 
     @Serializable
-    data class AddEditActivity(val activityId: String? = null, val archiveName: String? = null) : NavigationRoute
+    data class AddEditActivity(val activity: Activity? = null) : NavigationRoute
 
     @Serializable
     data class EvaluateActivity(val activity: Activity) : NavigationRoute
@@ -68,4 +70,16 @@ sealed interface NavigationRoute {
             const val Result = "ArchiveSelectActivitiesManuallyResult"
         }
     }
+
+    @Serializable
+    data class TeamList(val archiveName: String? = null) : NavigationRoute
+
+    @Serializable
+    data class AddEditTeam(val team: Team? = null, val archiveName: String? = null) : NavigationRoute
+
+    @Serializable
+    data class EvaluateTeamActivity(val activity: Activity) : NavigationRoute
+
+    @Serializable
+    data class TeamProfile(val team: Team, val archiveName: String? = null) : NavigationRoute
 }

@@ -20,7 +20,7 @@ jobs:
 
       - name: Add content to temporary google-services file
         run: |
-          cat << 'EOF' > ./app/src/unitRelease/google-services.json
+          cat << 'EOF' > ./androidApp/src/unitRelease/google-services.json
           ${{ secrets.FB_UNIT_CREDENTIALS }}
           EOF
 
@@ -33,7 +33,7 @@ jobs:
           appId: ${{ secrets.FB_UNIT_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FB_UNIT_CREDENTIALS_APP_DIST }}
           groups: Testers
-          file: ./app/build/outputs/apk/unit/release/app-unit-release.apk
+          file: ./androidApp/build/outputs/apk/unit/release/app-unit-release.apk
 
   build-pathfinders:
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
 
       - name: Add content to temporary google-services file
         run: |
-          cat << 'EOF' > ./app/src/pathfindersRelease/google-services.json
+          cat << 'EOF' > ./androidApp/src/pathfindersRelease/google-services.json
           ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
           EOF
 
@@ -61,7 +61,7 @@ jobs:
           appId: ${{ secrets.FB_PATHFINDERS_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FB_PATHFINDERS_CREDENTIALS_APP_DIST }}
           groups: Testers
-          file: ./app/build/outputs/apk/pathfinders/release/app-pathfinders-release.apk
+          file: ./androidApp/build/outputs/apk/pathfinders/release/app-pathfinders-release.apk
 
   cleanup:
     runs-on: ubuntu-latest

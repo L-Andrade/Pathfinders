@@ -27,13 +27,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.nav.navigateBackWithResult
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.add
 import pathfinders.shared.generated.resources.add_criteria
@@ -47,14 +48,15 @@ import pathfinders.shared.generated.resources.select_number_of_criteria
 
 @Composable
 fun AddCriteriaToActivityScreen(
-    navigator: NavController,
-    viewModel: AddCriteriaToActivityViewModel = koinViewModel(),
+    selectedCriteria: SelectedCriteria,
+    navigator: Navigator,
+    viewModel: AddCriteriaToActivityViewModel = koinViewModel { parametersOf(selectedCriteria) },
 ) {
     Scaffold(
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = Res.string.select_criteria_for_activity,
-                onIconClick = { navigator.navigateUp() },
+                onIconClick = { navigator.goBack() },
             )
         },
     ) { padding ->
@@ -70,6 +72,7 @@ fun AddCriteriaToActivityScreen(
                         navigator.navigateBackWithResult(NavigationRoute.AddCriteriaToActivity.Result, s.selection)
                     },
                 )
+
                 is AddCriteriaToActivityState.Loading ->
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }

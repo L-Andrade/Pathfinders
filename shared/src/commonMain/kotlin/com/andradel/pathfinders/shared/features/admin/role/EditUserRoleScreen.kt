@@ -40,18 +40,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.ParticipantClass
 import com.andradel.pathfinders.flavors.model.color
 import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.features.admin.role.model.EditUserRole
 import com.andradel.pathfinders.shared.features.admin.role.model.stringRes
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
+import com.andradel.pathfinders.shared.user.User
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.edit_user_role
 import pathfinders.shared.generated.resources.generic_error
@@ -61,14 +63,18 @@ import pathfinders.shared.generated.resources.save
 import pathfinders.shared.generated.resources.try_again
 
 @Composable
-fun EditUserRoleScreen(navigator: NavController, viewModel: EditUserRoleViewModel = koinViewModel()) {
+fun EditUserRoleScreen(
+    user: User,
+    navigator: Navigator,
+    viewModel: EditUserRoleViewModel = koinViewModel { parametersOf(user) },
+) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(key1 = Unit) {
         lifecycleOwner.collectChannelFlow(viewModel.result) { result ->
             result.onSuccess {
-                navigator.navigateUp()
+                navigator.goBack()
             }.onFailure {
                 val snackbarResult = snackbarHostState.showSnackbar(
                     message = getString(Res.string.generic_error),
@@ -86,7 +92,7 @@ fun EditUserRoleScreen(navigator: NavController, viewModel: EditUserRoleViewMode
         topBar = {
             TopAppBarTitleWithIcon(
                 titleRes = Res.string.edit_user_role,
-                onIconClick = navigator::navigateUp,
+                onIconClick = navigator::goBack,
                 endContent = {
                     IconButton(enabled = state.enabled, onClick = viewModel::save) {
                         Icon(

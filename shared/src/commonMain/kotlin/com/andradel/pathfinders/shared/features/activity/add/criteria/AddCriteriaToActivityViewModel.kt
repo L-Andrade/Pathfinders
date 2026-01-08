@@ -1,13 +1,9 @@
 package com.andradel.pathfinders.shared.features.activity.add.criteria
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.andradel.pathfinders.shared.firebase.activity.ActivityCriteriaFirebaseDataSource
 import com.andradel.pathfinders.shared.model.criteria.ActivityCriteria
-import com.andradel.pathfinders.shared.nav.NavigationRoute
-import com.andradel.pathfinders.shared.nav.customNavType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -15,18 +11,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import kotlin.reflect.typeOf
+import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class AddCriteriaToActivityViewModel(
-    handle: SavedStateHandle,
+    @InjectedParam selectedCriteria: SelectedCriteria,
     private val dataSource: ActivityCriteriaFirebaseDataSource,
 ) : ViewModel() {
-    private val selection = MutableStateFlow(
-        handle.toRoute<NavigationRoute.AddCriteriaToActivity>(
-            typeMap = mapOf(typeOf<SelectedCriteria>() to customNavType<SelectedCriteria>()),
-        ).selected.selection,
-    )
+    private val selection = MutableStateFlow(selectedCriteria.selection)
 
     val state = combine(selection, dataSource.criteria) { selection, criteria ->
         AddCriteriaToActivityState.Loaded(

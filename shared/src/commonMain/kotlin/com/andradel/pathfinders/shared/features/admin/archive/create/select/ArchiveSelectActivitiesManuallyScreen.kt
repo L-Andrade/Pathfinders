@@ -29,23 +29,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.model.title
 import com.andradel.pathfinders.shared.extensions.collectChannelFlow
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.nav.navigateBackWithResult
 import com.andradel.pathfinders.shared.ui.TopAppBarTitleWithIcon
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 import pathfinders.shared.generated.resources.Res
 import pathfinders.shared.generated.resources.select
 import pathfinders.shared.generated.resources.select_number_of_activities
 
 @Composable
 fun ArchiveSelectActivitiesManuallyScreen(
-    navigator: NavController,
-    viewModel: ArchiveSelectActivitiesManuallyViewModel = koinViewModel(),
+    initialSelection: List<String>,
+    navigator: Navigator,
+    viewModel: ArchiveSelectActivitiesManuallyViewModel = koinViewModel { parametersOf(initialSelection) },
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(key1 = Unit) {
@@ -57,7 +59,7 @@ fun ArchiveSelectActivitiesManuallyScreen(
         topBar = {
             TopAppBarTitleWithIcon(
                 title = stringResource(Res.string.select),
-                onIconClick = navigator::navigateUp,
+                onIconClick = navigator::goBack,
             )
         },
     ) { padding ->

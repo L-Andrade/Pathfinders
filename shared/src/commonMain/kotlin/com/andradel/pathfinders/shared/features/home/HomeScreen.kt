@@ -26,10 +26,10 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.andradel.pathfinders.flavors.drawables.Drawables
 import com.andradel.pathfinders.shared.model.participant.Participant
 import com.andradel.pathfinders.shared.nav.NavigationRoute
+import com.andradel.pathfinders.shared.nav.Navigator
 import com.andradel.pathfinders.shared.user.UserRole
 import com.andradel.pathfinders.shared.user.isClassAdmin
 import org.jetbrains.compose.resources.StringResource
@@ -45,11 +45,12 @@ import pathfinders.shared.generated.resources.participant_list
 import pathfinders.shared.generated.resources.reminders_screen
 import pathfinders.shared.generated.resources.sign_in
 import pathfinders.shared.generated.resources.sign_out
+import pathfinders.shared.generated.resources.team_list
 import pathfinders.shared.generated.resources.try_again
 import pathfinders.shared.generated.resources.user_participant_profile
 
 @Composable
-fun HomeScreen(onSignInClick: () -> Unit, navigator: NavController, viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(onSignInClick: () -> Unit, navigator: Navigator, viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     Scaffold(
         content = { padding ->
@@ -77,6 +78,7 @@ fun HomeScreen(onSignInClick: () -> Unit, navigator: NavController, viewModel: H
                         onActivitiesClick = { navigator.navigate(NavigationRoute.ActivityList()) },
                         onRemindersClick = { navigator.navigate(NavigationRoute.Reminders) },
                         onProfileClick = { navigator.navigate(NavigationRoute.ParticipantProfile(it)) },
+                        onTeamsClick = { navigator.navigate(NavigationRoute.TeamList()) },
                     )
 
                     HomeState.Error -> ErrorScreen(viewModel::updateUser)
@@ -157,6 +159,7 @@ private fun LoggedInScreen(
     onActivitiesClick: () -> Unit,
     onRemindersClick: () -> Unit,
     onProfileClick: (Participant) -> Unit,
+    onTeamsClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(horizontalAlignment = CenterHorizontally, modifier = modifier) {
@@ -166,6 +169,7 @@ private fun LoggedInScreen(
         }
         if (state.user.role.isClassAdmin) {
             ListButton(onActivitiesClick, Res.string.activity_list)
+            ListButton(onTeamsClick, Res.string.team_list)
             ListButton(onRemindersClick, Res.string.reminders_screen)
         }
         if (state.participant != null) {
