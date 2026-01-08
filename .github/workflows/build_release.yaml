@@ -57,11 +57,10 @@ jobs:
           ${{ secrets.FB_PATHFINDERS_CREDENTIALS }}
           EOF
 
-      - name: Setup release key
+      - name: Setup release keystore
         run: |
-          cat << 'EOF' > ./release.jks
-          ${{ secrets.RELEASE_JKS }}
-          EOF
+          echo "${{ secrets.RELEASE_JKS }}" >> ./release.jks.base64
+          base64 --decode ./release.jks.base64 > ./release.jks
 
       - name: Build Pathfinders release
         run: ./gradlew assemblePathfindersRelease -PstorePassword=${{ secrets.PATHFINDERS_STORE_PASSWD }} -PkeyPassword=${{ secrets.PATHFINDERS_KEY_PASSWD }}
