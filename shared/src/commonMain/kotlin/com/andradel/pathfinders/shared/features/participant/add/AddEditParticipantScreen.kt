@@ -60,6 +60,7 @@ import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.dynamic.rememberLottieDynamicProperties
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -112,9 +113,12 @@ fun AddEditParticipantScreen(
             val result by remember { derivedStateOf { state.participantResult } }
             var showCandle by remember { mutableStateOf(false) }
             var loading by remember { mutableStateOf(false) }
-            AddParticipantResult(result, navigator, { loading = it }) {
-                LaunchedEffect(key1 = result) {
-                    snackbarHostState.showSnackbar(it)
+            LaunchedEffect(key1 = result) {
+                loading = result is ParticipantResult.Loading
+                when (val r = result) {
+                    is ParticipantResult.Failure -> snackbarHostState.showSnackbar(getString(r.message))
+                    ParticipantResult.Success -> navigator.goBack()
+                    ParticipantResult.Loading, null -> Unit
                 }
             }
             Box(modifier = Modifier.padding(padding)) {
@@ -308,21 +312,6 @@ private fun ScoutClassDropDown(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun AddParticipantResult(
-    result: ParticipantResult?,
-    navigator: Navigator,
-    onLoading: (Boolean) -> Unit,
-    showSnackbar: @Composable (String) -> Unit,
-) {
-    onLoading(result is ParticipantResult.Loading)
-    when (result) {
-        is ParticipantResult.Failure -> showSnackbar(stringResource(result.message))
-        ParticipantResult.Success -> navigator.goBack()
-        ParticipantResult.Loading, null -> Unit
     }
 }
 
